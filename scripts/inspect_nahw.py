@@ -4,6 +4,7 @@
 from pathlib import Path
 import csv
 import json
+import sys
 from collections import Counter
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,6 +43,9 @@ def inspect_csv(filename: str) -> None:
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     missing = [
         p
         for p in [

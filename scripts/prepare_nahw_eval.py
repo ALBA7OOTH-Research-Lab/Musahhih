@@ -27,7 +27,7 @@ def main() -> None:
         rows = json.load(f)
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    with OUTPUT.open("w", encoding="utf-8") as f:
+    with OUTPUT.open("w", encoding="utf-8", newline="\n") as f:
         for idx, row in enumerate(rows):
             record = {
                 "id": f"nahw-{row['passage_id']}-{idx}",

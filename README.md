@@ -1,5 +1,7 @@
 # Musahhih
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cyberuniversal/Musahhih/blob/main/notebooks/01_nahw_baseline_unsloth.ipynb)
+
 **Musahhih** is an open research project on improving Modern Standard Arabic grammatical error correction with open-weight language models.
 
 The project builds on the **Nahw** benchmark and related Arabic grammatical error correction work. Its first goal is to establish a reproducible baseline on held-out Arabic correction data, then compare LoRA/QLoRA fine-tuning with natural, synthetic, and mixed training corpora.
@@ -27,6 +29,19 @@ Produce a reproducible baseline score from an untouched open model on the held-o
 
 > **Data rule:** `Nahw-Passage` is treated as evaluation data. It must not be used for training if results are reported on it.
 
+### Run the untouched-model baseline
+
+1. Open [`notebooks/01_nahw_baseline_unsloth.ipynb`](notebooks/01_nahw_baseline_unsloth.ipynb) with the Colab badge above.
+2. In Colab, select **Runtime → Change runtime type → T4 GPU** (or another available GPU).
+3. Run the notebook from top to bottom. The default pilot processes exactly the first 25 test records; the separate 511-record section is disabled by default.
+4. Inspect the manual-review table, then download the files from `outputs/` or optionally copy them to Google Drive.
+
+Free Colab GPU availability is not guaranteed. The workflow does not require Colab Pro, paid APIs, or paid storage.
+
+> **Test-only warning:** Never train on Nahw-Passage or use its results to tune prompts, choose checkpoints, or make repeated model-selection decisions.
+
+The pilot writes `outputs/baseline_pilot_predictions.jsonl` and `outputs/baseline_pilot_summary.json`. Generated outputs are ignored by Git.
+
 ## Repository structure
 
 ```text
@@ -38,9 +53,12 @@ Produce a reproducible baseline score from an untouched open model on the held-o
 │   ├── literature_matrix.md
 │   ├── papers.md
 │   └── research_plan.md
+├── notebooks/
+│   └── 01_nahw_baseline_unsloth.ipynb
 ├── scripts/
 │   ├── download_nahw.py
 │   ├── inspect_nahw.py
+│   ├── nahw_baseline_utils.py
 │   ├── prepare_nahw_eval.py
 │   ├── run_gemma3_nahw_baseline.py
 │   └── train_lora.py
