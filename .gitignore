@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+.env
+
+# Model and experiment outputs
+outputs/
+checkpoints/
+wandb/
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Downloaded or processed datasets
+data/raw/
+data/processed/
+
+# Keep the sample format
+a!data/train.sample.jsonl
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
