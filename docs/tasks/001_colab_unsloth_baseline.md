@@ -24,7 +24,7 @@ Update `README.md` with:
 
 1. Display the notebook's purpose and research rules.
 2. Verify that a CUDA GPU is available and print its name and memory.
-3. Clone or update `https://github.com/cyberuniversal/Musahhih`.
+3. Clone or update `https://github.com/ALBA7OOTH-Research-Lab/Musahhih`.
 4. Install pinned compatible versions of Unsloth and required libraries using the current official installation method.
 5. Print package versions for reproducibility.
 6. Run the existing Nahw download, inspection, and evaluation-preparation scripts.

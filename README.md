@@ -1,6 +1,6 @@
 # Musahhih
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cyberuniversal/Musahhih/blob/main/notebooks/01_nahw_baseline_unsloth.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ALBA7OOTH-Research-Lab/Musahhih/blob/main/notebooks/01_nahw_baseline_unsloth.ipynb)
 
 **Musahhih** is an open research project on improving Modern Standard Arabic grammatical error correction with open-weight language models.
 
