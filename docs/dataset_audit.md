@@ -40,4 +40,26 @@ All `.sent`, `.cor`, and `.m2` files decoded as UTF-8 with BOM handling. Within 
 
 Exact-source checks found no overlap between any QALB source document and the 100 unique Nahw-Passage passages. This is only an exact-text check and does not rule out paraphrase or broader provenance overlap. One 34-character, already-correct L2 source occurs in both QALB-2015 L2 train and test under different document IDs. Its SHA-256 is `32f52ef800b5292b2b3df1e0dfe6ba5b6254d25a32dbad12909dcd8e1f144e5b`. Preserve the official raw files, but exclude the train-side occurrence at load time through a private selection manifest before modeling.
 
+### Private selection manifests
+
+The verified manifest run used `python scripts/prepare_qalb_manifests.py` from generator commit `8ec8d2aab37d364685b0a066c73e9c0ff5111a02`. The generator read the unchanged QALB ZIP directly and compared exact source strings without normalization; file-format prefixes were removed before the exact UTF-8 comparisons.
+
+| Input | SHA-256 |
+|---|---|
+| QALB 0.9.1 ZIP | `c14764b01439618bdcebda04bd5b9365cd70a1fbc58607f1bd18cf357514e503` |
+| Nahw-Passage JSON | `97d4f5e0b75ff5848ffdff113a74676c0de607d0bb877e1f26c1bde1585a2208` |
+
+| Private output under `data/processed/qalb/` | SHA-256 |
+|---|---|
+| `qalb_registry.jsonl` | `e0a87eb3b6bdf9d0dca4edd29e4a4ab72b8c6a49d2e29f83aaab496147939691` |
+| `qalb_train_selection.jsonl` | `9c9a054120d884a26d1b700501020452211df7b24de7e64476615d4a85d5dca2` |
+| `qalb_dev_selection.jsonl` | `563b12a75789ce0865ab341614935d855ab42086fae6e0cdaa26ba17f4de26c8` |
+| `qalb_manifest_summary.json` | `ee413cb049284a7115ee6c75e654ce9f7151207bc2aa3553a245e24d25931155` |
+
+The registry contains 22,938 records. The selection contains 19,720 training records and 1,171 development records, while all 2,046 official test records remain evaluation-only. One train/dev record with exact QALB-test source overlap was excluded; no train/dev record was excluded for exact Nahw overlap.
+
+Within-split duplicated sources are intentionally preserved. The manifest flags 237 records because every member of a duplicated-source group receives the flag. This is distinct from the 121 duplicate excess records, which count only records beyond the first occurrence in each within-split group (total records minus within-split unique-source counts).
+
+The deterministic rerun and schema/privacy checks passed. All outputs are text-free selection metadata and hashes, remain ignored and private, and must not be committed or redistributed. Obtain institutional guidance before creating any persistent transformed corpus copy. This preparation performed no model training and no QALB test evaluation.
+
 See `results/qalb_0.9.1_intake.md` for the reproducible intake checks and duplicate counts.

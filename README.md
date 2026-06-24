@@ -92,6 +92,16 @@ python scripts/inspect_nahw.py
 python scripts/prepare_nahw_eval.py
 ```
 
+### QALB private manifests
+
+Registered QALB users may place the unchanged release ZIP at the ignored path `data/raw/qalb/QALB-0.9.1-Dec03-2021-SharedTasks.zip`, then run:
+
+```bash
+python scripts/prepare_qalb_manifests.py
+```
+
+The script reads the ZIP directly and writes text-free metadata and hashes under ignored `data/processed/qalb/`. It preserves within-split duplicates, excludes train/dev records with exact source overlap against QALB test or Nahw, and keeps every QALB test record evaluation-only. Never commit or redistribute the QALB release or these private outputs.
+
 Authenticate with Hugging Face if the selected model is gated:
 
 ```bash
