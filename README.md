@@ -49,6 +49,7 @@ The pilot writes `outputs/baseline_pilot_predictions.jsonl` and `outputs/baselin
 ├── data/
 │   └── train.sample.jsonl
 ├── docs/
+│   ├── collaboration_workflow.md
 │   ├── dataset_audit.md
 │   ├── experiment_naming.md
 │   ├── literature_matrix.md
@@ -134,6 +135,13 @@ The registered run IDs are defined in
 [`docs/experiment_naming.md`](docs/experiment_naming.md), and the frozen B0/B1/B2
 prompt protocols are defined in
 [`docs/prompt_baseline_protocol.md`](docs/prompt_baseline_protocol.md).
+
+## Team workflow
+
+Use the Musahhih Research Hub in Notion for roadmap and status, and GitHub issues
+and pull requests for execution. Each active task should have one owner, one
+branch, and one PR so human contributors and AI agents do not overwrite each
+other. See [`docs/collaboration_workflow.md`](docs/collaboration_workflow.md).
 
 ## Foundation
 

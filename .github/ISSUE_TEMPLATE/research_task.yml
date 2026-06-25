@@ -1,0 +1,105 @@
+name: Research or implementation task
+description: Track one scoped Musahhih research, data, notebook, or engineering task.
+title: "[Task] "
+labels:
+  - research-task
+body:
+  - type: input
+    id: notion
+    attributes:
+      label: Linked Notion task
+      description: Paste the Musahhih Research Hub task URL.
+      placeholder: https://www.notion.so/...
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: Name the human owner and, if relevant, the AI agent/operator.
+      placeholder: "Mohammed / Codex"
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Research design
+        - Dataset preparation
+        - Prompt baseline
+        - Model inference
+        - Fine-tuning
+        - Evaluation
+        - Documentation
+        - Repository operations
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the concrete outcome. Avoid broad tasks that should be split.
+      placeholder: "Implement..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected_files
+    attributes:
+      label: Expected files or directories
+      description: List files likely to be edited so other agents can avoid overlap.
+      placeholder: |
+        scripts/...
+        docs/...
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: List the exact outputs that make this task done.
+      placeholder: |
+        - Script ...
+        - Tests ...
+        - Docs ...
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and blockers
+      description: Link issues, PRs, Notion decisions, datasets, or access requirements.
+  - type: dropdown
+    id: restricted_data
+    attributes:
+      label: Restricted or private data involved?
+      options:
+        - "No"
+        - "Yes - QALB"
+        - "Yes - other restricted corpus"
+        - "Unsure"
+    validations:
+      required: true
+  - type: textarea
+    id: safeguards
+    attributes:
+      label: Research safeguards
+      description: Confirm the constraints relevant to this task.
+      value: |
+        - Nahw-Passage is not used for training, prompt tuning, checkpoint selection, or repeated model decisions.
+        - Official dataset splits are preserved.
+        - No private corpus text, credentials, model weights, checkpoints, adapters, or large generated outputs will be committed.
+        - No metric will be reported unless the model actually ran and raw predictions are saved.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Planned validation
+      description: List commands/checks the assignee should run before opening the PR.
+      placeholder: |
+        python -m compileall scripts
+        python -m unittest discover -s tests -q
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      description: State the acceptance criteria a reviewer can verify.
+    validations:
+      required: true

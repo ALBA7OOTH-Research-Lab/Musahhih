@@ -40,6 +40,15 @@ Do not begin fine-tuning until the baseline and parser are verified and a legall
 - Use UTF-8 for Arabic text and preserve original strings unless normalization is part of an explicitly documented metric.
 - Keep changes narrow. Do not refactor unrelated files.
 
+## Team and agent coordination
+
+- For non-trivial work, use one GitHub issue, one owner, one branch, and one pull request.
+- Before editing, check the linked issue, current branch, `git status`, and likely overlapping pull requests or local changes.
+- Prefer branch names like `codex/<issue-number>-<short-description>` or `human/<issue-number>-<short-description>`.
+- Do not let two agents edit the same files at the same time unless one task explicitly depends on the other.
+- Keep Notion as the lab-facing status and decision hub; update the linked task after meaningful progress, merge, or blockage.
+- Follow `docs/collaboration_workflow.md` for the full team workflow.
+
 ## Validation
 
 For Python changes, run:
