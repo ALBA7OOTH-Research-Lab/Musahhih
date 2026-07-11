@@ -152,6 +152,32 @@ By default, the bundle writer refuses output paths outside `data/processed/qalb/
 the override flag is only for temporary local diagnostics and must not be used
 for committed artifacts.
 
+### QALB-development prompt validation input
+
+Before any B1-P1/B2-P1 Nahw-Passage run, a licensed contributor can verify the
+deterministic QALB-2014 L1 development selection without writing corpus text:
+
+```bash
+python -m scripts.prepare_qalb_dev_prompt_records
+```
+
+The default dry run selects 25 technically compatible single-token replacement
+annotations and prints only corpus-text-free counts and hashes. It reads the
+unchanged QALB ZIP and the private development-selection manifest directly; it
+does not use QALB test or Nahw-Passage.
+
+If the team's licensed-data handling procedure permits a temporary transformed
+input, deliberately write it under the ignored private directory:
+
+```bash
+python -m scripts.prepare_qalb_dev_prompt_records --write-private-output
+```
+
+This creates `data/processed/qalb/qalb14_dev_prompt_records.jsonl` and refuses to
+overwrite it. The file contains licensed QALB text: do not print, commit, attach,
+or redistribute it. Delete or retain it according to the team's approved QALB
+data-handling procedure after validation.
+
 Canonical output directories for prompt-baseline runs use:
 
 ```text
