@@ -5,9 +5,12 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from scripts.run_prompt_baseline import (
     DEFAULT_MAX_NEW_TOKENS,
+    GemmaGenerator,
     ROOT,
     PromptRecord,
     RunConfig,
@@ -32,6 +35,55 @@ class PromptBaselineRunTests(unittest.TestCase):
             "".join(json.dumps(row) + "\n" for row in rows),
             encoding="utf-8",
         )
+
+    def test_gemma_generator_loads_pinned_quantized_model_with_unsloth(self):
+        calls = []
+
+        class FakeModel:
+            def eval(self):
+                calls.append("eval")
+
+        class FakeFastModel:
+            @staticmethod
+            def from_pretrained(**kwargs):
+                calls.append(kwargs)
+                return FakeModel(), object()
+
+        fake_unsloth = SimpleNamespace(FastModel=FakeFastModel)
+        fake_torch = SimpleNamespace(
+            __version__="torch-version",
+            bfloat16="bfloat16",
+            float16="float16",
+            float32="float32",
+            cuda=SimpleNamespace(
+                is_available=lambda: True,
+                is_bf16_supported=lambda: False,
+            ),
+        )
+        generator = GemmaGenerator("example/model", "pinned-revision", 32)
+        with (
+            patch.dict(sys.modules, {"torch": fake_torch, "unsloth": fake_unsloth}),
+            patch(
+                "scripts.run_prompt_baseline.importlib.metadata.version",
+                side_effect=lambda package: f"{package}-version",
+            ),
+        ):
+            generator._load()
+
+        self.assertEqual(
+            calls[0],
+            {
+                "model_name": "example/model",
+                "revision": "pinned-revision",
+                "max_seq_length": 2048,
+                "dtype": "float16",
+                "load_in_4bit": True,
+                "full_finetuning": False,
+            },
+        )
+        self.assertEqual(calls[1], "eval")
+        self.assertEqual(generator.metadata["backend"], "unsloth")
+        self.assertTrue(generator.metadata["load_in_4bit"])
 
     def test_experiment_id_uses_canonical_pattern(self):
         run_id = experiment_id("B1-P1", "gemma3-4b-it", "qalb14-dev", 3407, 1)
