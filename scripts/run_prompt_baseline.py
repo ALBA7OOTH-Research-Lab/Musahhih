@@ -77,7 +77,7 @@ class GemmaGenerator:
         self.processor = None
         self.model = None
         self.metadata = {
-            "backend": "transformers",
+            "backend": "unsloth",
             "model_id": model_id,
             "model_revision": revision,
             "max_new_tokens": max_new_tokens,
@@ -88,7 +88,7 @@ class GemmaGenerator:
     def _load(self) -> None:
         try:
             import torch
-            from transformers import AutoProcessor, Gemma3ForConditionalGeneration
+            from unsloth import FastModel
         except (ImportError, OSError) as error:
             raise RunSafetyError("Gemma inference dependencies are unavailable") from error
 
@@ -99,25 +99,25 @@ class GemmaGenerator:
             dtype = torch.float32
             device = "cpu"
         try:
-            self.processor = AutoProcessor.from_pretrained(
-                self.model_id,
+            self.model, self.processor = FastModel.from_pretrained(
+                model_name=self.model_id,
                 revision=self.revision,
-                padding_side="left",
+                max_seq_length=2048,
+                dtype=dtype,
+                load_in_4bit=True,
+                full_finetuning=False,
             )
-            self.model = Gemma3ForConditionalGeneration.from_pretrained(
-                self.model_id,
-                revision=self.revision,
-                torch_dtype=dtype,
-                device_map="auto",
-            ).eval()
+            self.model.eval()
         except Exception as error:
             raise RunSafetyError("unable to initialize pinned Gemma backend") from error
         self.metadata.update(
             {
                 "torch_version": torch.__version__,
                 "transformers_version": importlib.metadata.version("transformers"),
+                "unsloth_version": importlib.metadata.version("unsloth"),
                 "device": device,
                 "dtype": str(dtype),
+                "load_in_4bit": True,
                 "cuda_available": torch.cuda.is_available(),
             }
         )

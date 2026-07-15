@@ -1,6 +1,8 @@
 # Prompt-Only Baseline Protocol
 
-Status: B0-P1 accepted; B1-P1 and B2-P1 frozen on 2026-06-24 but not yet run.
+Status: B0-P1 accepted; B1-P1 and B2-P1 frozen on 2026-06-24 and passed the
+25-record QALB-development technical gate on 2026-07-11. Nahw-Passage has not
+been run with B1-P1 or B2-P1.
 
 This document preregisters the untouched-model prompt baselines before either new
 protocol is evaluated on Nahw-Passage. It preserves the experiment-family mapping
