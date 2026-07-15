@@ -43,6 +43,12 @@ Secondary diagnostics:
 
 Do not invent linguistic labels.
 
+Freeze the natural-versus-synthetic-versus-mixed methodology before synthetic
+generation or fine-tuning. See
+[`synthetic_data_protocol.md`](synthetic_data_protocol.md). The primary novelty
+claim is a matched, leakage-controlled comparison of supervision sources, not
+the use of synthetic data by itself.
+
 Potential training sources:
 - QALB train/dev splits, if legally obtained
 - expert-validated public corpora
@@ -81,10 +87,14 @@ Hold the following constant:
 - evaluation script
 
 Runs:
-- F1: natural-only
-- F2: synthetic-only, matched for sample count
-- F3: natural + synthetic
-- F4: best mixture with data-size ablation
+- F1-P1: natural-only with `N` eligible records
+- F2-P1: synthetic-only with the same `N`
+- F3-P1: fixed 50:50 natural + synthetic with total size `N`
+- F4-P1: preregistered mixture and data-size ablations selected on development
+  data only
+
+An explanation-augmented condition is optional and separate from the core
+comparison. It must not be introduced as a post-test revision of F1–F4.
 
 ## Phase D — Evaluation
 
