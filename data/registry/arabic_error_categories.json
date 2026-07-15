@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "registry_id": "musahhih-areta-candidates-v1",
+  "status": "candidate_only",
+  "source": {
+    "name": "ARETA",
+    "paper_title": "Automatic Error Type Annotation for Arabic",
+    "url": "https://aclanthology.org/2021.conll-1.47/",
+    "locator": "Table 1"
+  },
+  "expected_parent_classes": [
+    "Orthography",
+    "Morphology",
+    "Syntax",
+    "Semantics",
+    "Punctuation",
+    "Merge",
+    "Split"
+  ],
+  "excluded_source_tags": ["OO", "MO", "XO", "SO", "PO"],
+  "categories": [
+    {
+      "id": "areta:OA",
+      "source_code": "OA",
+      "parent_class": "Orthography",
+      "published_description": "Confusion in Alif, Ya and Alif-Maqsura",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OC",
+      "source_code": "OC",
+      "parent_class": "Orthography",
+      "published_description": "Wrong order of word characters",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OD",
+      "source_code": "OD",
+      "parent_class": "Orthography",
+      "published_description": "Additional character(s)",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OG",
+      "source_code": "OG",
+      "parent_class": "Orthography",
+      "published_description": "Lengthening short vowels",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OH",
+      "source_code": "OH",
+      "parent_class": "Orthography",
+      "published_description": "Hamza errors",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OM",
+      "source_code": "OM",
+      "parent_class": "Orthography",
+      "published_description": "Missing character(s)",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:ON",
+      "source_code": "ON",
+      "parent_class": "Orthography",
+      "published_description": "Confusion between Nun and Tanwin",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OR",
+      "source_code": "OR",
+      "parent_class": "Orthography",
+      "published_description": "Replacement in word character(s)",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OS",
+      "source_code": "OS",
+      "parent_class": "Orthography",
+      "published_description": "Shortening long vowels",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OT",
+      "source_code": "OT",
+      "parent_class": "Orthography",
+      "published_description": "Confusion in Ha, Ta and Ta-Marbuta",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:OW",
+      "source_code": "OW",
+      "parent_class": "Orthography",
+      "published_description": "Confusion in Alif Fariqa",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:MI",
+      "source_code": "MI",
+      "parent_class": "Morphology",
+      "published_description": "Word inflection",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:MT",
+      "source_code": "MT",
+      "parent_class": "Morphology",
+      "published_description": "Verb tense",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:XC",
+      "source_code": "XC",
+      "parent_class": "Syntax",
+      "published_description": "Case",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:XF",
+      "source_code": "XF",
+      "parent_class": "Syntax",
+      "published_description": "Definiteness",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:XG",
+      "source_code": "XG",
+      "parent_class": "Syntax",
+      "published_description": "Gender",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:XM",
+      "source_code": "XM",
+      "parent_class": "Syntax",
+      "published_description": "Missing word",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:XN",
+      "source_code": "XN",
+      "parent_class": "Syntax",
+      "published_description": "Number",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:XT",
+      "source_code": "XT",
+      "parent_class": "Syntax",
+      "published_description": "Unnecessary word",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:SF",
+      "source_code": "SF",
+      "parent_class": "Semantics",
+      "published_description": "Conjunction error",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:SW",
+      "source_code": "SW",
+      "parent_class": "Semantics",
+      "published_description": "Word selection error",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:PC",
+      "source_code": "PC",
+      "parent_class": "Punctuation",
+      "published_description": "Punctuation confusion",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:PM",
+      "source_code": "PM",
+      "parent_class": "Punctuation",
+      "published_description": "Missing punctuation",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:PT",
+      "source_code": "PT",
+      "parent_class": "Punctuation",
+      "published_description": "Unnecessary punctuation",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:MG",
+      "source_code": "MG",
+      "parent_class": "Merge",
+      "published_description": "Words are merged",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    },
+    {
+      "id": "areta:SP",
+      "source_code": "SP",
+      "parent_class": "Split",
+      "published_description": "Words are split",
+      "arabic_label": null,
+      "source_locator": "Table 1",
+      "label_role": "candidate_diagnostic",
+      "areta_supported": true,
+      "synthetic_operator": {"status": "disabled", "rule_id": null, "specification": null, "approval": null}
+    }
+  ]
+}
