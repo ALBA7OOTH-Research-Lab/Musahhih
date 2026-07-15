@@ -218,3 +218,12 @@ Excluded ARETA catch-all tags and unresolved source discrepancies should remain
 in a provenance appendix, not the active candidate inventory. No Arabic examples
 should appear in the public registry unless their source and redistribution
 rights are independently established.
+
+## Machine-readable candidate registry
+
+The reviewed candidate metadata is stored in
+[`data/registry/arabic_error_categories.json`](../data/registry/arabic_error_categories.json).
+Run `python scripts/validate_error_registry.py` to verify the exact 26-tag
+inventory and confirm that every synthetic operator remains disabled. The file
+is public taxonomy metadata only; it contains no corpus examples or approved
+transformation rules.
