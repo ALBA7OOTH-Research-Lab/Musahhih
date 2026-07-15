@@ -239,6 +239,19 @@ Predictions and metrics are written to `outputs/`.
 
 ## Planned experiments
 
+The frozen `F1-P1` natural-data protocol is documented in
+[`docs/f1_natural_pilot_protocol.md`](docs/f1_natural_pilot_protocol.md). Its
+private QALB adapter defaults to a text-free validation run:
+
+```bash
+python scripts/prepare_f1_natural_records.py
+```
+
+Writing text-bearing records is deliberately disabled unless the user supplies
+both `--write-private-records` and `--confirm-license-guidance`. Such outputs
+remain under ignored `data/processed/`; never commit, print, or redistribute
+them. This command does not train a model or access QALB test/Nahw results.
+
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
 3. Natural-data LoRA/QLoRA fine-tuning
