@@ -18,6 +18,23 @@
 3. Deduplicate across datasets before training.
 4. Never report a benchmark that overlaps with training data.
 5. Keep a manifest of every transformation.
+6. Do not use Nahw-Passage or any evaluation split as a clean-text source for
+   synthetic generation, demonstrations, retrieval, taxonomy design, or model
+   selection.
+7. Register the license and checksum of every clean-text source before producing
+   derived records; accessibility alone does not establish transformation or
+   redistribution rights.
+8. Assign all variants of one clean source to one split before generation, and
+   preserve exact original text alongside any documented normalization.
+9. Treat automatic ARETA or morphology labels as diagnostics, not expert gold
+   annotations. Every project category must retain its external source and tool
+   version.
+
+The preregistered requirements for project-generated and released synthetic
+data are defined in
+[`synthetic_data_protocol.md`](synthetic_data_protocol.md). No synthetic
+generation is authorized until that protocol passes methodology review and is
+marked frozen.
 
 ## QALB 0.9.1 intake
 
