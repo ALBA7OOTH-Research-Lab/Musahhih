@@ -16,9 +16,14 @@ Treat this file as a map, not a full manual. Follow the linked docs for details.
 
 ## Current milestone
 
-Build and validate a free Google Colab/Jupyter workflow using Unsloth that runs an untouched-model baseline on 25 held-out Nahw-Passage records.
+Freeze and review the `F1-P1` natural-data fine-tuning pilot protocol before
+implementing or running training. The baseline and private QALB manifest stages
+are complete; QALB text and derived training artifacts remain private.
 
-Do not begin fine-tuning until the baseline and parser are verified and a legally usable GEC training corpus is available.
+Do not begin fine-tuning until the protocol, private adapter, dependency pins,
+privacy checks, and free-Colab GPU smoke gate are independently reviewed. The
+proposed `XG` synthetic operator remains disabled pending qualified linguistic
+review.
 
 ## Non-negotiable research rules
 

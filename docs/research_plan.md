@@ -78,6 +78,11 @@ Unified training record:
 
 ## Phase C — Fine-tuning experiments
 
+The proposed first natural-data feasibility run is specified in
+[`f1_natural_pilot_protocol.md`](f1_natural_pilot_protocol.md). It must pass
+independent methodology, privacy, compatibility, and free-GPU gates before any
+training begins. It is not yet the final matched-size F1/F2/F3 comparison.
+
 Hold the following constant:
 - base model
 - validation/test data
