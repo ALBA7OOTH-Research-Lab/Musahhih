@@ -29,6 +29,6 @@ compilation, and `git diff --check`.
 No CUDA model load, LoRA attachment, token-length pass over private records,
 forward/backward step, GPU-memory measurement, training, checkpoint selection,
 generation, or adapter export was executed locally. Therefore this report makes
-no claim about Colab compatibility, VRAM use, runtime, loss, or correction
-quality. Those claims require the deliberate free-Colab smoke and later approved
+no claim about Kaggle GPU compatibility, VRAM use, runtime, loss, or correction
+quality. Those claims require the deliberate free-Kaggle smoke and later approved
 run.

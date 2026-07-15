@@ -21,7 +21,7 @@ implementing or running training. The baseline and private QALB manifest stages
 are complete; QALB text and derived training artifacts remain private.
 
 Do not begin fine-tuning until the protocol, private adapter, dependency pins,
-privacy checks, and free-Colab GPU smoke gate are independently reviewed. The
+privacy checks, and free-Kaggle GPU smoke gate are independently reviewed. The
 proposed `XG` synthetic operator remains disabled pending qualified linguistic
 review.
 
@@ -33,7 +33,7 @@ review.
 - Never fabricate metrics, dataset access, completed runs, or citations.
 - Record exact model IDs/revisions, prompts, decoding settings, seeds, hardware, and package versions.
 - Save predictions as well as aggregate metrics.
-- Prefer zero-cost tools and Google Colab Free; do not introduce paid dependencies.
+- Prefer zero-cost tools and free Kaggle/Colab runtimes; do not introduce paid dependencies.
 - Never commit API keys, Hugging Face tokens, Google credentials, or private datasets.
 
 ## Repository conventions
@@ -74,7 +74,7 @@ For notebooks:
 
 - validate that the notebook is valid JSON
 - make setup cells idempotent where practical
-- ensure a fresh Colab runtime can run cells in order
+- ensure a fresh supported notebook runtime can run cells in order
 - keep the 25-example pilot separate from the full 511-record run
 
 If a required check cannot run because no GPU or external access is available, state that clearly and report what was validated instead.

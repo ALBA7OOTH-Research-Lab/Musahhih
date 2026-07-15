@@ -10,7 +10,7 @@ Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/26
 `F1-P1` is Musahhih's first supervised fine-tuning pilot using licensed natural
 Arabic grammatical-error-correction data. It asks whether the same Gemma 3 4B
 instruction model used for the untouched baselines can learn the correction
-interface from a small, reproducible QALB training view on free Colab hardware.
+interface from a small, reproducible QALB training view on free GPU hardware.
 
 This is an engineering and feasibility pilot, not the final natural-versus-
 synthetic comparison. It does not authorize a Nahw-Passage run, QALB test
@@ -29,7 +29,7 @@ is eligible.
 - No prompt, checkpoint, hyperparameter, or stopping rule may be revised from a
   final-test result.
 - The pilot does not create or use linguistic error labels.
-- No paid API, Colab Pro feature, or paid storage/compute is required.
+- No paid API, paid notebook tier, or paid storage/compute is required.
 
 ## Registered model
 
@@ -211,19 +211,24 @@ complete, raw outputs are retained privately, and the parser/artifact pipeline
 works. It does not select the checkpoint or alter settings. Record
 `do_sample=false`, no temperature argument, and `max_new_tokens=256`.
 
-## Free Colab execution gate
+## Free Kaggle GPU execution gate
 
-The target is a free Colab NVIDIA T4 with approximately 15 GiB VRAM, but free
-GPU assignment and runtime duration are not guaranteed. Before the first valid
-run, the implementation must perform a one-batch forward/backward/optimizer
-smoke test using the longest selected record and report peak allocated/reserved
-VRAM. Require at least 1 GiB headroom after the optimizer step. An out-of-memory
-error, unsupported dtype, incompatible package set, or insufficient headroom
+Amendment dated 2026-07-15, before any F1-P1 GPU result: the team cannot use the
+planned Colab T4, so the primary target is a free Kaggle NVIDIA GPU. Do not
+assume a GPU model in advance. Record the exact assigned device, CUDA capability,
+visible-device count, total memory, runtime, and package versions. Use only one
+device for F1-P1; an additional visible Kaggle device must remain unused. CPU is
+not an experimental substitute because it would not validate the QLoRA GPU path.
+
+Before the first valid run, perform a one-batch forward/backward/optimizer smoke
+test using the longest selected record and report peak allocated/reserved VRAM.
+Require at least 1 GiB headroom after the optimizer step. An out-of-memory error,
+unsupported device or dtype, incompatible package set, or insufficient headroom
 keeps F1-P1 blocked; do not reduce length, rank, or batch settings inside the
 same protocol.
 
 No training feasibility or duration is claimed until that GPU test succeeds.
-Save resumable adapter/checkpoint state frequently enough for Colab interruption,
+Save resumable adapter/checkpoint state frequently enough for notebook interruption,
 but a resumed run must retain the same run ID, hashes, seed, and settings and
 must record the interruption.
 
@@ -280,7 +285,7 @@ Open a separate issue to:
 1. implement and test the private QALB training adapter using synthetic fixtures;
 2. replace the generic `scripts/train_lora.py` template with a guarded Unsloth
    F1 runner or add a narrowly named runner;
-3. create a beginner-readable Colab workflow with deliberate execution gates;
+3. create a beginner-readable Kaggle-compatible workflow with deliberate execution gates;
 4. pin the tested dependency set and verify the longest-record GPU smoke test;
 5. validate artifact privacy and resumability; and only then
 6. execute seed 3407, followed by 3408 and 3409 only when free compute permits.
