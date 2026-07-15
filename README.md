@@ -252,11 +252,13 @@ both `--write-private-records` and `--confirm-license-guidance`. Such outputs
 remain under ignored `data/processed/`; never commit, print, or redistribute
 them. This command does not train a model or access QALB test/Nahw results.
 
-After the private adapter gate, open
-[`notebooks/02_f1_natural_qlora.ipynb`](notebooks/02_f1_natural_qlora.ipynb) in
-free Google Colab. Run cells in order. The notebook requires a deliberate
+After the private adapter gate, import
+[`notebooks/02_f1_natural_qlora.ipynb`](notebooks/02_f1_natural_qlora.ipynb) into
+a free Kaggle Notebook, enable a GPU accelerator and Internet, and attach QALB
+inputs only through a private Kaggle Dataset. Run cells in order. The notebook requires a deliberate
 one-batch GPU smoke test with at least 1 GiB headroom before its separately
-confirmed full-training cell can run. Full training is disabled by default.
+confirmed full-training cell can run. CPU is not a supported training fallback;
+full training is disabled by default.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
