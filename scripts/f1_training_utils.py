@@ -110,4 +110,3 @@ def require_full_training_confirmation(confirmation: str, smoke_summary: dict) -
         raise TrainingGateError("Full F1-P1 training confirmation is missing")
     if not isinstance(smoke_summary, dict) or smoke_summary.get("passed") is not True:
         raise TrainingGateError("A passing one-batch GPU smoke summary is required")
-
