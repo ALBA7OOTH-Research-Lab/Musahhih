@@ -1,9 +1,10 @@
 import hashlib
 import json
 from pathlib import Path
+import tempfile
+import unittest
+from unittest import mock
 import zipfile
-
-import pytest
 
 from scripts.prepare_f1_natural_records import (
     AdapterError, build_split, eligible_actions, safe_output_dir,
@@ -33,71 +34,65 @@ def synthetic_zip(path: Path, action="A 1 2|||TYPE_IGNORED|||FIXED|||REQUIRED|||
         archive.writestr("ROOT/data/2014/train/QALB-2014-L1-Train.m2", f"S BAD TOKEN HERE\n{action}\n")
 
 
-def test_single_token_annotator_zero_action_is_eligible():
-    actions = ["A 1 2|||ANY_LABEL|||FIXED|||REQUIRED|||-NONE-|||0"]
-    result = eligible_actions("BAD TOKEN HERE", actions, "synthetic:1")
-    assert len(result) == 1
-    assert result[0]["error"] == "TOKEN"
-    assert result[0]["correction"] == "FIXED"
+class F1NaturalAdapterTests(unittest.TestCase):
+    def test_single_token_annotator_zero_action_is_eligible(self):
+        actions = ["A 1 2|||ANY_LABEL|||FIXED|||REQUIRED|||-NONE-|||0"]
+        result = eligible_actions("BAD TOKEN HERE", actions, "synthetic:1")
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["error"], "TOKEN")
+        self.assertEqual(result[0]["correction"], "FIXED")
 
+    def test_ineligible_m2_actions_are_rejected(self):
+        actions = [
+            "A 1 2|||TYPE|||FIXED|||REQUIRED|||-NONE-|||1",
+            "A 1 3|||TYPE|||FIXED|||REQUIRED|||-NONE-|||0",
+            "A 1 2|||TYPE|||TWO WORDS|||REQUIRED|||-NONE-|||0",
+            "A 1 2|||TYPE|||-NONE-|||REQUIRED|||-NONE-|||0",
+        ]
+        for action in actions:
+            with self.subTest(action=action):
+                self.assertEqual(eligible_actions("BAD TOKEN HERE", [action], "synthetic:1"), [])
 
-@pytest.mark.parametrize("action", [
-    "A 1 2|||TYPE|||FIXED|||REQUIRED|||-NONE-|||1",
-    "A 1 3|||TYPE|||FIXED|||REQUIRED|||-NONE-|||0",
-    "A 1 2|||TYPE|||TWO WORDS|||REQUIRED|||-NONE-|||0",
-    "A 1 2|||TYPE|||-NONE-|||REQUIRED|||-NONE-|||0",
-])
-def test_ineligible_m2_actions_are_rejected(action):
-    assert eligible_actions("BAD TOKEN HERE", [action], "synthetic:1") == []
+    def test_build_split_uses_source_hash_and_never_returns_labels(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive_path = Path(directory) / "fixture.zip"
+            synthetic_zip(archive_path)
+            with zipfile.ZipFile(archive_path) as archive:
+                edits, exclusions = build_split(archive, [row()], "train")
+            self.assertEqual(len(edits), 1)
+            self.assertNotIn("TYPE_IGNORED", json.dumps(edits))
+            self.assertEqual(exclusions, {"document_filter": 0, "no_eligible_action": 0})
 
+    def test_build_split_fails_on_source_hash_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive_path = Path(directory) / "fixture.zip"
+            synthetic_zip(archive_path)
+            with zipfile.ZipFile(archive_path) as archive:
+                with self.assertRaisesRegex(AdapterError, "Source integrity mismatch"):
+                    build_split(archive, [row(source_sha256="0" * 64)], "train")
 
-def test_build_split_uses_source_hash_and_never_returns_labels(tmp_path):
-    archive_path = tmp_path / "fixture.zip"
-    synthetic_zip(archive_path)
-    with zipfile.ZipFile(archive_path) as archive:
-        edits, exclusions = build_split(archive, [row()], "train")
-    assert len(edits) == 1
-    assert "TYPE_IGNORED" not in json.dumps(edits)
-    assert exclusions == {"document_filter": 0, "no_eligible_action": 0}
+    def test_test_split_cannot_enter_training(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive_path = Path(directory) / "fixture.zip"
+            synthetic_zip(archive_path)
+            with zipfile.ZipFile(archive_path) as archive:
+                edits, exclusions = build_split(archive, [row(split="test", eligible_for_training=False)], "train")
+            self.assertEqual(edits, [])
+            self.assertEqual(exclusions["document_filter"], 1)
 
+    def test_manifest_cannot_redirect_training_to_test_member(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive_path = Path(directory) / "fixture.zip"
+            synthetic_zip(archive_path)
+            with zipfile.ZipFile(archive_path) as archive:
+                with self.assertRaisesRegex(AdapterError, "frozen split"):
+                    build_split(archive, [row(sent_member="ROOT/data/2014/test/QALB-2014-L1-Test.sent")], "train")
 
-def test_build_split_fails_on_source_hash_mismatch(tmp_path):
-    archive_path = tmp_path / "fixture.zip"
-    synthetic_zip(archive_path)
-    with zipfile.ZipFile(archive_path) as archive:
-        with pytest.raises(AdapterError, match="Source integrity mismatch"):
-            build_split(archive, [row(source_sha256="0" * 64)], "train")
-
-
-def test_test_split_cannot_enter_training(tmp_path):
-    archive_path = tmp_path / "fixture.zip"
-    synthetic_zip(archive_path)
-    with zipfile.ZipFile(archive_path) as archive:
-        edits, exclusions = build_split(
-            archive,
-            [row(split="test", eligible_for_training=False)],
-            "train",
-        )
-    assert edits == []
-    assert exclusions["document_filter"] == 1
-
-
-def test_manifest_cannot_redirect_training_to_test_member(tmp_path):
-    archive_path = tmp_path / "fixture.zip"
-    synthetic_zip(archive_path)
-    with zipfile.ZipFile(archive_path) as archive:
-        with pytest.raises(AdapterError, match="frozen split"):
-            build_split(
-                archive,
-                [row(sent_member="ROOT/data/2014/test/QALB-2014-L1-Test.sent")],
-                "train",
-            )
-
-
-def test_private_output_must_stay_under_processed(tmp_path, monkeypatch):
-    import scripts.prepare_f1_natural_records as module
-    monkeypatch.setattr(module, "ROOT", tmp_path)
-    allowed = tmp_path / "data" / "processed" / "f1"
-    assert safe_output_dir(allowed) == allowed.resolve()
-    with pytest.raises(AdapterError, match="must stay"):
-        safe_output_dir(tmp_path / "outputs")
+    def test_private_output_must_stay_under_processed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with mock.patch("scripts.prepare_f1_natural_records.ROOT", root):
+                allowed = root / "data" / "processed" / "f1"
+                self.assertEqual(safe_output_dir(allowed), allowed.resolve())
+                with self.assertRaisesRegex(AdapterError, "must stay"):
+                    safe_output_dir(root / "outputs")
