@@ -224,6 +224,24 @@ the xFormers release compatibility record, and the torchao compatibility record:
 - https://github.com/facebookresearch/xformers/blob/main/CHANGELOG.md
 - https://github.com/pytorch/ao/issues/2919
 
+### Gemma 3 response-masking compatibility amendment (2026-07-16)
+
+Kaggle smoke run v9 passed the CUDA probe, private archive checksum, model
+load, and LoRA attachment, then stopped before the optimizer step. Unsloth
+2026.7.3 identified Gemma 3's processor as vision-aware and rejected the
+legacy post-construction `train_on_responses_only` helper. The frozen
+assistant-only loss contract is therefore implemented with
+`UnslothVisionDataCollator` using `train_on_responses_only=True`, the frozen
+Gemma turn markers, and `completion_only_loss=True`. The notebook verifies a
+collated example contains trainable assistant labels without printing private
+text. This is a runtime compatibility change only; it does not change records,
+splits, prompts, hyperparameters, or the prohibition on test data.
+
+Official Unsloth source and maintainer guidance:
+
+- https://github.com/unslothai/unsloth-zoo/blob/main/unsloth_zoo/vision_utils.py
+- https://github.com/unslothai/unsloth/issues/1559
+
 ## Checkpoint and development gate
 
 Select between the epoch-1 and epoch-2 checkpoints using lowest mean

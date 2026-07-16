@@ -54,5 +54,19 @@ class F1NotebookStaticTests(unittest.TestCase):
         self.assertIn("QALB-0.9.1-Dec03-2021-SharedTasks.zip.bin", self.source)
         self.assertIn("data/raw/qalb/QALB-0.9.1-Dec03-2021-SharedTasks.zip", self.source)
 
+    def test_gemma3_uses_collate_time_response_masking(self):
+        for value in (
+            "from unsloth.trainer import UnslothVisionDataCollator",
+            "train_on_responses_only=True",
+            "completion_only_loss=True",
+            "instruction_part='<start_of_turn>user\\\\n'",
+            "response_part='<start_of_turn>model\\\\n'",
+            "response_collator([private_data['train'][0]])['labels'][0]",
+            "dataset_kwargs={'skip_prepare_dataset': True}",
+            "remove_unused_columns=False",
+        ):
+            self.assertIn(value, self.source)
+        self.assertNotIn("from unsloth.chat_templates import train_on_responses_only", self.source)
+
     def test_test_sets_are_explicitly_prohibited(self):
         self.assertIn("QALB test and Nahw-Passage are never loaded here", self.source)
