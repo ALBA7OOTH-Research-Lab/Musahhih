@@ -57,6 +57,12 @@ The corrected workflow also embeds text-free selection evidence directly in
 the smoke JSON: training-record count, maximum token count, longest index, and
 an explicit validated-sequence-length flag.
 
+Kaggle kernel version 13 then executed the amended workflow. It measured 2,000
+training records, reported a maximum of 245 tokens at index 1218, completed the
+one-step optimizer smoke on that selected record, and retained 10,793,254,912
+bytes of headroom. The exact generated text-free JSON replaced the invalidated
+v11 artifact at `results/f1_p1_gpu_smoke_summary.json`.
+
 The complete two-epoch pilot, checkpoint selection, private development
 generation, adapter export, and every final-test evaluation were not executed.
 No correction-quality score or full-training feasibility claim is made here.
