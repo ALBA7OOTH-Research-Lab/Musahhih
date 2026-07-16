@@ -45,9 +45,11 @@ compilation, and `git diff --check`.
 
 ## Not executed
 
-Kaggle version 5 assigned a P100 and completed private record preparation, but
-the pre-amendment PyTorch build failed during model loading because it omitted
-`sm_60` kernels. No optimizer step, GPU-memory summary, training, checkpoint
-selection, generation, or adapter export ran. The amended dependency stack has
-not yet passed the deliberate Kaggle smoke, so this report makes no feasibility,
-runtime, loss, or correction-quality claim.
+Kaggle kernel version 11 completed the deliberate one-step optimizer smoke on
+a Tesla P100. Peak reserved memory was 6,266,290,176 bytes and measured
+headroom was 10,793,254,912 bytes, so the frozen 1 GiB gate passed. The exact
+text-free artifact is `results/f1_p1_gpu_smoke_summary.json`.
+
+The complete two-epoch pilot, checkpoint selection, private development
+generation, adapter export, and every final-test evaluation were not executed.
+No correction-quality score or full-training feasibility claim is made here.
