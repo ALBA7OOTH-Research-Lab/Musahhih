@@ -70,5 +70,17 @@ class F1NotebookStaticTests(unittest.TestCase):
             self.assertIn(value, self.source)
         self.assertNotIn("from unsloth.chat_templates import train_on_responses_only", self.source)
 
+    def test_token_length_guard_measures_text_sequence_not_batch(self):
+        for value in (
+            "text_tokenizer = getattr(processor, 'tokenizer', processor)",
+            "def rendered_token_count(messages):",
+            "return_attention_mask=False",
+            "isinstance(input_ids[0], (list, tuple))",
+            "if not lengths or min(lengths) < 2:",
+            "LONGEST_INDEX = max(range(len(lengths)), key=lengths.__getitem__)",
+        ):
+            self.assertIn(value, self.source)
+        self.assertNotIn("len(processor(processor.apply_chat_template", self.source)
+
     def test_test_sets_are_explicitly_prohibited(self):
         self.assertIn("QALB test and Nahw-Passage are never loaded here", self.source)
