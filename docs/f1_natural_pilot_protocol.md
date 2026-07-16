@@ -203,8 +203,10 @@ optimizer step because the then-current PyTorch binary contained kernels only
 for `sm_70` and newer. Private archive verification and record preparation had
 already passed; no smoke summary or training result was produced. For a P100
 worker only, install the official PyTorch 2.6.0 CUDA 12.4 wheel set before the
-first `torch` import, with `torchvision==0.21.0`, `xformers==0.0.29.post3`, and
-`torchao==0.12.0`. Immediately execute a one-element CUDA tensor operation and
+first `torch` import, with `torchvision==0.21.0`, `xformers==0.0.29.post3`,
+`torchao==0.12.0`, and Kaggle's already-loaded `numpy==2.0.2`. The explicit
+NumPy pin prevents a mixed in-memory/on-disk C-extension state. Immediately
+execute a one-element CUDA tensor operation and
 synchronize; failure keeps the gate blocked. Non-P100 workers retain their
 recorded runtime stack.
 
