@@ -7,6 +7,12 @@
   "contains_corpus_text": false,
   "executed": true,
   "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+  "selection": {
+    "train_records": 2000,
+    "max_tokens": 245,
+    "longest_index": 1218,
+    "validated_sequence_lengths": true
+  },
   "runtime": {
     "python": "3.12.13",
     "cuda": "12.4",

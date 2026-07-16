@@ -3,16 +3,14 @@
 Status: proposed freeze for independent methodology review. No training is
 authorized by this document until it is approved and merged.
 
-Engineering gate status (2026-07-16): Kaggle v11 completed a one-step P100
-smoke with 10,793,254,912 bytes of measured headroom, but its record-selection
-evidence was invalidated after the log reported `max_tokens: 1`. The notebook
-had measured the outer batch dimension returned by the processor rather than
-the rendered text sequence length, so record zero was not proven to be the
-longest record and the 1,024-token guard was ineffective. The exact v11
-artifact remains committed at `results/f1_p1_gpu_smoke_summary.json` as
-historical evidence, but it is not an accepted longest-record gate. Full
-training remains unauthorized until the corrected smoke passes and the
-independent reviewer reaffirms the decision against the corrected commit.
+Engineering gate status (2026-07-16): Kaggle v11 was invalidated after its log
+reported `max_tokens: 1`, revealing that the processor batch dimension had been
+counted. After the token-length correction and artifact-contract amendment,
+Kaggle v13 measured all 2,000 training records, selected index 1218 as the true
+maximum at 245 tokens, completed the one-step P100 smoke, and recorded
+10,793,254,912 bytes of headroom. The exact text-free v13 summary is committed
+at `results/f1_p1_gpu_smoke_summary.json`. Full training remains unauthorized
+until the independent reviewer reaffirms GO against the corrected commit.
 
 Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/26
 
