@@ -242,6 +242,22 @@ Official Unsloth source and maintainer guidance:
 - https://github.com/unslothai/unsloth-zoo/blob/main/unsloth_zoo/vision_utils.py
 - https://github.com/unslothai/unsloth/issues/1559
 
+### P100 eager-mode compatibility amendment (2026-07-16)
+
+Kaggle smoke run v10 passed response-collator construction and entered the
+one-step trainer, then stopped before completing the optimizer step because
+TorchInductor selected Triton. PyTorch reports that Triton requires CUDA
+capability 7.0 or newer, while the assigned P100 is capability 6.0. On a P100
+only, the notebook now sets Unsloth's documented
+`UNSLOTH_COMPILE_DISABLE=1` switch before importing Unsloth, keeping execution
+in eager mode. The resolved state is recorded in runtime metadata. This does
+not change the model, data, loss mask, hyperparameters, or research gates.
+
+Official implementation references:
+
+- https://github.com/unslothai/unsloth-zoo/blob/main/unsloth_zoo/compiler.py
+- https://docs.pytorch.org/docs/stable/generated/torch.compile.html
+
 ## Checkpoint and development gate
 
 Select between the epoch-1 and epoch-2 checkpoints using lowest mean

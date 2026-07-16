@@ -46,6 +46,8 @@ class F1NotebookStaticTests(unittest.TestCase):
             "'pillow': PIL.__version__",
             "https://download.pytorch.org/whl/cu124",
             "torch.ones(1, device='cuda')",
+            "os.environ['UNSLOTH_COMPILE_DISABLE'] = '1'",
+            "'unsloth_compile_disabled': os.environ.get('UNSLOTH_COMPILE_DISABLE') == '1'",
         ):
             self.assertIn(value, self.source)
 
