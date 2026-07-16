@@ -43,6 +43,7 @@ class F1NotebookStaticTests(unittest.TestCase):
             "'xformers': '0.0.29.post3'",
             "'torchao': '0.12.0'",
             "'numpy': '2.0.2'",
+            "'pillow': PIL.__version__",
             "https://download.pytorch.org/whl/cu124",
             "torch.ones(1, device='cuda')",
         ):
