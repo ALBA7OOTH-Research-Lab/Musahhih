@@ -45,10 +45,13 @@ compilation, and `git diff --check`.
 
 ## Not executed
 
-Kaggle kernel version 11 completed the deliberate one-step optimizer smoke on
-a Tesla P100. Peak reserved memory was 6,266,290,176 bytes and measured
-headroom was 10,793,254,912 bytes, so the frozen 1 GiB gate passed. The exact
-text-free artifact is `results/f1_p1_gpu_smoke_summary.json`.
+Kaggle kernel version 11 completed a one-step optimizer smoke on a Tesla P100.
+Peak reserved memory was 6,266,290,176 bytes and measured headroom was
+10,793,254,912 bytes. However, its log reported `max_tokens: 1`: the notebook
+had counted the processor's outer batch dimension and therefore did not prove
+that the selected record was the longest or enforce the 1,024-token limit. The
+exact text-free artifact remains at `results/f1_p1_gpu_smoke_summary.json`, but
+the longest-record gate is invalid pending a corrected rerun.
 
 The complete two-epoch pilot, checkpoint selection, private development
 generation, adapter export, and every final-test evaluation were not executed.

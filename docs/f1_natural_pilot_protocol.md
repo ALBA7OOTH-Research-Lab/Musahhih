@@ -3,12 +3,16 @@
 Status: proposed freeze for independent methodology review. No training is
 authorized by this document until it is approved and merged.
 
-Engineering gate status (2026-07-16): the deliberate one-step Kaggle P100
-smoke passed with 10,793,254,912 bytes of measured headroom, exceeding the
-frozen 1 GiB requirement. The text-free summary is committed at
-`results/f1_p1_gpu_smoke_summary.json`. This pass does not itself authorize the
-full pilot; an independent review of the frozen protocol and smoke artifact is
-still required.
+Engineering gate status (2026-07-16): Kaggle v11 completed a one-step P100
+smoke with 10,793,254,912 bytes of measured headroom, but its record-selection
+evidence was invalidated after the log reported `max_tokens: 1`. The notebook
+had measured the outer batch dimension returned by the processor rather than
+the rendered text sequence length, so record zero was not proven to be the
+longest record and the 1,024-token guard was ineffective. The exact v11
+artifact remains committed at `results/f1_p1_gpu_smoke_summary.json` as
+historical evidence, but it is not an accepted longest-record gate. Full
+training remains unauthorized until the corrected smoke passes and the
+independent reviewer reaffirms the decision against the corrected commit.
 
 Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/26
 
@@ -264,6 +268,17 @@ Official implementation references:
 
 - https://github.com/unslothai/unsloth-zoo/blob/main/unsloth_zoo/compiler.py
 - https://docs.pytorch.org/docs/stable/generated/torch.compile.html
+
+### Token-length guard correction (2026-07-16)
+
+The v11 execution log revealed that the pre-run token counter returned one for
+every record because `len(processor(...).input_ids)` counted a batch dimension.
+The notebook now renders the unchanged Gemma chat text, counts the flat IDs
+returned by the processor's text tokenizer, rejects nested/batched IDs, and
+fails if any measured sequence is implausibly shorter than two tokens. This
+restores the frozen 1,024-token rejection rule and makes `LONGEST_INDEX` select
+the actual maximum. No record, prompt, loss mask, or training hyperparameter is
+changed. The one-step smoke must be repeated before full training.
 
 ## Checkpoint and development gate
 
