@@ -3,6 +3,13 @@
 Status: proposed freeze for independent methodology review. No training is
 authorized by this document until it is approved and merged.
 
+Engineering gate status (2026-07-16): the deliberate one-step Kaggle P100
+smoke passed with 10,793,254,912 bytes of measured headroom, exceeding the
+frozen 1 GiB requirement. The text-free summary is committed at
+`results/f1_p1_gpu_smoke_summary.json`. This pass does not itself authorize the
+full pilot; an independent review of the frozen protocol and smoke artifact is
+still required.
+
 Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/26
 
 ## Purpose and decision boundary
