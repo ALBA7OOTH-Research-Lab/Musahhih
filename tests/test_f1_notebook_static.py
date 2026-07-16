@@ -36,5 +36,21 @@ class F1NotebookStaticTests(unittest.TestCase):
         self.assertIn("CPU is not a training fallback", self.source)
         self.assertNotIn('"gpuType": "T4"', self.source)
 
+    def test_p100_stack_is_explicit_and_probed(self):
+        for value in (
+            "'torch': '2.6.0'",
+            "'torchvision': '0.21.0'",
+            "'xformers': '0.0.29.post3'",
+            "'torchao': '0.12.0'",
+            "https://download.pytorch.org/whl/cu124",
+            "torch.ones(1, device='cuda')",
+        ):
+            self.assertIn(value, self.source)
+
+    def test_private_kaggle_transport_keeps_checksum_archive(self):
+        self.assertIn("KAGGLE_PRIVATE_SOURCE_DIR", self.source)
+        self.assertIn("QALB-0.9.1-Dec03-2021-SharedTasks.zip.bin", self.source)
+        self.assertIn("data/raw/qalb/QALB-0.9.1-Dec03-2021-SharedTasks.zip", self.source)
+
     def test_test_sets_are_explicitly_prohibited(self):
         self.assertIn("QALB test and Nahw-Passage are never loaded here", self.source)

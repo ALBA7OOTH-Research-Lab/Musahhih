@@ -1,6 +1,6 @@
 # F1-P1 QLoRA workflow static validation
 
-Date: 2026-07-15
+Date: 2026-07-16
 
 Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/32
 
@@ -21,14 +21,20 @@ Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/32
   tie within `1e-6` in favor of epoch 1.
 - QALB test and Nahw-Passage are not workflow inputs.
 
-Repository validation passed with 87 `unittest` tests and 40 subtests, script
+The P100 compatibility amendment pins PyTorch 2.6.0/CUDA 12.4,
+xFormers 0.0.29.post3, torchvision 0.21.0, and torchao 0.12.0 before the first
+PyTorch import when the assigned GPU is a P100. It immediately executes and
+synchronizes a CUDA tensor probe. The separate private archive Dataset restores
+the exact registered ZIP name before the existing checksum gate.
+
+Repository validation passed with 93 `unittest` tests, script
 compilation, and `git diff --check`.
 
 ## Not executed
 
-No CUDA model load, LoRA attachment, token-length pass over private records,
-forward/backward step, GPU-memory measurement, training, checkpoint selection,
-generation, or adapter export was executed locally. Therefore this report makes
-no claim about Kaggle GPU compatibility, VRAM use, runtime, loss, or correction
-quality. Those claims require the deliberate free-Kaggle smoke and later approved
-run.
+Kaggle version 5 assigned a P100 and completed private record preparation, but
+the pre-amendment PyTorch build failed during model loading because it omitted
+`sm_60` kernels. No optimizer step, GPU-memory summary, training, checkpoint
+selection, generation, or adapter export ran. The amended dependency stack has
+not yet passed the deliberate Kaggle smoke, so this report makes no feasibility,
+runtime, loss, or correction-quality claim.

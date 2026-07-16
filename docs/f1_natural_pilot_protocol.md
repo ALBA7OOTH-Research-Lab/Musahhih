@@ -196,6 +196,31 @@ TRL, datasets, and CUDA before F1-P1 becomes executable. Any package change afte
 the first valid seed creates a new protocol revision; it cannot be mixed into
 F1-P1 results.
 
+### Pre-run P100 compatibility amendment (2026-07-16)
+
+Kaggle version 5 assigned a Tesla P100 (`sm_60`) and failed before the first
+optimizer step because the then-current PyTorch binary contained kernels only
+for `sm_70` and newer. Private archive verification and record preparation had
+already passed; no smoke summary or training result was produced. For a P100
+worker only, install the official PyTorch 2.6.0 CUDA 12.4 wheel set before the
+first `torch` import, with `torchvision==0.21.0`, `xformers==0.0.29.post3`, and
+`torchao==0.12.0`. Immediately execute a one-element CUDA tensor operation and
+synchronize; failure keeps the gate blocked. Non-P100 workers retain their
+recorded runtime stack.
+
+The source archive may be transmitted to Kaggle as an opaque `.bin` object in
+a second private Dataset when Kaggle rejects the original `.zip` during Dataset
+processing. The notebook must restore the exact registered `.zip` filename and
+verify the existing SHA-256 before reading it. This transport workaround does
+not change corpus bytes, selection manifests, records, or research settings.
+
+This amendment is based on the official PyTorch previous-version wheel table,
+the xFormers release compatibility record, and the torchao compatibility record:
+
+- https://docs.pytorch.org/get-started/previous-versions/
+- https://github.com/facebookresearch/xformers/blob/main/CHANGELOG.md
+- https://github.com/pytorch/ao/issues/2919
+
 ## Checkpoint and development gate
 
 Select between the epoch-1 and epoch-2 checkpoints using lowest mean
