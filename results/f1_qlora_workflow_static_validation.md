@@ -22,8 +22,8 @@ Issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/32
 - QALB test and Nahw-Passage are not workflow inputs.
 
 The P100 compatibility amendment pins PyTorch 2.6.0/CUDA 12.4,
-xFormers 0.0.29.post3, torchvision 0.21.0, and torchao 0.12.0 before the first
-PyTorch import when the assigned GPU is a P100. It immediately executes and
+xFormers 0.0.29.post3, torchvision 0.21.0, torchao 0.12.0, and NumPy 2.0.2
+before the first PyTorch import when the assigned GPU is a P100. It immediately executes and
 synchronizes a CUDA tensor probe. The separate private archive Dataset restores
 the exact registered ZIP name before the existing checksum gate.
 
