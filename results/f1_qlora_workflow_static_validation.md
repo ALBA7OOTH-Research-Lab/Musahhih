@@ -34,6 +34,12 @@ The workflow checks the collated labels directly before any training step;
 private text is not printed. This change follows the failure observed after
 successful model load and LoRA attachment in Kaggle smoke run v9.
 
+Kaggle smoke run v10 reached the one-step trainer but TorchInductor attempted
+to use Triton, which does not support the P100's CUDA capability 6.0. The P100
+bootstrap now sets Unsloth's compile-disable switch before any Unsloth import
+and records the resolved eager-mode state. Other GPU paths retain their normal
+Unsloth compilation behavior.
+
 Repository validation passed with 94 `unittest` tests, script
 compilation, and `git diff --check`.
 
