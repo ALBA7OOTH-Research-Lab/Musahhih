@@ -78,6 +78,8 @@ class F1NotebookStaticTests(unittest.TestCase):
             "isinstance(input_ids[0], (list, tuple))",
             "if not lengths or min(lengths) < 2:",
             "LONGEST_INDEX = max(range(len(lengths)), key=lengths.__getitem__)",
+            "'validated_sequence_lengths': True",
+            "'selection': selection_metadata",
         ):
             self.assertIn(value, self.source)
         self.assertNotIn("len(processor(processor.apply_chat_template", self.source)

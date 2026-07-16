@@ -277,8 +277,11 @@ The notebook now renders the unchanged Gemma chat text, counts the flat IDs
 returned by the processor's text tokenizer, rejects nested/batched IDs, and
 fails if any measured sequence is implausibly shorter than two tokens. This
 restores the frozen 1,024-token rejection rule and makes `LONGEST_INDEX` select
-the actual maximum. No record, prompt, loss mask, or training hyperparameter is
-changed. The one-step smoke must be repeated before full training.
+the actual maximum. The generated smoke summary records the training-record
+count, maximum token count, longest index, and a validated-sequence-length flag
+so the selection evidence does not depend on a separate private log. No record,
+prompt, loss mask, or training hyperparameter is changed. The one-step smoke
+must be repeated before full training.
 
 ## Checkpoint and development gate
 
