@@ -53,6 +53,10 @@ that the selected record was the longest or enforce the 1,024-token limit. The
 exact text-free artifact remains at `results/f1_p1_gpu_smoke_summary.json`, but
 the longest-record gate is invalid pending a corrected rerun.
 
+The corrected workflow also embeds text-free selection evidence directly in
+the smoke JSON: training-record count, maximum token count, longest index, and
+an explicit validated-sequence-length flag.
+
 The complete two-epoch pilot, checkpoint selection, private development
 generation, adapter export, and every final-test evaluation were not executed.
 No correction-quality score or full-training feasibility claim is made here.
