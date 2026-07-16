@@ -28,7 +28,13 @@ before the first PyTorch import when the assigned GPU is a P100. It immediately 
 synchronizes a CUDA tensor probe. The separate private archive Dataset restores
 the exact registered ZIP name before the existing checksum gate.
 
-Repository validation passed with 93 `unittest` tests, script
+Gemma 3 response-only masking now runs through Unsloth's vision-aware data
+collator, with completion-only loss and the frozen user/model turn markers.
+The workflow checks the collated labels directly before any training step;
+private text is not printed. This change follows the failure observed after
+successful model load and LoRA attachment in Kaggle smoke run v9.
+
+Repository validation passed with 94 `unittest` tests, script
 compilation, and `git diff --check`.
 
 ## Not executed
