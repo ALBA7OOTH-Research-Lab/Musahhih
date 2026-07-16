@@ -41,7 +41,7 @@ class F1NotebookStaticTests(unittest.TestCase):
             "'torch': '2.6.0'",
             "'torchvision': '0.21.0'",
             "'xformers': '0.0.29.post3'",
-            "'torchao': '0.12.0'",
+            "'torchao': '0.16.0'",
             "'numpy': '2.0.2'",
             "'pillow': PIL.__version__",
             "https://download.pytorch.org/whl/cu124",
