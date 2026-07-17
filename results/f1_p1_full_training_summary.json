@@ -1,0 +1,56 @@
+{
+  "protocol_id": "F1-P1",
+  "recorded_date": "2026-07-17",
+  "execution": {
+    "platform": "Kaggle",
+    "kernel": "univverssal/musahhih-f1-p1-full-training",
+    "kernel_version": 3,
+    "kernel_status": "complete",
+    "repository_commit": "b18f78a",
+    "gpu": "Tesla P100-PCIE-16GB"
+  },
+  "model": {
+    "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+    "load_in_4bit": true,
+    "max_sequence_length": 1024,
+    "trainable_parameters": 32788480,
+    "total_parameters": 4332867952
+  },
+  "data": {
+    "train_records": 2000,
+    "development_records": 975,
+    "seed": 3407,
+    "train_selection_sha256": "03588f135e82575f8de9030b948d6b59cd14e3ca9c218207b0f33885d1f8e2d1",
+    "development_selection_sha256": "510d81f828d1a58d62ea73615cdde09831adab1c84abfd01d79d587c6192fcbe"
+  },
+  "training": {
+    "epochs": 2,
+    "optimizer_steps": 250,
+    "batch_size_per_device": 1,
+    "gradient_accumulation_steps": 16,
+    "effective_batch_size": 16,
+    "evaluations": [
+      {
+        "epoch": 1.0,
+        "step": 125,
+        "development_assistant_token_loss": 0.33018210530281067
+      },
+      {
+        "epoch": 2.0,
+        "step": 250,
+        "development_assistant_token_loss": 0.3194449543952942
+      }
+    ]
+  },
+  "checkpoint_selection": {
+    "rule": "lowest development assistant-token loss; ties within 1e-6 choose epoch 1",
+    "selected_checkpoint": "checkpoint-250"
+  },
+  "safeguards": {
+    "contains_corpus_text": false,
+    "qalb_test_used": false,
+    "nahw_passage_used": false,
+    "private_development_generation_executed": false,
+    "correction_metric_reported": false
+  }
+}
