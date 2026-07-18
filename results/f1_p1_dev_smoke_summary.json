@@ -1,0 +1,60 @@
+{
+  "protocol_id": "F1-P1",
+  "recorded_date": "2026-07-18",
+  "gate": "private_25_record_development_smoke",
+  "gate_status": "passed",
+  "execution": {
+    "platform": "Kaggle",
+    "kernel": "univverssal/musahhih-f1-p1-private-dev-smoke",
+    "kernel_version": 2,
+    "kernel_status": "complete",
+    "repository_commit": "e11b86c05ad79c6670432076294a05f0d6b2e440",
+    "gpu": "Tesla P100-PCIE-16GB"
+  },
+  "checkpoint": {
+    "selected_checkpoint": "checkpoint-250",
+    "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+    "checkpoint_selection_sha256": "898c19d5dcead1f6c8f0ed27b6e8c5c6b9ebaec2f1b2a9909e58d8c9758ee123",
+    "adapter_config_sha256": "db19ef8bf4852698103dde20cd50b4429ca102ac96980f7939ecc4cff2049c4d"
+  },
+  "records": {
+    "expected": 25,
+    "completed": 25,
+    "selected_record_ids_sha256": "52a2f03a522d70bc5ed20b2e0c112fb52305bb1b04f8c9b222915562a16b70e7",
+    "private_predictions_sha256": "c5266bfaa70107564ce030afe0cbdd2868ee8d613ee558dad5aba711c08fe2a8"
+  },
+  "decoding": {
+    "do_sample": false,
+    "temperature_argument": null,
+    "max_new_tokens": 256
+  },
+  "parsing": {
+    "empty_output_count": 0,
+    "warning_counts": {
+      "outer_formatting_removed": 1
+    }
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "cuda": "12.4",
+    "cuda_capability": "6.0",
+    "packages": {
+      "torch": "2.6.0+cu124",
+      "transformers": "4.56.2",
+      "unsloth": "2026.7.3",
+      "accelerate": "1.13.0",
+      "peft": "0.19.1",
+      "trl": "0.22.2",
+      "datasets": "4.3.0",
+      "bitsandbytes": "0.49.2"
+    }
+  },
+  "safeguards": {
+    "contains_corpus_text": false,
+    "private_development_metric_published": false,
+    "checkpoint_selection_changed": false,
+    "qalb_test_used": false,
+    "nahw_passage_used": false,
+    "training_executed_in_smoke_kernel": false
+  }
+}
