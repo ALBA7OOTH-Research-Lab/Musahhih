@@ -1,6 +1,6 @@
 {
   "protocol_id": "F1-P1",
-  "pilot_gate_status": "pending_private_25_record_development_smoke",
+  "pilot_gate_status": "passed",
   "recorded_date": "2026-07-17",
   "execution": {
     "platform": "Kaggle",

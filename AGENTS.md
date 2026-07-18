@@ -16,14 +16,14 @@ Treat this file as a map, not a full manual. Follow the linked docs for details.
 
 ## Current milestone
 
-Freeze and review the `F1-P1` natural-data fine-tuning pilot protocol before
-implementing or running training. The baseline and private QALB manifest stages
-are complete; QALB text and derived training artifacts remain private.
+`F1-P1` natural-data training and its frozen private development smoke are
+complete. The selected private adapter is `checkpoint-250`; QALB text, model
+responses, and adapter artifacts remain private.
 
-Do not begin fine-tuning until the protocol, private adapter, dependency pins,
-privacy checks, and free-Kaggle GPU smoke gate are independently reviewed. The
-proposed `XG` synthetic operator remains disabled pending qualified linguistic
-review.
+Freeze and review the selected-adapter evaluation protocol before any final
+test execution. Do not tune prompts, parsing, checkpoints, or experiment
+decisions from Nahw-Passage or QALB test results. The proposed `XG` synthetic
+operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 
