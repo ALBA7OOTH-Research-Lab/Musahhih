@@ -86,3 +86,9 @@ class F1NotebookStaticTests(unittest.TestCase):
 
     def test_test_sets_are_explicitly_prohibited(self):
         self.assertIn("QALB test and Nahw-Passage are never loaded here", self.source)
+
+    def test_private_dev_smoke_matches_frozen_decoding_contract(self):
+        self.assertIn("do_sample=False, max_new_tokens=256", self.source)
+        self.assertIn("return_dict=True", self.source)
+        self.assertIn("dev_predictions.jsonl", self.source)
+        self.assertNotIn("max_new_tokens=32", self.source)
