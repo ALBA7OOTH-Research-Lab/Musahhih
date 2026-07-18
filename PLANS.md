@@ -8,7 +8,7 @@
 - [x] Add a fail-closed adapter evaluator and paired-comparison utilities.
 - [x] Test all gates with synthetic fixtures only and validate the selected
   adapter's text-free config/selection hashes against the private audit copy.
-- [ ] Run repository validation, open a pull request, and request an independent
-  GO/NO-GO review tied to the merged commit.
+- [x] Run repository validation and open pull request #60.
+- [ ] Obtain an independent GO/NO-GO review tied to the merged commit.
 
 This task must not execute model inference on Nahw-Passage.
