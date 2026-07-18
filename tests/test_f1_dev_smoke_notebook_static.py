@@ -31,6 +31,7 @@ class F1DevSmokeNotebookStaticTests(unittest.TestCase):
             "F1-P1-dev-smoke|3407|",
             "do_sample=False, max_new_tokens=256",
             "'temperature_argument': None",
+            "'content': [{'type': 'text', 'text': message['content']}]",
             "[:25]",
             "checkpoint-250",
         ):
