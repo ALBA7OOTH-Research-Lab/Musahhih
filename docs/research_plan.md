@@ -121,6 +121,12 @@ Also measure:
 - ArabicMMLU or another general Arabic benchmark before and after fine-tuning
 - inference cost and adapter size
 
+The proposed F1-P1 overcorrection/capability measurement is frozen in
+[`f1_capability_retention_protocol.md`](f1_capability_retention_protocol.md):
+154 reconstructed QALB-2015 L2 development targets and a balanced 1,000-record
+ArabicMMLU test subset, with B0 and F1-P1 executed in one matched private P100
+runtime. It remains non-executable until merged-commit review and explicit GO.
+
 ## Phase E — Paper contribution
 
 A credible paper should contribute:

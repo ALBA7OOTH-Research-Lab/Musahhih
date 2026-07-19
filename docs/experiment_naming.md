@@ -47,7 +47,7 @@ The accepted pattern is:
 | `B0` | Untouched zero-shot model | `B0-P1` |
 | `B1` | Untouched few-shot model | `B1-P1` |
 | `B2` | Untouched expert-style prompted model | `B2-P1` |
-| `F1` | Natural-data fine-tuning | `F1-P1`; checkpoint-250 selected on private development loss, final evaluation pending |
+| `F1` | Natural-data fine-tuning | `F1-P1`; training, checkpoint selection, and frozen Nahw-Passage evaluation complete; safety diagnostics proposed |
 | `F2` | Synthetic-data fine-tuning | Not yet registered |
 | `F3` | Mixed natural and synthetic fine-tuning | Not yet registered |
 | `F4` | Registered mixture or data-size ablation | Not yet registered |
@@ -65,6 +65,7 @@ Use these values unless a future protocol amendment registers another value:
 | Nahw-Passage | `nahw-passage` |
 | QALB-2014 development | `qalb14-dev` |
 | QALB-2015 L2 development | `qalb15-l2-dev` |
+| Matched overcorrection/capability diagnostics | `safety-diagnostics` |
 
 The frozen B0 run predates this convention. Its canonical retrospective ID is:
 

@@ -1,19 +1,18 @@
 # Active implementation plan
 
-## Issues #59 and #61 — freeze and execute F1-P1 selected-adapter evaluation
+## Issue #63 — F1 capability-retention and overcorrection protocol
 
-- [x] Confirm the selected checkpoint, immutable base revision, adapter hashes,
-  accepted B0 settings, and Nahw-Passage checksum.
-- [x] Write the pre-registered evaluation and retry protocol.
-- [x] Add a fail-closed adapter evaluator and paired-comparison utilities.
-- [x] Test all gates with synthetic fixtures only and validate the selected
-  adapter's text-free config/selection hashes against the private audit copy.
-- [x] Run repository validation and open pull request #60.
-- [x] Obtain GO tied to merged commit
-  `240ccfe0ae6370e2b7003a41ff4b703390f6f831`.
-- [x] Execute the single authorized 511-record run as Kaggle kernel version 1.
-- [x] Independently recompute record alignment, hashes, counts, and paired
-  statistics from the downloaded private predictions.
-- [x] Open corpus-text-free result audit PR #62; merging it closes issue #61.
+- [x] Close the completed F1-P1 final-evaluation issue and merge its
+  corpus-text-free audit.
+- [x] Audit current official ArabicMMLU source, license, task format, revision,
+  and split counts.
+- [x] Identify a QALB development-only correct-input construction independent
+  of the F1 checkpoint-selection split.
+- [x] Freeze dataset selection, prompts, metrics, matched runtime, and retry
+  rules in `docs/f1_capability_retention_protocol.md`.
+- [x] Add deterministic preparation/evaluation utilities and synthetic tests.
+- [ ] Validate, open a pull request, and obtain GO/NO-GO tied to its merged
+  commit before any model inference.
 
-No repeat run or test-driven protocol change is authorized.
+Nahw-Passage and QALB test must not be accessed by this task. XG remains
+disabled pending qualified linguistic review.
