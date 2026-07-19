@@ -314,6 +314,12 @@ malformed, or inconsistent with the selected stage. The config contains no
 corpus text, but remains Git-ignored. No final-test evaluation is part of that
 notebook.
 
+Two approved F2-P1 smoke attempts have stopped at preflight without loading a
+model or running an optimizer step. The current repair supports Kaggle's nested
+`/kaggle/input/datasets/<owner>/<dataset>/...` mounts while retaining unique-
+file and checksum gates. A fresh exact-commit GO on issue #69 is required
+before another GPU attempt; no prior GO authorizes a retry.
+
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
 3. Natural-data LoRA/QLoRA fine-tuning

@@ -3,10 +3,12 @@
 Recorded: 2026-07-19
 
 Status: private record assembly and static workflow implementation complete.
-The first authorized F2-P1 smoke attempt failed during notebook syntax preflight
-before model loading or an optimizer step. No inference ran, and neither
-Nahw-Passage nor QALB test was accessed. A repaired workflow and a fresh exact-
-commit GO on issue #69 are required before another GPU attempt.
+Two authorized F2-P1 smoke attempts stopped during fail-closed preflight: the
+first on a malformed private execution copy, and the second on an obsolete
+flat Kaggle input-mount assumption. Neither reached model loading or an
+optimizer step. No inference ran, and neither Nahw-Passage nor QALB test was
+accessed. A repaired workflow and a fresh exact-commit GO on issue #69 are
+required before another GPU attempt.
 
 ## Frozen private inputs
 
@@ -58,7 +60,7 @@ The workflow:
   assistant-token loss, with the registered tie rule; and
 - never loads a final test or generates evaluation predictions.
 
-## First authorized smoke attempt and repair
+## Authorized smoke attempts and repairs
 
 Issue #69 authorized only the F2-P1 longest-record one-step smoke at workflow
 commit `c4d26b98264e8067a8584fb20e13e077af151778`. The private Kaggle execution
@@ -77,6 +79,27 @@ text-free private JSON file. The public notebook remains disabled and
 syntactically unchanged in Kaggle. This is an execution-safety repair only; it
 does not change the frozen data, model, training, checkpoint, or evaluation
 method.
+
+Issue #69 then authorized the same limited smoke at workflow commit
+`e86827d00f5af028927cac6d654f86fcaf6515d1`. The repaired activation config and
+repository-commit gates passed. Kaggle mounted the private record file under
+its current nested `/kaggle/input/datasets/<owner>/<dataset>/...` layout, while
+the notebook still checked the older flat dataset directory. Private record
+discovery therefore found zero files and failed before package installation,
+model loading, LoRA attachment, trainer construction, or an optimizer step.
+
+The private failed version is named
+`failed-preflight-kaggle-mount-layout-no-model`, and its P100 session was
+stopped. No smoke summary, metric, adapter, or checkpoint was produced. The GO
+was closed conservatively; no runtime symlink, notebook hot-patch, or retry was
+used.
+
+The second repair searches recursively under the canonical `/kaggle/input`
+root, supports both flat and nested Kaggle mount layouts, and still requires
+exactly one file with the expected name. Duplicate Kaggle matches fail closed;
+only when Kaggle contains no match does local ignored storage serve as the
+development fallback. Existing checksum, schema, count, role, and provenance
+validation remains unchanged.
 
 ## What this audit does not establish
 
