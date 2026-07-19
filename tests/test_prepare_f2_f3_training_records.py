@@ -128,20 +128,12 @@ class F2F3TrainingRecordTests(unittest.TestCase):
     def test_private_output_is_idempotent_and_refuses_difference(self):
         payloads, _ = self.build_fixture()
         with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory)
-            private_root = output.parent.resolve()
             with patch(
                 "scripts.prepare_f2_f3_training_records.ROOT",
-                private_root.parent,
+                Path(directory),
             ):
-                # safe_private_output expects ROOT/data/processed; use that shape.
-                target = private_root.parent / "data/processed/test-output"
+                target = Path(directory) / "data/processed/test-output"
                 target.mkdir(parents=True)
-                self.addCleanup(
-                    lambda: __import__("shutil").rmtree(
-                        private_root.parent / "data", ignore_errors=True
-                    )
-                )
                 write_idempotent(target, payloads)
                 write_idempotent(target, payloads)
                 changed = dict(payloads)
