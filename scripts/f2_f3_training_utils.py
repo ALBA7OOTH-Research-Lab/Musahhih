@@ -31,6 +31,14 @@ FULL_TRAINING_CONFIRMATION = {
     "F2-P1": "RUN_F2_P1_TWO_EPOCH_TRAINING",
     "F3-P1": "RUN_F3_P1_TWO_EPOCH_TRAINING",
 }
+P100_CORE_STACK = {
+    "torch": "2.6.0",
+    "torchvision": "0.21.0",
+    "xformers": "0.0.29.post3",
+    "torchao": "0.16.0",
+    "numpy": "2.0.2",
+}
+P100_HEAVY_STACK = ("torch", "torchvision", "numpy")
 
 
 class F2F3TrainingGateError(ValueError):
@@ -49,6 +57,53 @@ def validate_arm(arm: str) -> str:
     if arm not in ARMS:
         raise F2F3TrainingGateError(f"Arm must be one of {ARMS}")
     return arm
+
+
+def p100_stack_report(
+    installed_versions: dict[str, str | None],
+    packages: tuple[str, ...] | None = None,
+) -> dict:
+    """Describe compatibility without importing or changing runtime packages."""
+    if not isinstance(installed_versions, dict):
+        raise F2F3TrainingGateError("Installed P100 package versions are invalid")
+    selected = tuple(P100_CORE_STACK) if packages is None else packages
+    if not selected or any(package not in P100_CORE_STACK for package in selected):
+        raise F2F3TrainingGateError("Requested P100 package set is invalid")
+    mismatches = {}
+    for package in selected:
+        expected = P100_CORE_STACK[package]
+        installed = installed_versions.get(package)
+        base_version = (
+            installed.split("+", 1)[0] if isinstance(installed, str) else None
+        )
+        if base_version != expected:
+            mismatches[package] = {"expected": expected, "installed": installed}
+    return {
+        "compatible": not mismatches,
+        "required": {package: P100_CORE_STACK[package] for package in selected},
+        "installed": {
+            package: installed_versions.get(package) for package in selected
+        },
+        "mismatches": mismatches,
+    }
+
+
+def validate_p100_core_stack(
+    installed_versions: dict[str, str | None],
+    packages: tuple[str, ...] | None = None,
+) -> dict:
+    """Fail closed unless the final runtime matches the frozen P100 stack."""
+    report = p100_stack_report(installed_versions, packages)
+    mismatches = report["mismatches"]
+    if mismatches:
+        details = ", ".join(
+            f"{package}={values['installed']!r} (expected {values['expected']})"
+            for package, values in sorted(mismatches.items())
+        )
+        raise F2F3TrainingGateError(
+            f"Pinned Kaggle P100 core stack mismatch after setup: {details}"
+        )
+    return report
 
 
 def locate_private_input(
@@ -233,15 +288,19 @@ __all__ = [
     "MIN_HEADROOM_BYTES",
     "MODEL_ID",
     "MODEL_REVISION",
+    "P100_CORE_STACK",
+    "P100_HEAVY_STACK",
     "SEED",
     "TRAINING_CONFIG",
     "TRAIN_RECORDS",
     "memory_gate",
     "locate_private_input",
+    "p100_stack_report",
     "require_full_training_confirmation",
     "require_execution_approval",
     "require_smoke_confirmation",
     "run_id",
     "validate_arm",
+    "validate_p100_core_stack",
     "validate_private_records",
 ]

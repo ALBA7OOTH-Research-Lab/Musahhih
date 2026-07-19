@@ -112,17 +112,27 @@ class F2F3NotebookStaticTests(unittest.TestCase):
 
     def test_p100_stack_and_gpu_probe_match_f1(self):
         for value in (
-            "'torch': '2.6.0'",
-            "'torchvision': '0.21.0'",
-            "'xformers': '0.0.29.post3'",
-            "'torchao': '0.16.0'",
-            "'numpy': '2.0.2'",
+            "P100_STACK = dict(P100_CORE_STACK)",
             "https://download.pytorch.org/whl/cu124",
             "torch.ones(1, device='cuda')",
             "os.environ['UNSLOTH_COMPILE_DISABLE'] = '1'",
             "CPU is not a training fallback",
         ):
             self.assertIn(value, self.source)
+
+    def test_p100_preflight_conditionally_installs_without_force_reinstall(self):
+        for value in (
+            "p100_stack_report(INITIAL_P100_STACK, P100_HEAVY_STACK)",
+            "validate_p100_core_stack(POST_HEAVY_STACK, P100_HEAVY_STACK)",
+            "validate_p100_core_stack(FINAL_P100_STACK)",
+            "torch.version.cuda != '12.4'",
+            "documented pinned original environment",
+            "'--progress-bar', 'off'",
+            "'heavy_install_performed': not INITIAL_HEAVY_REPORT['compatible']",
+            "'core_stack': CORE_STACK_STATE",
+        ):
+            self.assertIn(value, self.source)
+        self.assertNotIn("--force-reinstall", self.source)
 
     def test_model_lora_and_training_contract_are_frozen(self):
         for value in (
