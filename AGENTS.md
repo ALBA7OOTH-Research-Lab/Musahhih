@@ -24,8 +24,9 @@ responses, and adapter artifacts remain private.
 
 Do not tune prompts, parsing, checkpoints, training data, or experiment
 decisions from the completed Nahw-Passage or safety-diagnostic results. The next
-milestone is to resolve and freeze the synthetic/mixed F2/F3 study. The proposed
-`XG` synthetic operator remains disabled pending qualified linguistic review.
+milestone is issue #67: validate and independently review the canonical
+Tibyan-derived F2/F3 manifest/protocol before any GPU work. The proposed `XG`
+synthetic operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 

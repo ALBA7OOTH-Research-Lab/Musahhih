@@ -167,4 +167,18 @@ manifest before modeling, preserve CC BY 4.0 attribution/license notices, define
 a project split without touching Nahw-Passage, rerun exact QALB overlap checks,
 and resolve the token-count discrepancy before publication.
 
+The proposed task-specific view is now documented in
+[`tibyan_f2_f3_protocol.md`](tibyan_f2_f3_protocol.md). The canonical
+corpus-text-free audit of the exact release found that a strict whole-pair
+single-substitution rule would retain only 3 of 6,192 pairs and is therefore
+not viable for the matched 2,000-record study. The draft companion protocol
+instead proposes a minimum-edit alignment rule that retains only substitutions
+forced across every optimal alignment, requires a unique erroneous token in the
+passage, and keeps at most one seeded record per released pair. The guarded
+implementation retained 6,165 candidate pairs, found 6,156 exact-side connected
+groups and zero exact full-side overlaps with the registered QALB or Nahw hash
+sets, and produced a 2,000-record selection. All selected records passed the
+pinned Gemma 1,024-token guard. Independent exact-commit review remains required
+before F2/F3 can be frozen or executed.
+
 See `results/tibyan_dataset_intake.md` for the corpus-text-free intake details.

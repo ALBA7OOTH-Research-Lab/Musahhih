@@ -1,8 +1,10 @@
 # Synthetic Arabic GEC Data Protocol
 
-Status: draft for methodology review. No synthetic records may be generated and
-no model may be fine-tuned from this document until the protocol is reviewed and
-its status is changed to frozen.
+Status: general methodology registered; no arm is executable from this document
+alone. The proposed Tibyan-derived matched view is specified separately in
+[`tibyan_f2_f3_protocol.md`](tibyan_f2_f3_protocol.md) and remains draft NO-GO
+pending independent exact-commit review. No model may be fine-tuned from either
+document until that gate passes.
 
 GitHub issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/16
 
@@ -250,6 +252,12 @@ treated as expert rationales. Evaluate correction and explanation separately.
 - [ ] Confirm the matrix is feasible on free compute; reduce it before running
       if needed.
 - [ ] Obtain independent methodology review and record the approving commit.
+
+For the Tibyan released-data path, the companion protocol resolves the proposed
+alignment, group, project-split, nested-selection, matched-budget, and staged-
+design rules. Its own freeze checklist remains controlling. The project-created
+`XG` path remains disabled and is not an alternative implementation of the
+Tibyan arm.
 
 Only then may an implementation issue generate synthetic candidates. Fine-
 tuning remains a later, separately reviewed task.

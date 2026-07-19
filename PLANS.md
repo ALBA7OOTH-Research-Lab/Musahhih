@@ -1,18 +1,20 @@
 # Active implementation plan
 
-## Issue #65 — execute matched F1 safety diagnostics
+## Issue #67 — freeze Tibyan-derived F2/F3 matched methodology
 
-- [x] Record project-owner GO for merged protocol commit
-  `45fd0640184af7e14abd99124e75923623d770c5`.
-- [x] Create a separate execution issue with exact inputs, hashes, runtime,
-  run ID, approval, privacy, and retry rules.
-- [x] Verify private Kaggle inputs and run the evaluator without `--execute`.
-- [x] Execute the single matched B0/F1-P1 P100 run exactly once if preflight
-  passes; preserve any failure as required by the frozen protocol.
-- [x] Download private artifacts and independently recompute hashes, alignment,
-  counts, paired statistics, and safeguards without logging corpus text.
-- [x] Commit a corpus-text-free result audit, run repository validation, open a
-  result PR, merge it, and synchronize GitHub and Notion.
+- [x] Re-verify the authoritative Tibyan archive/final-file hashes and compute a
+  corpus-text-free eligibility/duplicate/length audit.
+- [x] Define stable record IDs, exact-source connected groups, and a seeded
+  Musahhih project split without calling it an official Tibyan split.
+- [x] Run private exact-overlap checks against frozen QALB and Nahw registries;
+  exclude any test-connected group from modeling eligibility.
+- [x] Resolve matched `N`, F2/F3 composition, the common checkpoint-selection
+  rule, seeds, budgets, metrics, privacy, attribution, and retry rules.
+- [x] Update the synthetic protocol and dataset/experiment documentation with
+  aggregate-only evidence and guarded implementation acceptance criteria.
+- [ ] Validate, open a methodology PR, obtain independent review and exact-
+  commit GO, and synchronize GitHub and Notion before GPU work.
 
-Do not use Nahw-Passage or QALB test, and do not train, tune, select, merge,
-retry from a score, or activate XG/F2/F3 in this task.
+Do not train, generate synthetic records, run model inference, inspect final-test
+results, or activate XG/F2/F3 in this task. Corpus text and private data remain
+ignored; public artifacts contain only aggregate metadata and hashes.

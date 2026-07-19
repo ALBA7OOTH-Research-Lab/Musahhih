@@ -131,6 +131,16 @@ pre-registered interval spanned -3.2 to +1.9 points. See
 [`../results/f1_safety_diagnostics_audit.md`](../results/f1_safety_diagnostics_audit.md).
 This diagnostic must not be repeated or used to revise F1-P1.
 
+The proposed released-synthetic/mixed implementation is now narrowed to the
+Tibyan-derived highlighted-token view in
+[`tibyan_f2_f3_protocol.md`](tibyan_f2_f3_protocol.md). Its canonical private
+manifest contains a nested 2,000-record synthetic selection after deterministic
+alignment, grouping, project splitting, and exact hash-overlap checks. It remains
+NO-GO pending independent exact-commit review; all 2,000 selected records passed
+the pinned Gemma 1,024-token formatting gate.
+The existing F1 test results predate this companion protocol, so the paper must
+disclose the staged design and cannot call all arms simultaneously preregistered.
+
 ## Phase E — Paper contribution
 
 A credible paper should contribute:

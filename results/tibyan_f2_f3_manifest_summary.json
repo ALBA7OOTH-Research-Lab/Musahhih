@@ -1,0 +1,85 @@
+{
+  "alignment": {
+    "forced_substitution_edges": 179503,
+    "pairs_with_forced_substitution": 6167,
+    "pairs_with_unique_error_forced_substitution": 6165,
+    "token_edit_distance": {
+      "maximum": 172,
+      "median": 51,
+      "minimum": 0
+    },
+    "unique_error_forced_substitution_edges": 132900,
+    "whole_pair_classification": {
+      "eligible_single_substitution": 3,
+      "identical": 2,
+      "multiple_token_differences": 1689,
+      "token_count_mismatch": 4498
+    }
+  },
+  "candidate_records": 6165,
+  "connected_groups": 6156,
+  "contains_corpus_text": false,
+  "f2_selection_record_id_sha256": "f56b749b19b1fbf0427a9f8af14011a19c6107fc82ef39a8e16399f45d3018be",
+  "f2_train_records": 2000,
+  "f3_synthetic_nested_records": 1000,
+  "f3_synthetic_selection_record_id_sha256": "1e5ad4dca40667197461ac589df25fd1c239f04bb4d093661235b41b8d03ae8f",
+  "f3_natural_nested_selection": {
+    "all_2000_record_id_sha256": "cad5f75e3e81d8623df8add6aacad8716c49b12e3dde277b8a2fceea62265530",
+    "first_1000_record_id_sha256": "7a21b02232163752188d7a9cd0f8e9c11f4e3bbbd26d3d3cd6f70df0d7ba7fd2",
+    "f1_train_selection_sha256": "03588f135e82575f8de9030b948d6b59cd14e3ca9c218207b0f33885d1f8e2d1",
+    "records": 1000
+  },
+  "formatted_token_lengths": {
+    "contains_corpus_text": false,
+    "length_manifest_sha256": "a518a43d7f7a5de317f039f16b30e80587539b0a7da7ca0acd35fba3726ab5b1",
+    "longest_record_id": "tibyan-14623621-ca2116f4fb4c9c0513cce1eeb7be93d98eeea2ee68989ff7ea5c8590bd1500aa",
+    "maximum": 836,
+    "median": 294.5,
+    "minimum": 82,
+    "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+    "model_weights_loaded": false,
+    "over_1024": 0,
+    "p95": 477,
+    "records": 2000,
+    "requested_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+    "tokenizer_class": "GemmaTokenizerFast",
+    "tokenizer_size": 262145,
+    "training_or_inference_executed": false,
+    "transformers": "4.56.2"
+  },
+  "groups_with_multiple_records": 9,
+  "input_line_pairs": 6192,
+  "inputs": {
+    "archive_sha256": "a7f318d9c64d7d2c214a5f44ee515b70c7d1ee930178b4b6b00cf5c733b0dfda",
+    "corrected_final_sha256": "5f8fde9319df89419ade12114f14466301cafb181ce807df896fb5de2361c4e4",
+    "erroneous_final_sha256": "e3b72a45abffbf2a63da07912adc0fa0b29a41c495d609aa2b917fc4d58956a6",
+    "nahw_sha256": "97d4f5e0b75ff5848ffdff113a74676c0de607d0bb877e1f26c1bde1585a2208",
+    "qalb_registry_sha256": "e0a87eb3b6bdf9d0dca4edd29e4a4ab72b8c6a49d2e29f83aaab496147939691"
+  },
+  "largest_group": 2,
+  "license": "CC-BY-4.0",
+  "nahw_passage_role": "hash-only leakage check; test-only",
+  "overlap_excluded_records": {
+    "exact_overlap_nahw": 0,
+    "exact_overlap_qalb_test": 0,
+    "exact_overlap_qalb_train_development": 0
+  },
+  "private_output_sha256": {
+    "tibyan_dev_selection.jsonl": "3da7e1c84de879a896e15ea0a4e283b3b67013187c25249ec2e38b8cc80b2ad9",
+    "tibyan_registry.jsonl": "28ad514fe94a908d9287aa7e31dd696871a5bba77d3c41ecb6d1029784900553",
+    "tibyan_train_selection.jsonl": "395d0554d8836c08727144ec44e1011cceeb19b6c7f90973655882047c6bdb0a"
+  },
+  "private_summary_sha256": "3623d05081fd418c023a5c84911cb7cbf67db2e27feaf79a34a7bb4f83b51caf",
+  "project_split": {
+    "development_group_representatives": 1270,
+    "development_records_before_group_representative": 1272,
+    "training_group_representatives": 4886,
+    "training_records_before_group_representative": 4893
+  },
+  "qalb_test_role": "hash-only leakage check; test-only",
+  "schema_version": 1,
+  "seed": 3407,
+  "source": "Tibyan-corpus",
+  "source_record": "Zenodo-14623621",
+  "training_or_inference_executed": false
+}
