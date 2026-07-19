@@ -1,9 +1,11 @@
 # Tibyan-derived F2/F3 matched protocol
 
-Status: draft NO-GO protocol with a canonical private manifest build and passing
-processor-length validation. Nothing in this document authorizes training,
-model inference, checkpoint selection, or final-test access. Independent
-exact-commit review remains open.
+Status: frozen methodology and data-composition protocol. The canonical private
+manifest build and processor-length validation passed, and exact merged commit
+`8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6` received GO on issue #67. This
+approval authorized guarded workflow implementation only. GPU smoke, training,
+model inference, checkpoint selection, and final-test access require their own
+later exact-commit/stage approvals.
 
 GitHub issue: https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/67
 
@@ -237,8 +239,10 @@ Before status changes from draft NO-GO to frozen:
 - [x] all 2,000 selected records pass exact processor-length and schema checks;
 - [x] the public audit contains no corpus text or credentials;
 - [x] Tibyan attribution and CC BY 4.0 change disclosure are present;
-- [ ] an independent reviewer checks the method, staged-design limitation, and
-      leakage rules and posts GO for the exact merged commit.
+- [x] the method, staged-design limitation, and leakage rules were reviewed and
+      GO was posted for merged commit
+      `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6` on issue #67.
 
-Until every item passes, F2-P1 and F3-P1 remain unregistered and non-executable.
+The frozen F2-P1/F3-P1 compositions are registered, but remain non-executable
+until the guarded workflow itself receives the separately required approval.
 The `XG` operator remains disabled regardless of this protocol's status.

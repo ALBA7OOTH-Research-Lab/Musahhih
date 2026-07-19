@@ -3,8 +3,10 @@
 Recorded: 2026-07-19
 
 Status: canonical private manifest build and processor-length validation
-complete; public audit recorded. The protocol remains NO-GO until independent
-methodology review and merged-commit GO. No training or inference is authorized.
+complete; public audit recorded. The methodology later received exact merged-
+commit GO for `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6` on issue #67. That decision
+authorized guarded workflow implementation only; no training or inference was
+authorized by this audit.
 
 ## Inputs verified
 

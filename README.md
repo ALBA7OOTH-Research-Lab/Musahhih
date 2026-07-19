@@ -281,16 +281,20 @@ Do not rerun these diagnostics or interpret the capability result as proof of
 non-inferiority.
 
 The next matched F2/F3 gate uses the authoritative Tibyan release rather than
-the still-disabled project-generated XG operator. The draft
+the still-disabled project-generated XG operator. The frozen
 [Tibyan F2/F3 protocol](docs/tibyan_f2_f3_protocol.md) defines a deterministic
 highlighted-token alignment, exact-source group split, private QALB/Nahw
 hash-overlap exclusions, a 2,000-record synthetic arm, and a nested 1,000-record
 synthetic half for the 50:50 mixed arm. The canonical manifest build is recorded
 without corpus text in
 [the manifest audit](results/tibyan_f2_f3_manifest_audit.md). All 2,000 selected
-records passed the pinned Gemma 1,024-token guard. F2/F3 remain NO-GO until
-independent review and exact-commit approval; no training or inference is
-authorized yet.
+records passed the pinned Gemma 1,024-token guard. The methodology and exact
+compositions received GO at merged commit
+`8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`; this authorized guarded workflow
+implementation only. The non-executing-by-default Kaggle workflow is
+[`notebooks/04_f2_f3_qlora.ipynb`](notebooks/04_f2_f3_qlora.ipynb). A new
+exact-commit GO is still required before its GPU smoke or full-training flags
+may be enabled. No final-test evaluation is part of that notebook.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines

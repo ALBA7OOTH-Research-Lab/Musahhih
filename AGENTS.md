@@ -23,10 +23,13 @@ are complete. See `results/f1_p1_final_evaluation_audit.md` and
 responses, and adapter artifacts remain private.
 
 Do not tune prompts, parsing, checkpoints, training data, or experiment
-decisions from the completed Nahw-Passage or safety-diagnostic results. The next
-milestone is issue #67: validate and independently review the canonical
-Tibyan-derived F2/F3 manifest/protocol before any GPU work. The proposed `XG`
-synthetic operator remains disabled pending qualified linguistic review.
+decisions from the completed Nahw-Passage or safety-diagnostic results. The
+Tibyan-derived F2/F3 methodology and compositions are frozen at commit
+`8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`. The current milestone is issue
+#69: implement and statically validate the fail-closed Kaggle workflow. Do not
+run a GPU smoke or training arm until that workflow receives a later exact-
+commit GO. The proposed `XG` operator remains disabled pending qualified
+linguistic review.
 
 ## Non-negotiable research rules
 
