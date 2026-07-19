@@ -1,18 +1,18 @@
 # Active implementation plan
 
-## Issue #63 — F1 capability-retention and overcorrection protocol
+## Issue #65 — execute matched F1 safety diagnostics
 
-- [x] Close the completed F1-P1 final-evaluation issue and merge its
-  corpus-text-free audit.
-- [x] Audit current official ArabicMMLU source, license, task format, revision,
-  and split counts.
-- [x] Identify a QALB development-only correct-input construction independent
-  of the F1 checkpoint-selection split.
-- [x] Freeze dataset selection, prompts, metrics, matched runtime, and retry
-  rules in `docs/f1_capability_retention_protocol.md`.
-- [x] Add deterministic preparation/evaluation utilities and synthetic tests.
-- [ ] Validate, open a pull request, and obtain GO/NO-GO tied to its merged
-  commit before any model inference.
+- [x] Record project-owner GO for merged protocol commit
+  `45fd0640184af7e14abd99124e75923623d770c5`.
+- [x] Create a separate execution issue with exact inputs, hashes, runtime,
+  run ID, approval, privacy, and retry rules.
+- [x] Verify private Kaggle inputs and run the evaluator without `--execute`.
+- [x] Execute the single matched B0/F1-P1 P100 run exactly once if preflight
+  passes; preserve any failure as required by the frozen protocol.
+- [x] Download private artifacts and independently recompute hashes, alignment,
+  counts, paired statistics, and safeguards without logging corpus text.
+- [ ] Commit a corpus-text-free result audit, run repository validation, open a
+  result PR, merge it, and synchronize GitHub and Notion.
 
-Nahw-Passage and QALB test must not be accessed by this task. XG remains
-disabled pending qualified linguistic review.
+Do not use Nahw-Passage or QALB test, and do not train, tune, select, merge,
+retry from a score, or activate XG/F2/F3 in this task.

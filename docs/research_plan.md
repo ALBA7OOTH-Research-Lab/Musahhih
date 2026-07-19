@@ -121,11 +121,15 @@ Also measure:
 - ArabicMMLU or another general Arabic benchmark before and after fine-tuning
 - inference cost and adapter size
 
-The proposed F1-P1 overcorrection/capability measurement is frozen in
+The F1-P1 overcorrection/capability measurement was frozen in
 [`f1_capability_retention_protocol.md`](f1_capability_retention_protocol.md):
 154 reconstructed QALB-2015 L2 development targets and a balanced 1,000-record
 ArabicMMLU test subset, with B0 and F1-P1 executed in one matched private P100
-runtime. It remains non-executable until merged-commit review and explicit GO.
+runtime. The single approved run found higher unchanged-token accuracy for
+F1-P1 (50.65% versus 27.92%) and a -0.6-point ArabicMMLU difference whose
+pre-registered interval spanned -3.2 to +1.9 points. See
+[`../results/f1_safety_diagnostics_audit.md`](../results/f1_safety_diagnostics_audit.md).
+This diagnostic must not be repeated or used to revise F1-P1.
 
 ## Phase E — Paper contribution
 

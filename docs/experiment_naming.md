@@ -47,7 +47,7 @@ The accepted pattern is:
 | `B0` | Untouched zero-shot model | `B0-P1` |
 | `B1` | Untouched few-shot model | `B1-P1` |
 | `B2` | Untouched expert-style prompted model | `B2-P1` |
-| `F1` | Natural-data fine-tuning | `F1-P1`; training, checkpoint selection, and frozen Nahw-Passage evaluation complete; safety diagnostics proposed |
+| `F1` | Natural-data fine-tuning | `F1-P1`; training, checkpoint selection, frozen Nahw-Passage evaluation, and matched safety diagnostics complete |
 | `F2` | Synthetic-data fine-tuning | Not yet registered |
 | `F3` | Mixed natural and synthetic fine-tuning | Not yet registered |
 | `F4` | Registered mixture or data-size ablation | Not yet registered |
