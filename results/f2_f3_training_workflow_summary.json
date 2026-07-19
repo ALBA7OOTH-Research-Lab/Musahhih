@@ -1,0 +1,42 @@
+{
+  "approval_scope": "methodology-approved workflow implementation only",
+  "common_development": {
+    "records": 975,
+    "sha256": "adfdeb0c2e5730357226ce4e5156c300679629142ea0576d32dea9ac3050a950",
+    "source": "QALB-2014-L1 development"
+  },
+  "contains_corpus_text": false,
+  "default_execution_gates": {
+    "approved_workflow_commit": "",
+    "full_training_confirmation": "",
+    "gpu_smoke_confirmation": "",
+    "run_full_training": false,
+    "run_gpu_smoke": false
+  },
+  "f2": {
+    "records": 2000,
+    "sha256": "bbc48dcf78ddff1830661ad749fcc8f9fbfce8206f4f09cd9f4d6501823201d2",
+    "source_counts": {
+      "Tibyan-corpus": 2000
+    }
+  },
+  "f3": {
+    "records": 2000,
+    "sha256": "d16decebe559e9a25da41ef59f63ca95e339972e22b9659dfc763e071fbc1546",
+    "source_counts": {
+      "QALB-2014-L1": 1000,
+      "Tibyan-corpus": 1000
+    }
+  },
+  "inference_executed": false,
+  "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+  "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+  "nahw_passage_used": false,
+  "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
+  "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
+  "qalb_test_used": false,
+  "schema_version": 1,
+  "seed": 3407,
+  "training_executed": false,
+  "validation_scope": "private-record adapter execution plus static notebook validation; no GPU model execution"
+}

@@ -135,9 +135,11 @@ The proposed released-synthetic/mixed implementation is now narrowed to the
 Tibyan-derived highlighted-token view in
 [`tibyan_f2_f3_protocol.md`](tibyan_f2_f3_protocol.md). Its canonical private
 manifest contains a nested 2,000-record synthetic selection after deterministic
-alignment, grouping, project splitting, and exact hash-overlap checks. It remains
-NO-GO pending independent exact-commit review; all 2,000 selected records passed
-the pinned Gemma 1,024-token formatting gate.
+alignment, grouping, project splitting, and exact hash-overlap checks. The
+methodology and compositions were frozen at merged commit
+`8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`; all 2,000 selected records passed
+the pinned Gemma 1,024-token formatting gate. The guarded workflow remains
+non-executing until a later exact-commit GO authorizes its GPU stage.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

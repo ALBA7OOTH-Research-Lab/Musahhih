@@ -1,20 +1,20 @@
 # Active implementation plan
 
-## Issue #67 — freeze Tibyan-derived F2/F3 matched methodology
+## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow
 
-- [x] Re-verify the authoritative Tibyan archive/final-file hashes and compute a
-  corpus-text-free eligibility/duplicate/length audit.
-- [x] Define stable record IDs, exact-source connected groups, and a seeded
-  Musahhih project split without calling it an official Tibyan split.
-- [x] Run private exact-overlap checks against frozen QALB and Nahw registries;
-  exclude any test-connected group from modeling eligibility.
-- [x] Resolve matched `N`, F2/F3 composition, the common checkpoint-selection
-  rule, seeds, budgets, metrics, privacy, attribution, and retry rules.
-- [x] Update the synthetic protocol and dataset/experiment documentation with
-  aggregate-only evidence and guarded implementation acceptance criteria.
-- [ ] Validate, open a methodology PR, obtain independent review and exact-
-  commit GO, and synchronize GitHub and Notion before GPU work.
+- [x] Record GO for methodology commit
+  `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6` and close issue #67.
+- [x] Build a fail-closed private adapter for the frozen F2 2,000-record arm,
+  F3 1,000/1,000 nested mixture, and common QALB development view.
+- [x] Add synthetic-fixture tests for hashes, provenance, nested selection,
+  schema, privacy, deterministic order, role guards, and non-overwrite behavior.
+- [x] Create a beginner-readable Kaggle P100 workflow with arm selection,
+  non-generating preflight, one-step smoke, and separately gated full training.
+- [x] Reuse the exact F1 model/LoRA/optimizer/checkpoint contract and record all
+  runtime, token, VRAM, artifact, and reproducibility metadata.
+- [ ] Validate locally, publish an aggregate-only audit, open a PR, pass CI, and
+  obtain exact-commit GO before any GPU smoke or two-epoch run.
 
-Do not train, generate synthetic records, run model inference, inspect final-test
-results, or activate XG/F2/F3 in this task. Corpus text and private data remain
-ignored; public artifacts contain only aggregate metadata and hashes.
+Do not execute model training or inference, access final-test outcomes, activate
+XG, upload private artifacts publicly, or change a frozen research setting in
+this task. A later GO may authorize only the explicitly named execution stage.
