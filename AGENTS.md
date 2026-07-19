@@ -25,11 +25,13 @@ responses, and adapter artifacts remain private.
 Do not tune prompts, parsing, checkpoints, training data, or experiment
 decisions from the completed Nahw-Passage or safety-diagnostic results. The
 Tibyan-derived F2/F3 methodology and compositions are frozen at commit
-`8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`. The current milestone is issue
-#69: implement and statically validate the fail-closed Kaggle workflow. Do not
-run a GPU smoke or training arm until that workflow receives a later exact-
-commit GO. The proposed `XG` operator remains disabled pending qualified
-linguistic review.
+`8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`. The fail-closed Kaggle workflow
+and current nested-input-mount repair are merged through issue #69 at commit
+`000c8ccd4db215ca588fa246659c599986660d98`. No GPU execution is currently
+authorized. The next milestone is a fresh exact-commit GO for one F2-P1
+longest-record, one-step P100 smoke; do not run full training, F3, final-test
+evaluation, or XG under that approval. The proposed `XG` operator remains
+disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 

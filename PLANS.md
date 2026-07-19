@@ -22,8 +22,9 @@
   loading or an optimizer step.
 - [x] Repair private-input discovery for current nested Kaggle mounts and
   validate the non-executing workflow locally.
-- [ ] Merge the repair through a narrow PR and obtain a fresh exact-commit GO
-  before any GPU rerun.
+- [x] Merge the nested-mount repair through PR #72 at
+  `000c8ccd4db215ca588fa246659c599986660d98`.
+- [ ] Obtain a fresh exact-commit GO before any GPU rerun.
 
 Do not execute model training or inference, access final-test outcomes, activate
 XG, upload private artifacts publicly, or change a frozen research setting in
