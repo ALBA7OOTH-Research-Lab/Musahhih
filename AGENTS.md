@@ -16,14 +16,16 @@ Treat this file as a map, not a full manual. Follow the linked docs for details.
 
 ## Current milestone
 
-`F1-P1` natural-data training and its frozen private development smoke are
-complete. The selected private adapter is `checkpoint-250`; QALB text, model
-responses, and adapter artifacts remain private.
+`F1-P1` natural-data training, private development smoke, and the single frozen
+Nahw-Passage evaluation are complete. The selected private `checkpoint-250`
+produced 145/511 exact matches; see `results/f1_p1_final_evaluation_audit.md`.
+QALB text, model responses, and adapter artifacts remain private.
 
-Freeze and review the selected-adapter evaluation protocol before any final
-test execution. Do not tune prompts, parsing, checkpoints, or experiment
-decisions from Nahw-Passage or QALB test results. The proposed `XG` synthetic
-operator remains disabled pending qualified linguistic review.
+Do not tune prompts, parsing, checkpoints, training data, or experiment
+decisions from the completed Nahw-Passage result. The next milestone is a
+pre-registered non-test analysis/capability-retention plan and the remaining
+F2/F3 study arms. The proposed `XG` synthetic operator remains disabled pending
+qualified linguistic review.
 
 ## Non-negotiable research rules
 

@@ -260,6 +260,14 @@ one-batch GPU smoke test with at least 1 GiB headroom before its separately
 confirmed full-training cell can run. CPU is not a supported training fallback;
 full training is disabled by default.
 
+F1-P1 training, private development selection, and its single pre-registered
+Nahw-Passage evaluation are now complete. The selected `checkpoint-250` reached
+145/511 exact matches (28.38%), compared with 86/511 (16.83%) for untouched B0.
+The independently checked, corpus-text-free result and important hardware/
+reproducibility caveats are recorded in
+[`results/f1_p1_final_evaluation_audit.md`](results/f1_p1_final_evaluation_audit.md).
+Do not rerun or revise F1-P1 based on this test result.
+
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
 3. Natural-data LoRA/QLoRA fine-tuning
