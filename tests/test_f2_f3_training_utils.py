@@ -8,11 +8,15 @@ from scripts.f2_f3_training_utils import (
     F2F3TrainingGateError,
     FULL_TRAINING_CONFIRMATION,
     GPU_SMOKE_CONFIRMATION,
+    P100_CORE_STACK,
+    P100_HEAVY_STACK,
     locate_private_input,
+    p100_stack_report,
     require_full_training_confirmation,
     require_smoke_confirmation,
     run_id,
     validate_private_records,
+    validate_p100_core_stack,
 )
 
 
@@ -109,6 +113,45 @@ class F2F3TrainingUtilsTests(unittest.TestCase):
             {"QALB-2014-L1": 1, "Tibyan-corpus": 1},
         )
         self.assertNotIn("PRIVATE", json.dumps(summary))
+
+    def test_p100_stack_report_accepts_exact_or_cuda_tagged_versions(self):
+        self.assertEqual(
+            P100_CORE_STACK,
+            {
+                "torch": "2.6.0",
+                "torchvision": "0.21.0",
+                "xformers": "0.0.29.post3",
+                "torchao": "0.16.0",
+                "numpy": "2.0.2",
+            },
+        )
+        installed = dict(P100_CORE_STACK)
+        installed["torch"] = "2.6.0+cu124"
+        installed["torchvision"] = "0.21.0+cu124"
+
+        summary = p100_stack_report(installed)
+
+        self.assertTrue(summary["compatible"])
+        self.assertEqual(summary["installed"], installed)
+
+    def test_p100_stack_report_supports_heavy_preinstall_decision(self):
+        installed = dict(P100_CORE_STACK)
+        installed["xformers"] = "0.0.34"
+
+        report = p100_stack_report(installed, P100_HEAVY_STACK)
+
+        self.assertTrue(report["compatible"])
+        self.assertNotIn("xformers", report["installed"])
+
+    def test_p100_core_stack_fails_closed_after_setup_on_mismatch(self):
+        installed = dict(P100_CORE_STACK)
+        installed.pop("xformers")
+        installed["torch"] = "2.7.0"
+
+        with self.assertRaisesRegex(
+            F2F3TrainingGateError, "core stack mismatch after setup"
+        ):
+            validate_p100_core_stack(installed)
 
     def test_smoke_requires_exact_confirmation(self):
         with self.assertRaisesRegex(F2F3TrainingGateError, "confirmation"):
