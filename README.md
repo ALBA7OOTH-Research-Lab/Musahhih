@@ -268,6 +268,14 @@ reproducibility caveats are recorded in
 [`results/f1_p1_final_evaluation_audit.md`](results/f1_p1_final_evaluation_audit.md).
 Do not rerun or revise F1-P1 based on this test result.
 
+The next proposed checkpoint is a matched B0/F1-P1 overcorrection and general
+Arabic capability diagnostic. Its QALB-2015 development and balanced
+ArabicMMLU selections, metrics, runtime, privacy rules, and execution gate are
+pre-registered in
+[`docs/f1_capability_retention_protocol.md`](docs/f1_capability_retention_protocol.md).
+No model inference is authorized until that protocol and its code are merged
+and a reviewer posts GO for the exact merged commit.
+
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
 3. Natural-data LoRA/QLoRA fine-tuning

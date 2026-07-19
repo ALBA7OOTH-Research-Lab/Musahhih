@@ -7,6 +7,7 @@
 | Nahw Synthetic 10K | Synthetic grammar MCQs | GU replication/ablation | Public in Nahw GitHub | MCQ task mismatch for GEC |
 | QALB-2014 | Parallel erroneous/corrected native-speaker Arabic text | Natural training/dev/test benchmark | Release 0.9.1 received and integrity-audited locally on 2026-06-23 | Research-only license; no redistribution or dataset modification rights; preserve official splits |
 | QALB-2015 | Native-speaker test and non-native-speaker train/dev/test correction data | Additional benchmark or training split | Release 0.9.1 received and integrity-audited locally on 2026-06-23 | One exact L2 source occurs in both train and test; exclude the train-side duplicate from any derived training view |
+| ArabicMMLU | 14,575 original Arabic multiple-choice questions across 40 tasks | General Arabic capability-retention diagnostic only | Official repository pinned at `7aa530e2893ac420352b3f5c1a1310c010e9758b`; CC BY-NC 4.0 | Selected test-subset results must not be used to tune the model, prompt, or scoring |
 | Tibyan | Large synthetic Arabic GEC corpus with paper-described expert/professional review | Conditional synthetic or mixed-data training source after private manifesting and overlap checks | Authoritative Zenodo release located and verified on 2026-06-25: `Tibyan-corpus`, DOI `10.5281/zenodo.14623621`, CC BY 4.0 | No official splits or IDs; paper/release token-count discrepancy; QALB overlap still requires private check |
 | ZAEBUC-related data | Learner writing used by recent GED/GEC work | Optional cross-domain evaluation | Check paper/repository access terms | Domain differs from Nahw passages |
 | ARETA | Automatic error-type annotation tool | Error analysis only | Public research tool/paper | Automatic tags are imperfect |
@@ -80,6 +81,38 @@ Within-split duplicated sources are intentionally preserved. The manifest flags 
 The deterministic rerun and schema/privacy checks passed. All outputs contain no source, correction, annotation, prompt, or passage text; they remain ignored and private and must not be committed or redistributed. Obtain institutional guidance before creating any persistent transformed corpus copy. This preparation performed no model training and no QALB test evaluation.
 
 See `results/qalb_0.9.1_intake.md` for the reproducible intake checks and duplicate counts.
+
+### F1 overcorrection development diagnostic
+
+For the post-hoc safety diagnostic specified before its own inference, use all
+154 QALB-2015 L2 development records only. Reconstruct each annotator-0 gold
+target from the frozen M2 source, then deterministically select one Arabic-script
+token that is already present in the corrected target. This is a project
+development diagnostic, not an official QALB score and not evidence that every
+target sentence is linguistically flawless. The private prepared records remain
+ignored; their text-free selection audit is in
+`results/f1_safety_eval_selection_summary.json`. QALB test remains untouched.
+All 154 reconstructed targets must exactly match the official `.cor` development
+targets after removing their `S ` format prefix.
+
+## ArabicMMLU capability intake
+
+- Official source: <https://huggingface.co/datasets/MBZUAI/ArabicMMLU>.
+- Paper: <https://arxiv.org/abs/2402.12840>.
+- License at the pinned revision: CC BY-NC 4.0.
+- Frozen repository revision:
+  `7aa530e2893ac420352b3f5c1a1310c010e9758b`.
+- Official counts: 120 development examples and 14,455 test questions, totaling
+  14,575 questions across 40 tasks.
+- Musahhih selection: 25 hash-ranked test rows per task, excluding the aggregate
+  `All/` duplicate, for 1,000 records. The hash rank uses task and official ID,
+  not question text, answer key, or model output.
+
+The frozen subset is a capability-retention diagnostic, not a full leaderboard
+submission. Use no development demonstrations. Compare B0 and F1-P1 once under
+the matched protocol in `docs/f1_capability_retention_protocol.md`; do not use
+the selected test-subset result to revise prompts, scoring, checkpoint choice,
+training data, or model decisions.
 
 ## Tibyan intake
 
