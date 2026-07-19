@@ -78,10 +78,14 @@ Unified training record:
 
 ## Phase C — Fine-tuning experiments
 
-The proposed first natural-data feasibility run is specified in
-[`f1_natural_pilot_protocol.md`](f1_natural_pilot_protocol.md). It must pass
-independent methodology, privacy, compatibility, and free-GPU gates before any
-training begins. It is not yet the final matched-size F1/F2/F3 comparison.
+The first natural-data feasibility run is specified in
+[`f1_natural_pilot_protocol.md`](f1_natural_pilot_protocol.md). F1-P1 completed
+its frozen training, private development selection, and single Nahw-Passage
+evaluation. The selected adapter reached 145/511 exact matches (28.38%), versus
+86/511 (16.83%) for untouched B0; the paired difference was 11.55 percentage
+points with a pre-registered 95% paired-bootstrap interval of 7.83–15.26 points.
+See [`../results/f1_p1_final_evaluation_audit.md`](../results/f1_p1_final_evaluation_audit.md).
+This feasibility result is not yet the final matched-size F1/F2/F3 comparison.
 
 Hold the following constant:
 - base model

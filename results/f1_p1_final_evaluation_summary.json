@@ -1,0 +1,82 @@
+{
+  "protocol_id": "F1-P1",
+  "recorded_date": "2026-07-19",
+  "run_status": "complete",
+  "execution": {
+    "platform": "Kaggle",
+    "kernel": "univverssal/musahhih-f1-p1-final-evaluation",
+    "kernel_version": 1,
+    "repository_commit": "240ccfe0ae6370e2b7003a41ff4b703390f6f831",
+    "gpu": "Tesla P100-PCIE-16GB"
+  },
+  "model": {
+    "base_model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+    "base_model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+    "selected_checkpoint": "checkpoint-250",
+    "adapter_config_sha256": "db19ef8bf4852698103dde20cd50b4429ca102ac96980f7939ecc4cff2049c4d",
+    "checkpoint_selection_sha256": "898c19d5dcead1f6c8f0ed27b6e8c5c6b9ebaec2f1b2a9909e58d8c9758ee123",
+    "load_in_4bit": true,
+    "adapter_merged": false
+  },
+  "data": {
+    "name": "Nahw-Passage",
+    "split": "test",
+    "records": 511,
+    "input_sha256": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b"
+  },
+  "decoding": {
+    "do_sample": false,
+    "temperature_argument": null,
+    "max_new_tokens": 32,
+    "seed": 3407
+  },
+  "metrics": {
+    "number_of_records": 511,
+    "number_correct": 145,
+    "exact_match_accuracy": 0.2837573385518591,
+    "invalid_or_empty_count": 0,
+    "parsing_failure_count": 0,
+    "suspicious_output_count": 2,
+    "multi_token_count": 2
+  },
+  "paired_comparison_to_b0": {
+    "baseline_correct": 86,
+    "baseline_accuracy": 0.16829745596868884,
+    "accuracy_difference_adapter_minus_baseline": 0.11545988258317025,
+    "baseline_wrong_adapter_right": 81,
+    "baseline_right_adapter_wrong": 22,
+    "mcnemar_two_sided_exact_p_value": 4.06692891792894e-09,
+    "paired_bootstrap_95_percentile_ci": [
+      0.07827788649706457,
+      0.15264187866927592
+    ],
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 3407
+  },
+  "artifacts": {
+    "private_predictions_sha256": "8c4d0ca25b48776a08ea02984af6c5c3ec0bc830d2d1a6994e0fb5eef995faa3",
+    "private_summary_sha256": "00cba506eec598bfb5168a0dfb26744a882bb058d5b36c97558625b4fa77b979",
+    "accepted_b0_predictions_sha256": "6997b6fe5959f5502511ebdd1885d05a89ebaefeb27eefb73520842598f36ebc"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "cuda": "12.4",
+    "packages": {
+      "torch": "2.6.0+cu124",
+      "transformers": "4.56.2",
+      "unsloth": "2026.7.3",
+      "accelerate": "1.13.0",
+      "peft": "0.19.1",
+      "trl": "0.22.2"
+    }
+  },
+  "safeguards": {
+    "contains_corpus_text": false,
+    "training_executed": false,
+    "test_pilot_executed": false,
+    "checkpoint_changed": false,
+    "prompt_or_parser_changed": false,
+    "qalb_test_used": false,
+    "repeat_run_authorized": false
+  }
+}
