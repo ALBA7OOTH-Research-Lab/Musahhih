@@ -11,7 +11,7 @@
   passes; preserve any failure as required by the frozen protocol.
 - [x] Download private artifacts and independently recompute hashes, alignment,
   counts, paired statistics, and safeguards without logging corpus text.
-- [ ] Commit a corpus-text-free result audit, run repository validation, open a
+- [x] Commit a corpus-text-free result audit, run repository validation, open a
   result PR, merge it, and synchronize GitHub and Notion.
 
 Do not use Nahw-Passage or QALB test, and do not train, tune, select, merge,
