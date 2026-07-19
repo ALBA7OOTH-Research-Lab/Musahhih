@@ -280,6 +280,18 @@ corpus-text-free audit in
 Do not rerun these diagnostics or interpret the capability result as proof of
 non-inferiority.
 
+The next matched F2/F3 gate uses the authoritative Tibyan release rather than
+the still-disabled project-generated XG operator. The draft
+[Tibyan F2/F3 protocol](docs/tibyan_f2_f3_protocol.md) defines a deterministic
+highlighted-token alignment, exact-source group split, private QALB/Nahw
+hash-overlap exclusions, a 2,000-record synthetic arm, and a nested 1,000-record
+synthetic half for the 50:50 mixed arm. The canonical manifest build is recorded
+without corpus text in
+[the manifest audit](results/tibyan_f2_f3_manifest_audit.md). All 2,000 selected
+records passed the pinned Gemma 1,024-token guard. F2/F3 remain NO-GO until
+independent review and exact-commit approval; no training or inference is
+authorized yet.
+
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
 3. Natural-data LoRA/QLoRA fine-tuning
