@@ -102,8 +102,13 @@ class F2F3NotebookStaticTests(unittest.TestCase):
             "validate_private_records(DEV_PATH, 'development')",
             "require_execution_approval(APPROVED_WORKFLOW_COMMIT",
             "Only aggregate metadata was printed",
+            "locate_private_input('f2_train_records.jsonl'",
+            "KAGGLE_INPUT_ROOT, LOCAL_PRIVATE_INPUT_ROOT",
         ):
             self.assertIn(value, self.source)
+        self.assertNotIn(
+            "Path('/kaggle/input/musahhih-f2-f3-private-records')", self.source
+        )
 
     def test_p100_stack_and_gpu_probe_match_f1(self):
         for value in (

@@ -51,6 +51,38 @@ def validate_arm(arm: str) -> str:
     return arm
 
 
+def locate_private_input(
+    name: str,
+    kaggle_input_root: Path,
+    local_private_root: Path,
+) -> Path:
+    """Find one private input across current Kaggle mounts or local storage."""
+    if not isinstance(name, str) or Path(name).name != name or not name:
+        raise F2F3TrainingGateError("Private input name must be one filename")
+
+    kaggle_matches = (
+        sorted(kaggle_input_root.rglob(name)) if kaggle_input_root.exists() else []
+    )
+    if len(kaggle_matches) > 1:
+        raise F2F3TrainingGateError(
+            f"Expected exactly one private {name}; found {len(kaggle_matches)} "
+            f"under {kaggle_input_root}"
+        )
+    if kaggle_matches:
+        return kaggle_matches[0]
+
+    local_matches = (
+        sorted(local_private_root.rglob(name)) if local_private_root.exists() else []
+    )
+    if len(local_matches) != 1:
+        raise F2F3TrainingGateError(
+            f"Expected exactly one private {name}; found {len(local_matches)} "
+            f"under {local_private_root} after finding none under "
+            f"{kaggle_input_root}"
+        )
+    return local_matches[0]
+
+
 def validate_private_records(path: Path, role: str) -> dict:
     if role not in (*ARMS, "development"):
         raise F2F3TrainingGateError("Unknown private record role")
@@ -205,6 +237,7 @@ __all__ = [
     "TRAINING_CONFIG",
     "TRAIN_RECORDS",
     "memory_gate",
+    "locate_private_input",
     "require_full_training_confirmation",
     "require_execution_approval",
     "require_smoke_confirmation",

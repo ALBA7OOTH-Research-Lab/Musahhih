@@ -17,8 +17,13 @@
 - [x] Replace fragile Kaggle cell editing with a validated private execution-
   config file after the first exact-commit smoke attempt failed at syntax
   preflight without producing a model result.
-- [ ] Validate the repaired non-executing workflow, merge it through a narrow
-  PR, and obtain a fresh exact-commit GO before any GPU rerun.
+- [x] Preserve and stop the second authorized attempt after Kaggle's current
+  nested dataset mount exposed an obsolete flat-path assumption before model
+  loading or an optimizer step.
+- [x] Repair private-input discovery for current nested Kaggle mounts and
+  validate the non-executing workflow locally.
+- [ ] Merge the repair through a narrow PR and obtain a fresh exact-commit GO
+  before any GPU rerun.
 
 Do not execute model training or inference, access final-test outcomes, activate
 XG, upload private artifacts publicly, or change a frozen research setting in

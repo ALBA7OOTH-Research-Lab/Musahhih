@@ -8,6 +8,7 @@ from scripts.f2_f3_training_utils import (
     F2F3TrainingGateError,
     FULL_TRAINING_CONFIRMATION,
     GPU_SMOKE_CONFIRMATION,
+    locate_private_input,
     require_full_training_confirmation,
     require_smoke_confirmation,
     run_id,
@@ -39,6 +40,52 @@ class F2F3TrainingUtilsTests(unittest.TestCase):
             "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
         )
         return path
+
+    def test_private_input_locator_supports_current_nested_kaggle_mount(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            kaggle_root = root / "kaggle" / "input"
+            nested = (
+                kaggle_root
+                / "datasets"
+                / "univverssal"
+                / "musahhih-f2-f3-private-records"
+            )
+            nested.mkdir(parents=True)
+            expected = nested / "f2_train_records.jsonl"
+            expected.touch()
+
+            located = locate_private_input(
+                expected.name,
+                kaggle_root,
+                root / "data" / "processed" / "f2_f3_training_records",
+            )
+
+            self.assertEqual(located, expected)
+
+    def test_private_input_locator_falls_back_locally_and_rejects_duplicates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            kaggle_root = root / "kaggle" / "input"
+            local_root = root / "data" / "processed" / "f2_f3_training_records"
+            local_root.mkdir(parents=True)
+            expected = local_root / "common_dev_records.jsonl"
+            expected.touch()
+            self.assertEqual(
+                locate_private_input(expected.name, kaggle_root, local_root),
+                expected,
+            )
+
+            first = kaggle_root / "datasets" / "owner" / "one"
+            second = kaggle_root / "datasets" / "owner" / "two"
+            first.mkdir(parents=True)
+            second.mkdir(parents=True)
+            (first / expected.name).touch()
+            (second / expected.name).touch()
+            with self.assertRaisesRegex(
+                F2F3TrainingGateError, "Expected exactly one private"
+            ):
+                locate_private_input(expected.name, kaggle_root, local_root)
 
     def test_private_f3_validation_reports_only_aggregate_provenance(self):
         rows = [

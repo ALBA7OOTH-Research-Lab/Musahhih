@@ -45,6 +45,17 @@
     "status": "failed_preflight",
     "workflow_commit": "c4d26b98264e8067a8584fb20e13e077af151778"
   },
+  "second_gpu_attempt": {
+    "arm": "F2-P1",
+    "failure": "obsolete flat Kaggle input path rejected current nested dataset mount at preflight",
+    "metric_produced": false,
+    "model_loaded": false,
+    "optimizer_steps": 0,
+    "preserved_version": "failed-preflight-kaggle-mount-layout-no-model",
+    "smoke_summary_files": 0,
+    "status": "failed_preflight",
+    "workflow_commit": "e86827d00f5af028927cac6d654f86fcaf6515d1"
+  },
   "inference_executed": false,
   "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
   "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
@@ -52,7 +63,7 @@
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 2,
+  "schema_version": 3,
   "seed": 3407,
   "training_executed": false,
   "validation_scope": "private-record adapter execution plus static notebook validation; no GPU model execution"
