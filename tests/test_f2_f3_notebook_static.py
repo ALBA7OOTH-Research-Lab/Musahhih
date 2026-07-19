@@ -1,6 +1,7 @@
 import ast
 import json
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -24,15 +25,73 @@ class F2F3NotebookStaticTests(unittest.TestCase):
 
     def test_execution_and_approval_gates_default_off(self):
         for value in (
-            "RUN_GPU_SMOKE = False",
-            "RUN_FULL_TRAINING = False",
-            "LOAD_PRIOR_SMOKE_SUMMARY = False",
-            "APPROVED_WORKFLOW_COMMIT = ''",
-            "APPROVAL_REFERENCE = ''",
-            "GPU_SMOKE_CONFIRMATION_VALUE = ''",
-            "FULL_TRAINING_CONFIRMATION_VALUE = ''",
+            "'stage': 'disabled'",
+            "RUN_GPU_SMOKE = EXECUTION_STAGE == 'gpu-smoke'",
+            "RUN_FULL_TRAINING = EXECUTION_STAGE == 'full-training'",
+            "LOAD_PRIOR_SMOKE_SUMMARY = RUN_FULL_TRAINING",
+            "APPROVED_WORKFLOW_COMMIT = EXECUTION_CONFIG['approved_workflow_commit']",
+            "APPROVAL_REFERENCE = EXECUTION_CONFIG['approval_reference']",
         ):
             self.assertIn(value, self.source)
+
+    def test_activation_uses_one_strict_private_config_without_cell_editing(self):
+        for value in (
+            "f2_f3_execution_config.json",
+            "Expected at most one private",
+            "set(EXECUTION_CONFIG) != CONFIG_KEYS",
+            "CONFIG_SOURCE = 'committed-disabled-defaults'",
+            "Do not edit this notebook cell to activate a run",
+            "scripts/prepare_f2_f3_execution_config.py",
+        ):
+            self.assertIn(value, self.source)
+
+    def test_activation_cell_defaults_off_and_loads_one_valid_config(self):
+        config_source = "".join(self.payload["cells"][2]["source"])
+
+        def execute_with(root: Path):
+            source = config_source.replace(
+                "Path('/kaggle/input')", f"Path({str(root)!r})"
+            )
+            namespace = {}
+            exec(compile(source, "activation-cell", "exec"), namespace)
+            return namespace
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            defaults = execute_with(root)
+            self.assertEqual(defaults["EXECUTION_STAGE"], "disabled")
+            self.assertFalse(defaults["EXECUTE_GPU_STAGE"])
+
+            config_dir = root / "private-config"
+            config_dir.mkdir()
+            (config_dir / "f2_f3_execution_config.json").write_text(
+                json.dumps(
+                    {
+                        "arm": "F2-P1",
+                        "stage": "gpu-smoke",
+                        "approved_workflow_commit": "a" * 40,
+                        "approval_reference": (
+                            "https://github.com/ALBA7OOTH-Research-Lab/"
+                            "Musahhih/issues/69#issuecomment-123456"
+                        ),
+                        "confirmation": "RUN_F2_F3_LONGEST_RECORD_SMOKE",
+                        "prior_smoke_summary_path": "",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            activated = execute_with(root)
+            self.assertEqual(activated["EXECUTION_STAGE"], "gpu-smoke")
+            self.assertTrue(activated["RUN_GPU_SMOKE"])
+            self.assertFalse(activated["RUN_FULL_TRAINING"])
+
+            duplicate_dir = root / "duplicate-config"
+            duplicate_dir.mkdir()
+            (duplicate_dir / "f2_f3_execution_config.json").write_text(
+                "{}", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(RuntimeError, "Expected at most one"):
+                execute_with(root)
 
     def test_private_inputs_are_exactly_validated(self):
         for value in (

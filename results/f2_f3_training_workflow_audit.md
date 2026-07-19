@@ -3,9 +3,10 @@
 Recorded: 2026-07-19
 
 Status: private record assembly and static workflow implementation complete.
-No model was loaded, no optimizer step ran, no inference ran, and neither
-Nahw-Passage nor QALB test was accessed. A later exact-commit GO on issue #69 is
-required before the GPU smoke or full training may be enabled.
+The first authorized F2-P1 smoke attempt failed during notebook syntax preflight
+before model loading or an optimizer step. No inference ran, and neither
+Nahw-Passage nor QALB test was accessed. A repaired workflow and a fresh exact-
+commit GO on issue #69 are required before another GPU attempt.
 
 ## Frozen private inputs
 
@@ -32,12 +33,16 @@ The prompt-template digest is
 
 ## Workflow safeguards
 
-The Kaggle notebook is deliberately non-executing by default. Both execution
-flags, both stage confirmations, the approved workflow commit, and its issue
-comment reference are blank. A smoke or full run requires an exact 40-character
-workflow commit plus a GO comment under issue #69. Full training additionally
-requires a preserved passing smoke summary for the same arm and commit from a
-fresh runtime.
+The Kaggle notebook is deliberately non-executing by default. It no longer
+requires editing a code cell to activate a run. With no unique private
+`f2_f3_execution_config.json` attached, the selected stage is `disabled`, the
+approval fields remain blank, and no GPU stage executes. The ignored config is
+created only after GO by `scripts/prepare_f2_f3_execution_config.py`, which
+requires an exact 40-character workflow commit, issue #69 comment URL, stage-
+specific confirmation, and—only for full training—a private passing smoke-
+summary path. The notebook stays disabled when the file is missing and rejects
+duplicate, malformed, or inconsistent activation files before repository or
+GPU work.
 
 The workflow:
 
@@ -52,6 +57,26 @@ The workflow:
 - selects between epoch 1 and epoch 2 only by frozen common-development
   assistant-token loss, with the registered tie rule; and
 - never loads a final test or generates evaluation predictions.
+
+## First authorized smoke attempt and repair
+
+Issue #69 authorized only the F2-P1 longest-record one-step smoke at workflow
+commit `c4d26b98264e8067a8584fb20e13e077af151778`. The private Kaggle execution
+copy duplicated the activated configuration followed immediately by the
+original default configuration in one cell. Python therefore encountered
+`print(...)ARM = ...` on line 15 and raised `SyntaxError`.
+
+The preserved aggregate check found zero smoke-summary files. No model was
+loaded, no optimizer step ran, and no metric, adapter, or checkpoint was
+produced. The failed Kaggle version is named
+`failed-preflight-syntax-no-smoke`, and its P100 session was stopped. The GO was
+consumed; no retry occurred.
+
+The repair moves deliberate activation into a separately generated, strict,
+text-free private JSON file. The public notebook remains disabled and
+syntactically unchanged in Kaggle. This is an execution-safety repair only; it
+does not change the frozen data, model, training, checkpoint, or evaluation
+method.
 
 ## What this audit does not establish
 

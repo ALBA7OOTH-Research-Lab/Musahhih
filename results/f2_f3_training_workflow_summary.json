@@ -1,5 +1,11 @@
 {
   "approval_scope": "methodology-approved workflow implementation only",
+  "activation_mechanism": {
+    "config_filename": "f2_f3_execution_config.json",
+    "default_stage": "disabled",
+    "generated_by": "scripts/prepare_f2_f3_execution_config.py",
+    "manual_notebook_editing_required": false
+  },
   "common_development": {
     "records": 975,
     "sha256": "adfdeb0c2e5730357226ce4e5156c300679629142ea0576d32dea9ac3050a950",
@@ -28,6 +34,17 @@
       "Tibyan-corpus": 1000
     }
   },
+  "first_gpu_attempt": {
+    "arm": "F2-P1",
+    "failure": "configuration-cell duplication caused SyntaxError at preflight",
+    "metric_produced": false,
+    "model_loaded": false,
+    "optimizer_steps": 0,
+    "preserved_version": "failed-preflight-syntax-no-smoke",
+    "smoke_summary_files": 0,
+    "status": "failed_preflight",
+    "workflow_commit": "c4d26b98264e8067a8584fb20e13e077af151778"
+  },
   "inference_executed": false,
   "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
   "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
@@ -35,7 +52,7 @@
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 1,
+  "schema_version": 2,
   "seed": 3407,
   "training_executed": false,
   "validation_scope": "private-record adapter execution plus static notebook validation; no GPU model execution"
