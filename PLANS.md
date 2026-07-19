@@ -14,6 +14,6 @@
 - [x] Execute the single authorized 511-record run as Kaggle kernel version 1.
 - [x] Independently recompute record alignment, hashes, counts, and paired
   statistics from the downloaded private predictions.
-- [ ] Merge the corpus-text-free result audit and close issue #61.
+- [x] Open corpus-text-free result audit PR #62; merging it closes issue #61.
 
 No repeat run or test-driven protocol change is authorized.
