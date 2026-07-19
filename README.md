@@ -268,13 +268,17 @@ reproducibility caveats are recorded in
 [`results/f1_p1_final_evaluation_audit.md`](results/f1_p1_final_evaluation_audit.md).
 Do not rerun or revise F1-P1 based on this test result.
 
-The next proposed checkpoint is a matched B0/F1-P1 overcorrection and general
-Arabic capability diagnostic. Its QALB-2015 development and balanced
-ArabicMMLU selections, metrics, runtime, privacy rules, and execution gate are
-pre-registered in
+The matched B0/F1-P1 overcorrection and general Arabic capability diagnostic is
+complete. Its QALB-2015 development and balanced ArabicMMLU selections,
+metrics, runtime, privacy rules, and execution gate were pre-registered in
 [`docs/f1_capability_retention_protocol.md`](docs/f1_capability_retention_protocol.md).
-No model inference is authorized until that protocol and its code are merged
-and a reviewer posts GO for the exact merged commit.
+F1-P1 showed better unchanged-token behavior than B0 on this diagnostic (50.65%
+versus 27.92%); on the balanced ArabicMMLU subset it scored 53.1% versus 53.7%
+for B0, with a paired interval spanning both loss and gain. See the cautious,
+corpus-text-free audit in
+[`results/f1_safety_diagnostics_audit.md`](results/f1_safety_diagnostics_audit.md).
+Do not rerun these diagnostics or interpret the capability result as proof of
+non-inferiority.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
