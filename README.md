@@ -293,8 +293,26 @@ compositions received GO at merged commit
 `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`; this authorized guarded workflow
 implementation only. The non-executing-by-default Kaggle workflow is
 [`notebooks/04_f2_f3_qlora.ipynb`](notebooks/04_f2_f3_qlora.ipynb). A new
-exact-commit GO is still required before its GPU smoke or full-training flags
-may be enabled. No final-test evaluation is part of that notebook.
+exact-commit GO is still required before a GPU smoke or full-training run. Do
+not edit the Kaggle notebook to activate it. After GO, generate a strict,
+text-free private activation file with:
+
+```bash
+python scripts/prepare_f2_f3_execution_config.py \
+  --arm F2-P1 \
+  --stage gpu-smoke \
+  --approved-workflow-commit <40-character-commit> \
+  --approval-reference <issue-69-comment-url> \
+  --confirmation RUN_F2_F3_LONGEST_RECORD_SMOKE \
+  --output data/processed/f2_f3_execution_configs/<run-name>/f2_f3_execution_config.json
+```
+
+Create a new directory for every authorized stage; the helper never overwrites
+an existing config. Attach only the current file through a private Kaggle
+Dataset. The notebook fails closed when the file is missing, duplicated,
+malformed, or inconsistent with the selected stage. The config contains no
+corpus text, but remains Git-ignored. No final-test evaluation is part of that
+notebook.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
