@@ -1,14 +1,14 @@
 # F2/F3 guarded training-workflow audit
 
-Recorded: 2026-07-19
+Recorded: 2026-07-20
 
-Status: private record assembly and static workflow implementation complete.
-Two authorized F2-P1 smoke attempts stopped during fail-closed preflight: the
-first on a malformed private execution copy, and the second on an obsolete
-flat Kaggle input-mount assumption. Neither reached model loading or an
-optimizer step. No inference ran, and neither Nahw-Passage nor QALB test was
-accessed. A repaired workflow and a fresh exact-commit GO on issue #69 are
-required before another GPU attempt.
+Status: private record assembly and the guarded workflow are complete. After
+three preserved pre-result infrastructure attempts and reviewed repairs, the
+fourth authorized F2-P1 smoke completed exactly one optimizer step on the
+longest validated record and passed the frozen P100 memory gate. No inference
+ran, no benchmark score was produced, and neither Nahw-Passage nor QALB test
+was accessed. Independent review and a separate exact-commit GO are required
+before one F2-P1 full-training run.
 
 ## Frozen private inputs
 
@@ -101,10 +101,66 @@ only when Kaggle contains no match does local ignored storage serve as the
 development fallback. Existing checksum, schema, count, role, and provenance
 validation remains unchanged.
 
+The third authorized attempt used workflow commit
+`aa96e9a776f5d04b39cb841ab3df42e149e98b81`. Its repository, activation, and
+private-record gates passed, but the then-unconditional PyTorch/CUDA
+force-reinstall did not return control after approximately one hour. The
+private P100 session was stopped and preserved as
+`aa96e9a-r01-preflight-interrupted`. It did not finish dependency validation,
+load a model, construct a trainer, run an optimizer step, or create a smoke
+summary. The GO was consumed without a retry.
+
+PR #74 replaced that preflight with a metadata-first conditional setup. It
+removes `--force-reinstall`, skips the heavy install when the runtime already
+matches, otherwise performs one pinned P100-stack installation, and validates
+the complete final stack before model loading. It changes no frozen data,
+model, prompt, LoRA, optimizer, seed, checkpoint, or evaluation setting.
+
+## Passing F2-P1 smoke
+
+Issue #69 authorized one new private Kaggle P100 batch run at exact workflow
+commit `f64edead0367e7659b107e5c4c309ed811d09071`. The run completed the frozen
+longest-record one-step smoke and stopped before the separately gated full-
+training section.
+
+- approval: [exact GO comment](https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018574045)
+- result audit: [issue #69 comment](https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018689524)
+- run: [private Kaggle version 1](https://www.kaggle.com/code/univverssal/musahhih-f2-p1-smoke-f64edea-r01)
+- model: `unsloth/gemma-3-4b-it-unsloth-bnb-4bit`
+- model revision: `316726ca0bd24aa323bfaf86e8a379ee1176d1fe`
+- hardware: Tesla P100-PCIE-16GB
+- selected record: index 1287, 836 tokens; all 2,000 records were at or below
+  the frozen 1,024-token limit
+- optimizer steps: exactly 1
+- peak reserved memory: 8,019,509,248 bytes
+- measured headroom: 9,040,035,840 bytes
+- required headroom: 1,073,741,824 bytes
+- memory gate: passed
+- downloaded private summary SHA-256:
+  `800c29215c8803fdfaf4f530609b93c96d8b767ad83eb4fc8f92ac649e6df08c`
+- activation-config SHA-256:
+  `8da7e35709bd6900f55b25b54ffe85664e92be27932461fdb4a93cc66ce2bf12`
+- executed-notebook SHA-256:
+  `3a9393d987821bea69edd93c406951c7ee3aa6f2298c40978c0546bdf5cacdb8`
+
+Kaggle initially exposed PyTorch 2.10.0+cu128 and torchvision 0.25.0+cu128.
+The conditional heavy setup ran once for 166.773 seconds, then validated
+PyTorch 2.6.0+cu124, torchvision 0.21.0+cu124, xformers 0.0.29.post3, torchao
+0.16.0, NumPy 2.0.2, and CUDA 12.4. The text-free summary records
+`contains_corpus_text=false`.
+
+The run also preserved three compatibility warnings for later review: an
+unused torchaudio 2.10.0+cu128 package conflicts with the frozen PyTorch
+version; staged installation emitted temporary resolver warnings before the
+required final stack validated; and Unsloth warned that Gemma 3 does not accept
+`num_items_in_batch`, so gradient-accumulation equivalence remains a
+reproducibility caveat.
+
 ## What this audit does not establish
 
-Static checks cannot establish current Kaggle P100 availability, runtime
-installation compatibility, peak VRAM, training stability, epoch losses,
-checkpoint existence, adapter quality, or benchmark performance. Those facts
-must come from separately approved, preserved executions. No score is reported
-here.
+The passing smoke establishes current P100 setup compatibility and measured
+memory feasibility for one worst-case optimizer step. It does not establish
+two-epoch stability, epoch losses, checkpoint existence, adapter quality, or
+benchmark performance. No score is reported here. Full F2 training, F3,
+development generation, QALB test, Nahw-Passage, safety-diagnostic reruns, and
+XG were not executed.

@@ -314,11 +314,17 @@ malformed, or inconsistent with the selected stage. The config contains no
 corpus text, but remains Git-ignored. No final-test evaluation is part of that
 notebook.
 
-Two approved F2-P1 smoke attempts have stopped at preflight without loading a
-model or running an optimizer step. The current repair supports Kaggle's nested
-`/kaggle/input/datasets/<owner>/<dataset>/...` mounts while retaining unique-
-file and checksum gates. A fresh exact-commit GO on issue #69 is required
-before another GPU attempt; no prior GO authorizes a retry.
+After three preserved pre-result infrastructure attempts, the exact-commit
+F2-P1 longest-record smoke completed on a free Kaggle P100 at
+`f64edead0367e7659b107e5c4c309ed811d09071`. Exactly one optimizer step ran;
+peak reserved memory was 8,019,509,248 bytes and measured headroom was
+9,040,035,840 bytes, above the frozen 1 GiB requirement. The corpus-text-free
+evidence is recorded in
+[`results/f2_p1_gpu_smoke_summary.json`](results/f2_p1_gpu_smoke_summary.json)
+and the updated workflow audit. This is an engineering result, not a benchmark
+score. No full F2 training, F3 run, final-test evaluation, or XG execution is
+authorized; the next gate is independent review followed by a separate exact-
+commit decision for one F2-P1 full-training run.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines

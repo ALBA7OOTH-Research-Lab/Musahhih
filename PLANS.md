@@ -24,8 +24,16 @@
   validate the non-executing workflow locally.
 - [x] Merge the nested-mount repair through PR #72 at
   `000c8ccd4db215ca588fa246659c599986660d98`.
-- [ ] Obtain a fresh exact-commit GO before any GPU rerun.
+- [x] Repair the conditional P100 dependency preflight through PR #74 at
+  `f64edead0367e7659b107e5c4c309ed811d09071`.
+- [x] Execute the exact-commit F2-P1 longest-record, one-step P100 smoke once;
+  the 1 GiB headroom gate passed with 9,040,035,840 bytes measured headroom.
+- [x] Preserve only aggregate, corpus-text-free smoke evidence in GitHub and
+  Notion; no benchmark score or final-test result was produced.
+- [ ] Obtain independent review and a separate exact-commit GO before one
+  F2-P1 full-training run.
 
-Do not execute model training or inference, access final-test outcomes, activate
-XG, upload private artifacts publicly, or change a frozen research setting in
-this task. A later GO may authorize only the explicitly named execution stage.
+Do not execute full training or inference, access final-test outcomes, activate
+F3 or XG, upload private artifacts publicly, or change a frozen research
+setting in this task. A later GO may authorize only the explicitly named
+execution stage.
