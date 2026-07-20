@@ -84,6 +84,21 @@
     "status": "passed",
     "workflow_commit": "f64edead0367e7659b107e5c4c309ed811d09071"
   },
+  "first_full_training_attempt": {
+    "actual_cloned_commit": "1b2fc818ee043a7247d6ff00f6432f2a47d07674",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018840589",
+    "approved_workflow_commit": "f64edead0367e7659b107e5c4c309ed811d09071",
+    "arm": "F2-P1",
+    "config_sha256": "87a45e4c3f2af045f4ce4af582c27b19fd01d79999ea1ee8f7d32b668d9e87e7",
+    "failure": "default-branch clone produced an approved workflow commit mismatch at repository preflight",
+    "metric_produced": false,
+    "model_loaded": false,
+    "optimizer_steps": 0,
+    "prior_smoke_summary_sha256": "800c29215c8803fdfaf4f530609b93c96d8b767ad83eb4fc8f92ac649e6df08c",
+    "private_records_validated": false,
+    "run": "univverssal/musahhih-f2-p1-full-f64edea-r01",
+    "status": "failed_preflight"
+  },
   "full_training_executed": false,
   "inference_executed": false,
   "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
@@ -92,7 +107,7 @@
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 4,
+  "schema_version": 5,
   "seed": 3407,
   "training_executed": true,
   "validation_scope": "private-record adapter, static notebook validation, and one approved F2-P1 longest-record optimizer-step smoke; no full training or inference"

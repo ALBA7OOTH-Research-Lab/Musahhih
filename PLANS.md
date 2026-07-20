@@ -30,10 +30,16 @@
   the 1 GiB headroom gate passed with 9,040,035,840 bytes measured headroom.
 - [x] Preserve only aggregate, corpus-text-free smoke evidence in GitHub and
   Notion; no benchmark score or final-test result was produced.
-- [ ] Obtain independent review and a separate exact-commit GO before one
-  F2-P1 full-training run.
+- [x] Obtain review and a separate exact-commit GO for one F2-P1 full-training
+  run at `f64edead0367e7659b107e5c4c309ed811d09071`.
+- [x] Preserve full-training attempt 001 after it failed closed at repository
+  preflight: current `main` was cloned instead of the approved workflow commit;
+  no private-data validation, model load, optimizer step, or result occurred.
+- [ ] Merge issue #78's immutable approved-commit checkout repair.
+- [ ] Obtain a fresh exact-commit GO and pass a new one-step F2-P1 smoke at the
+  repaired commit before any new full-training decision.
 
-Do not execute full training or inference, access final-test outcomes, activate
-F3 or XG, upload private artifacts publicly, or change a frozen research
-setting in this task. A later GO may authorize only the explicitly named
-execution stage.
+Do not execute another smoke, full training, or inference; access final-test
+outcomes; activate F3 or XG; upload private artifacts publicly; or change a
+frozen research setting in this task. All previous execution approvals are
+consumed. A later GO may authorize only its explicitly named execution stage.

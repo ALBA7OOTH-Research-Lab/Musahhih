@@ -1,6 +1,8 @@
 import ast
 import json
+import os
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 
@@ -92,6 +94,104 @@ class F2F3NotebookStaticTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(RuntimeError, "Expected at most one"):
                 execute_with(root)
+
+    def test_executing_repository_uses_immutable_approved_commit(self):
+        setup_source = "".join(self.payload["cells"][4]["source"])
+        for value in (
+            "if dirty and EXECUTE_GPU_STAGE:",
+            "Executing stage refuses a repository with local changes.",
+            "elif EXECUTE_GPU_STAGE:",
+            "'fetch', '--no-tags', 'origin', 'main'",
+            "'checkout', '--detach', APPROVED_WORKFLOW_COMMIT",
+            "origin_url != REPO_URL",
+        ):
+            self.assertIn(value, setup_source)
+        self.assertLess(
+            setup_source.index("'checkout', '--detach', APPROVED_WORKFLOW_COMMIT"),
+            setup_source.index("ACTUAL_WORKFLOW_COMMIT ="),
+        )
+
+    def test_executing_repository_checks_out_historical_approved_commit(self):
+        setup_source = "".join(self.payload["cells"][4]["source"])
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_repo = root / "source"
+            remote_repo = root / "remote.git"
+            runtime = root / "runtime"
+            source_repo.mkdir()
+            runtime.mkdir()
+            subprocess.run(
+                ["git", "init", "-b", "main"], cwd=source_repo, check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "test"], cwd=source_repo,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.email", "test@example.invalid"],
+                cwd=source_repo, check=True,
+            )
+            marker = source_repo / "marker.txt"
+            marker.write_text("approved\n", encoding="utf-8")
+            subprocess.run(["git", "add", "marker.txt"], cwd=source_repo, check=True)
+            subprocess.run(
+                ["git", "commit", "-m", "approved"], cwd=source_repo,
+                check=True, capture_output=True,
+            )
+            approved = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=source_repo, check=True,
+                capture_output=True, text=True,
+            ).stdout.strip()
+            marker.write_text("new main\n", encoding="utf-8")
+            subprocess.run(["git", "add", "marker.txt"], cwd=source_repo, check=True)
+            subprocess.run(
+                ["git", "commit", "-m", "new main"], cwd=source_repo,
+                check=True, capture_output=True,
+            )
+            subprocess.run(
+                ["git", "clone", "--bare", str(source_repo), str(remote_repo)],
+                check=True, capture_output=True,
+            )
+
+            executable_source = setup_source.replace(
+                "Path('/kaggle/working') if Path('/kaggle/working').exists() else Path('/content')",
+                f"Path({str(runtime)!r})",
+            ).replace(
+                "https://github.com/ALBA7OOTH-Research-Lab/Musahhih.git",
+                remote_repo.as_posix(),
+            )
+            namespace = {
+                "EXECUTE_GPU_STAGE": True,
+                "APPROVED_WORKFLOW_COMMIT": approved,
+            }
+            original_cwd = Path.cwd()
+            try:
+                exec(compile(executable_source, "repository-setup", "exec"), namespace)
+            finally:
+                os.chdir(original_cwd)
+
+            self.assertEqual(namespace["ACTUAL_WORKFLOW_COMMIT"], approved)
+            self.assertEqual(
+                (runtime / "Musahhih" / "marker.txt").read_text(encoding="utf-8"),
+                "approved\n",
+            )
+            (runtime / "Musahhih" / "untracked.txt").write_text(
+                "local work\n", encoding="utf-8"
+            )
+            try:
+                with self.assertRaisesRegex(
+                    RuntimeError, "refuses a repository with local changes"
+                ):
+                    exec(
+                        compile(executable_source, "repository-setup", "exec"),
+                        {
+                            "EXECUTE_GPU_STAGE": True,
+                            "APPROVED_WORKFLOW_COMMIT": approved,
+                        },
+                    )
+            finally:
+                os.chdir(original_cwd)
 
     def test_private_inputs_are_exactly_validated(self):
         for value in (

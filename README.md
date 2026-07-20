@@ -322,9 +322,13 @@ peak reserved memory was 8,019,509,248 bytes and measured headroom was
 evidence is recorded in
 [`results/f2_p1_gpu_smoke_summary.json`](results/f2_p1_gpu_smoke_summary.json)
 and the updated workflow audit. This is an engineering result, not a benchmark
-score. No full F2 training, F3 run, final-test evaluation, or XG execution is
-authorized; the next gate is independent review followed by a separate exact-
-commit decision for one F2-P1 full-training run.
+score. The first separately approved full-training attempt failed closed before
+private-data validation because the notebook cloned a later audit-only `main`
+commit instead of checking out the approved workflow commit. No model loaded
+and no training step or result exists from that attempt. Issue #78 repairs
+immutable approved-commit checkout; after merge, its new commit requires a
+fresh one-step smoke before any new full-training decision. No F2/F3 GPU run,
+final-test evaluation, or XG execution is currently authorized.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
