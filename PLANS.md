@@ -35,11 +35,18 @@
 - [x] Preserve full-training attempt 001 after it failed closed at repository
   preflight: current `main` was cloned instead of the approved workflow commit;
   no private-data validation, model load, optimizer step, or result occurred.
-- [ ] Merge issue #78's immutable approved-commit checkout repair.
-- [ ] Obtain a fresh exact-commit GO and pass a new one-step F2-P1 smoke at the
-  repaired commit before any new full-training decision.
+- [x] Merge issue #78's immutable approved-commit checkout repair through PR
+  #79 at `ea4766ee205922c9fd4cb1af0357cca19bcfd59b`.
+- [x] Record the owner's explicit waiver of an additional repair-only smoke and
+  one-attempt F2-P1 full-training authorization.
+- [x] Complete one private F2-P1 two-epoch P100 run and select
+  `checkpoint-125` by the frozen common-development assistant-token loss rule.
+- [x] Verify and record only aggregate, corpus-text-free run evidence and the
+  selected private adapter hash.
+- [ ] Review the selected adapter through a newly authorized private
+  development-inference gate before deciding whether to proceed to F3-P1.
 
-Do not execute another smoke, full training, or inference; access final-test
-outcomes; activate F3 or XG; upload private artifacts publicly; or change a
-frozen research setting in this task. All previous execution approvals are
+Do not execute F2 inference, another training run, final-test evaluation,
+safety-diagnostic reruns, F3, or XG; upload private artifacts publicly; or
+change a frozen research setting in this task. The F2-P1 training approval is
 consumed. A later GO may authorize only its explicitly named execution stage.

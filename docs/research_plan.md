@@ -138,8 +138,11 @@ manifest contains a nested 2,000-record synthetic selection after deterministic
 alignment, grouping, project splitting, and exact hash-overlap checks. The
 methodology and compositions were frozen at merged commit
 `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`; all 2,000 selected records passed
-the pinned Gemma 1,024-token formatting gate. The guarded workflow remains
-non-executing until a later exact-commit GO authorizes its GPU stage.
+the pinned Gemma 1,024-token formatting gate. One authorized F2-P1 two-epoch
+training run completed and selected private epoch-1 `checkpoint-125` by the
+frozen common-development assistant-token loss rule. No inference or final-test
+access occurred; see
+[`../results/f2_p1_full_training_summary.json`](../results/f2_p1_full_training_summary.json).
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

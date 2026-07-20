@@ -99,7 +99,26 @@
     "run": "univverssal/musahhih-f2-p1-full-f64edea-r01",
     "status": "failed_preflight"
   },
-  "full_training_executed": false,
+  "second_full_training_attempt": {
+    "adapter_sha256": "935fdf02c95189934e40629f877d8692d325ef22895cbaa03fdb7390b0cd7b3e",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018921893",
+    "approved_workflow_commit": "f64edead0367e7659b107e5c4c309ed811d09071",
+    "arm": "F2-P1",
+    "config_sha256": "5049d23719295768c7329cd316b8d0ed6d4f7901621a76440d42458e751b00cb",
+    "development_losses": {
+      "epoch_1": 0.5975050330162048,
+      "epoch_2": 0.611619234085083
+    },
+    "execution_wrapper_commit": "ea4766ee205922c9fd4cb1af0357cca19bcfd59b",
+    "nahw_passage_used": false,
+    "optimizer_steps": 250,
+    "prior_smoke_summary_sha256": "800c29215c8803fdfaf4f530609b93c96d8b767ad83eb4fc8f92ac649e6df08c",
+    "qalb_test_used": false,
+    "run": "univverssal/musahhih-f2-p1-full-ea4766e-r02",
+    "selected_checkpoint": "checkpoint-125",
+    "status": "complete"
+  },
+  "full_training_executed": true,
   "inference_executed": false,
   "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
   "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
@@ -107,8 +126,8 @@
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 5,
+  "schema_version": 6,
   "seed": 3407,
   "training_executed": true,
-  "validation_scope": "private-record adapter, static notebook validation, and one approved F2-P1 longest-record optimizer-step smoke; no full training or inference"
+  "validation_scope": "private-record adapter, static notebook validation, one approved F2-P1 longest-record optimizer-step smoke, and one approved F2-P1 two-epoch full-training run; no inference or final-test access"
 }

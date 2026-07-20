@@ -2,13 +2,11 @@
 
 Recorded: 2026-07-20
 
-Status: private record assembly and the guarded workflow are complete. After
-three preserved pre-result infrastructure attempts and reviewed repairs, the
-fourth authorized F2-P1 smoke completed exactly one optimizer step on the
-longest validated record and passed the frozen P100 memory gate. No inference
-ran, no benchmark score was produced, and neither Nahw-Passage nor QALB test
-was accessed. Independent review and a separate exact-commit GO are required
-before one F2-P1 full-training run.
+Status: private record assembly, the guarded workflow, the longest-record
+smoke, and one F2-P1 two-epoch training run are complete. The frozen
+common-development selection rule chose epoch 1 (`checkpoint-125`). No
+inference ran, no final-test score was produced, and neither Nahw-Passage nor
+QALB test was accessed. The selected adapter remains private.
 
 ## Frozen private inputs
 
@@ -191,12 +189,67 @@ approved workflow commit before verification. Because that repair creates a
 new workflow commit, it must pass a fresh same-commit F2-P1 smoke before another
 full-training run can be considered.
 
+## Completed F2-P1 full training
+
+PR #79 merged the immutable-checkout repair at
+`ea4766ee205922c9fd4cb1af0357cca19bcfd59b`. The owner then explicitly waived
+an additional post-repair smoke and authorized exactly one F2-P1 full-training
+attempt. This exception is recorded rather than presented as the originally
+recommended gate sequence. The repaired execution wrapper checked out the
+already smoke-tested workflow commit
+`f64edead0367e7659b107e5c4c309ed811d09071` before any private-data or GPU work.
+
+- approval: [owner authorization and smoke waiver](https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018921893)
+- execution audit: [issue #80](https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/80)
+- private run: [Kaggle version 1](https://www.kaggle.com/code/univverssal/musahhih-f2-p1-full-ea4766e-r02)
+- execution-wrapper commit:
+  `ea4766ee205922c9fd4cb1af0357cca19bcfd59b`
+- checked-out workflow commit:
+  `f64edead0367e7659b107e5c4c309ed811d09071`
+- execution-config SHA-256:
+  `5049d23719295768c7329cd316b8d0ed6d4f7901621a76440d42458e751b00cb`
+- executed-notebook SHA-256:
+  `c32d977799b76915ebedcfec4001cae56cd3461755de10c1a142e868f60908b5`
+- prior passing-smoke summary SHA-256:
+  `800c29215c8803fdfaf4f530609b93c96d8b767ad83eb4fc8f92ac649e6df08c`
+- hardware: Tesla P100-PCIE-16GB
+- training: 2,000 F2-P1 records, two epochs, 250 optimizer steps, effective
+  batch size 16
+- development: 975 QALB-2014 L1 development records
+- epoch 1 development assistant-token loss: `0.5975050330162048`
+- epoch 2 development assistant-token loss: `0.611619234085083`
+- frozen selection rule: lowest common-development assistant-token loss; ties
+  within `1e-6` choose epoch 1
+- selected checkpoint: `checkpoint-125`
+- selected private adapter size: 131,252,288 bytes
+- selected private adapter SHA-256:
+  `935fdf02c95189934e40629f877d8692d325ef22895cbaa03fdb7390b0cd7b3e`
+- checkpoint-selection file SHA-256:
+  `39edee5e31d79c791a4ab0b14b7b85b838e28bcc302d9e552f168a03ac870e1b`
+
+The run validated the registered F2-P1 train and common-development record
+counts and hashes before loading the model. Its text-free selection record
+sets `contains_corpus_text=false`, `nahw_passage_used=false`, and
+`qalb_test_used=false`. The private checkpoints and adapter were not committed.
+The public aggregate record is
+[`f2_p1_full_training_summary.json`](f2_p1_full_training_summary.json).
+
+The final stack was Python 3.12.13, PyTorch 2.6.0+cu124, CUDA 12.4,
+Transformers 4.56.2, Unsloth 2026.7.3, Accelerate 1.13.0, PEFT 0.19.1, TRL
+0.22.2, datasets 4.3.0, bitsandbytes 0.49.2, torchvision 0.21.0+cu124,
+xformers 0.0.29.post3, torchao 0.16.0, and NumPy 2.0.2.
+
+The three smoke-era compatibility caveats persisted: Kaggle retained an unused
+torchaudio 2.10.0+cu128 package, staged installation emitted temporary resolver
+warnings before final validation, and Unsloth warned that Gemma 3 does not
+accept `num_items_in_batch`, making exact gradient-accumulation equivalence a
+reproducibility caveat.
+
 ## What this audit does not establish
 
-The passing smoke establishes current P100 setup compatibility and measured
-memory feasibility for one worst-case optimizer step. The preflight failure
-does not establish two-epoch stability, epoch losses, checkpoint existence,
-adapter quality, or benchmark performance. No score is reported here. Full F2
-training, F3,
-development generation, QALB test, Nahw-Passage, safety-diagnostic reruns, and
-XG were not executed.
+The completed run establishes two-epoch F2-P1 training, two frozen-development
+loss measurements, deterministic checkpoint selection, and existence of the
+selected private adapter. Development loss is a selection metric, not a held-
+out correction score, and does not establish adapter quality on a final test.
+F2 inference, F3 training, development generation, QALB test, Nahw-Passage,
+safety-diagnostic reruns, and XG were not executed.

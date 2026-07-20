@@ -1,0 +1,113 @@
+{
+  "adapter": {
+    "bytes": 131252288,
+    "private_location": "Kaggle output checkpoint-125",
+    "sha256": "935fdf02c95189934e40629f877d8692d325ef22895cbaa03fdb7390b0cd7b3e"
+  },
+  "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018921893",
+  "arm": "F2-P1",
+  "checkpoint_selection": {
+    "evaluations": [
+      {
+        "epoch": 1.0,
+        "eval_loss": 0.5975050330162048,
+        "eval_runtime_seconds": 713.8496,
+        "step": 125
+      },
+      {
+        "epoch": 2.0,
+        "eval_loss": 0.611619234085083,
+        "eval_runtime_seconds": 707.8445,
+        "step": 250
+      }
+    ],
+    "rule": "lowest common-development assistant-token loss; ties within 1e-6 choose epoch 1",
+    "selected_checkpoint": "checkpoint-125",
+    "selection_file_sha256": "39edee5e31d79c791a4ab0b14b7b85b838e28bcc302d9e552f168a03ac870e1b"
+  },
+  "common_development": {
+    "records": 975,
+    "sha256": "adfdeb0c2e5730357226ce4e5156c300679629142ea0576d32dea9ac3050a950",
+    "source": "QALB-2014-L1 development"
+  },
+  "contains_corpus_text": false,
+  "execution": {
+    "config_sha256": "5049d23719295768c7329cd316b8d0ed6d4f7901621a76440d42458e751b00cb",
+    "gpu": "Tesla P100-PCIE-16GB",
+    "issue": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/80",
+    "notebook_sha256": "c32d977799b76915ebedcfec4001cae56cd3461755de10c1a142e868f60908b5",
+    "run": "univverssal/musahhih-f2-p1-full-ea4766e-r02",
+    "status": "complete",
+    "wrapper_commit": "ea4766ee205922c9fd4cb1af0357cca19bcfd59b"
+  },
+  "inference_executed": false,
+  "model": {
+    "load_in_4bit": true,
+    "id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+    "lora": {
+      "alpha": 32,
+      "bias": "none",
+      "dropout": 0.0,
+      "gradient_checkpointing": "unsloth",
+      "rank": 16,
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "max_sequence_length": 1024,
+    "revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe"
+  },
+  "nahw_passage_used": false,
+  "packages": {
+    "accelerate": "1.13.0",
+    "bitsandbytes": "0.49.2",
+    "cuda": "12.4",
+    "datasets": "4.3.0",
+    "numpy": "2.0.2",
+    "peft": "0.19.1",
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "torchao": "0.16.0",
+    "torchvision": "0.21.0+cu124",
+    "transformers": "4.56.2",
+    "trl": "0.22.2",
+    "unsloth": "2026.7.3",
+    "xformers": "0.0.29.post3"
+  },
+  "prior_smoke_summary_sha256": "800c29215c8803fdfaf4f530609b93c96d8b767ad83eb4fc8f92ac649e6df08c",
+  "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
+  "qalb_test_used": false,
+  "schema_version": 1,
+  "training": {
+    "epochs": 2,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 0.0002,
+    "lr_scheduler_type": "linear",
+    "max_grad_norm": 1.0,
+    "optimizer_steps": 250,
+    "optimizer": "adamw_8bit",
+    "packing": false,
+    "per_device_batch_size": 1,
+    "precision": "fp16",
+    "records": 2000,
+    "sha256": "bbc48dcf78ddff1830661ad749fcc8f9fbfce8206f4f09cd9f4d6501823201d2",
+    "source": "Tibyan-corpus",
+    "seed": 3407,
+    "total_batch_size": 16,
+    "trainable_parameters": 32788480,
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01,
+    "workflow_commit": "f64edead0367e7659b107e5c4c309ed811d09071"
+  },
+  "warnings": [
+    "Kaggle retained unused torchaudio 2.10.0+cu128 beside the validated frozen PyTorch stack.",
+    "The staged dependency installation emitted temporary resolver warnings before final stack validation passed.",
+    "Unsloth warned that Gemma 3 does not accept num_items_in_batch, so gradient-accumulation equivalence is a reproducibility caveat."
+  ]
+}
