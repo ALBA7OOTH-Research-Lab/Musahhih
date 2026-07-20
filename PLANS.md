@@ -43,18 +43,19 @@
   `checkpoint-125` by the frozen common-development assistant-token loss rule.
 - [x] Verify and record only aggregate, corpus-text-free run evidence and the
   selected private adapter hash.
-- [ ] Issue #82: freeze and implement a disabled-by-default F2-P1 private
+- [x] Issue #82: freeze and implement a disabled-by-default F2-P1 private
   development-smoke workflow for selected `checkpoint-125`.
-- [ ] Validate and merge the exact workflow commit before execution.
-- [ ] Execute the single authorized deterministic 25-record QALB-development
+- [x] Validate and merge the exact workflow commit before execution.
+- [x] Execute the single authorized deterministic 25-record QALB-development
   run, preserve its first terminal state, and publish only text-free evidence.
-- [ ] Audit the private outputs and decide whether F2-P1 is technically ready
-  for a separately authorized evaluation or whether an engineering repair is
-  required. Do not use the smoke to reselect the checkpoint or tune parsing.
+- [x] Audit the private outputs: 25/25 rows completed, no output was empty, no
+  parser warning occurred, and all private hashes matched. F2-P1 is technically
+  reloadable; the private development metric remains unpublished.
+- [ ] Make a separate research decision about the next comparison stage. No
+  final-test evaluation or F3 training is implied by the technical gate.
 
-Current authorization permits exactly one F2-P1 selected-adapter inference run
-on a deterministic 25-record subset of the frozen QALB development view after
-the reviewed workflow merges. Do not execute another training run, any final-
-test evaluation, safety-diagnostic rerun, F3, or XG; upload private artifacts
-publicly; or change a frozen research setting. The run may verify the pipeline
-only and cannot change the selected checkpoint, prompt, or parser.
+The F2-P1 private development-smoke authorization is consumed. Do not execute
+another development run, training run, final-test evaluation, safety-diagnostic
+rerun, F3, or XG; upload private artifacts publicly; or change a frozen
+research setting without a fresh scope-specific GO. The completed technical
+gate cannot change the selected checkpoint, prompt, or parser.

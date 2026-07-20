@@ -48,8 +48,8 @@ The accepted pattern is:
 | `B1` | Untouched few-shot model | `B1-P1` |
 | `B2` | Untouched expert-style prompted model | `B2-P1` |
 | `F1` | Natural-data fine-tuning | `F1-P1`; training, checkpoint selection, frozen Nahw-Passage evaluation, and matched safety diagnostics complete |
-| `F2` | Synthetic-data fine-tuning | `F2-P1` Tibyan-derived matched protocol is draft NO-GO; no training authorized |
-| `F3` | Mixed natural and synthetic fine-tuning | `F3-P1` fixed 50:50 QALB/Tibyan protocol is draft NO-GO; no training authorized |
+| `F2` | Synthetic-data fine-tuning | `F2-P1`; training, checkpoint selection, and private development smoke complete; no final-test evaluation |
+| `F3` | Mixed natural and synthetic fine-tuning | `F3-P1` fixed 50:50 QALB/Tibyan protocol is frozen but not trained or authorized |
 | `F4` | Registered mixture or data-size ablation | Not yet registered |
 
 `B1` remains the few-shot family and `B2` remains the expert-style prompt family.

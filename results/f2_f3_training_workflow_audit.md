@@ -3,10 +3,12 @@
 Recorded: 2026-07-20
 
 Status: private record assembly, the guarded workflow, the longest-record
-smoke, and one F2-P1 two-epoch training run are complete. The frozen
-common-development selection rule chose epoch 1 (`checkpoint-125`). No
-inference ran, no final-test score was produced, and neither Nahw-Passage nor
-QALB test was accessed. The selected adapter remains private.
+smoke, one F2-P1 two-epoch training run, and one selected-adapter 25-record
+private development smoke are complete. The frozen common-development
+selection rule chose epoch 1 (`checkpoint-125`), and the later development
+smoke reloaded it without changing selection. No final-test score was produced,
+and neither Nahw-Passage nor QALB test was accessed. The selected adapter and
+record-level responses remain private.
 
 ## Frozen private inputs
 
@@ -245,11 +247,34 @@ warnings before final validation, and Unsloth warned that Gemma 3 does not
 accept `num_items_in_batch`, making exact gradient-accumulation equivalence a
 reproducibility caveat.
 
+## Passing F2-P1 private development smoke
+
+Issue #82 authorized one private development-only run after its guarded
+workflow merged at `d176c6fa4bacc3ea05419484e2316e9e6201a9bd`. Private
+Kaggle version 1 completed all 25 label-independent deterministic QALB-2014 L1
+development records with zero empty outputs and no parser warnings.
+
+The run verified `checkpoint-125`, the adapter-model, adapter-config, and
+checkpoint-selection hashes before loading. It used greedy decoding, no
+temperature argument, `max_new_tokens=256`, and seed 3407. The selected record-
+ID SHA-256 is
+`7cf5e1fbced3f28551053abb08d7747ae7eedcd70ca6900be2ea9ce4e58c4527`;
+the private prediction JSONL SHA-256 is
+`5f29061b4510ec678b138fdaf324629ea910ad4682729ffc2544f31d76d31f70`.
+The private development exact-match count was not published or used to change
+the experiment.
+
+See [`f2_p1_dev_smoke_audit.md`](f2_p1_dev_smoke_audit.md) and the byte-identical
+text-free [`f2_p1_dev_smoke_summary.json`](f2_p1_dev_smoke_summary.json). The
+run accessed no final test and performed no training, checkpoint change, F3,
+safety diagnostic, or XG execution. Its one-attempt authorization is consumed.
+
 ## What this audit does not establish
 
-The completed run establishes two-epoch F2-P1 training, two frozen-development
-loss measurements, deterministic checkpoint selection, and existence of the
-selected private adapter. Development loss is a selection metric, not a held-
-out correction score, and does not establish adapter quality on a final test.
-F2 inference, F3 training, development generation, QALB test, Nahw-Passage,
-safety-diagnostic reruns, and XG were not executed.
+The completed stages establish two-epoch F2-P1 training, two frozen-development
+loss measurements, deterministic checkpoint selection, existence of the
+selected private adapter, and successful reload/generation/parsing on 25
+private development records. Development loss and the technical smoke are not
+held-out correction scores and do not establish adapter quality on a final
+test. Full F2 evaluation, F3 training, QALB test, Nahw-Passage, safety-
+diagnostic reruns, and XG were not executed.

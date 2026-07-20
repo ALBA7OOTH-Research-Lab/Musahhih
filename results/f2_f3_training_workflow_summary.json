@@ -119,15 +119,31 @@
     "status": "complete"
   },
   "full_training_executed": true,
-  "inference_executed": false,
+  "f2_private_development_smoke": {
+    "adapter_model_sha256": "935fdf02c95189934e40629f877d8692d325ef22895cbaa03fdb7390b0cd7b3e",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/82#issuecomment-5021082958",
+    "empty_output_count": 0,
+    "gate_status": "passed",
+    "nahw_passage_used": false,
+    "private_development_metric_published": false,
+    "private_predictions_sha256": "5f29061b4510ec678b138fdaf324629ea910ad4682729ffc2544f31d76d31f70",
+    "qalb_test_used": false,
+    "records_completed": 25,
+    "records_expected": 25,
+    "repository_commit": "d176c6fa4bacc3ea05419484e2316e9e6201a9bd",
+    "run": "univverssal/musahhih-f2-p1-dev-smoke-d176c6f-r01",
+    "selected_checkpoint": "checkpoint-125",
+    "selected_record_ids_sha256": "7cf5e1fbced3f28551053abb08d7747ae7eedcd70ca6900be2ea9ce4e58c4527"
+  },
+  "inference_executed": true,
   "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
   "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
   "nahw_passage_used": false,
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 6,
+  "schema_version": 7,
   "seed": 3407,
   "training_executed": true,
-  "validation_scope": "private-record adapter, static notebook validation, one approved F2-P1 longest-record optimizer-step smoke, and one approved F2-P1 two-epoch full-training run; no inference or final-test access"
+  "validation_scope": "private-record adapter, static notebook validation, one approved F2-P1 longest-record optimizer-step smoke, one approved F2-P1 two-epoch full-training run, and one approved 25-record private development inference smoke; no final-test access"
 }

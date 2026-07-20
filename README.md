@@ -331,14 +331,14 @@ completed. The frozen common-development loss rule selected private
 `0.611619234085083`). These are checkpoint-selection losses, not final-test
 scores. Aggregate evidence and the private adapter hash are recorded in
 [`results/f2_p1_full_training_summary.json`](results/f2_p1_full_training_summary.json).
-No inference or final-test access occurred, and no further F2/F3 GPU run or XG
-execution is authorized except the single private development-only gate frozen
-in [`docs/f2_p1_private_dev_smoke_protocol.md`](docs/f2_p1_private_dev_smoke_protocol.md).
-Its disabled-by-default Kaggle workflow is
-[`notebooks/05_f2_private_dev_smoke.ipynb`](notebooks/05_f2_private_dev_smoke.ipynb).
-The authorized run is limited to 25 deterministically selected QALB development
-records and cannot change the prompt, parser, or selected checkpoint. Raw
-responses, corpus records, and adapter artifacts remain private.
+The separately frozen private development-only gate in
+[`docs/f2_p1_private_dev_smoke_protocol.md`](docs/f2_p1_private_dev_smoke_protocol.md)
+then completed 25/25 deterministic QALB development records with zero empty
+outputs and no parser warnings. See
+[`results/f2_p1_dev_smoke_audit.md`](results/f2_p1_dev_smoke_audit.md). Its
+private development metric, raw responses, corpus records, and adapter artifacts
+remain private; the selected checkpoint did not change. No final-test access
+occurred, and no further F2/F3 GPU run or XG execution is authorized.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
@@ -372,5 +372,6 @@ This project builds on:
 
 The untouched baseline, prompt baselines, F1-P1 natural-data study, matched
 safety diagnostics, and F2-P1 synthetic-data training are complete. F2-P1 has
-not yet been evaluated, and F3-P1 has not been trained. Development loss is not
-reported as final model performance.
+passed its private technical development smoke but has not received final-test
+evaluation, and F3-P1 has not been trained. Development loss and smoke status
+are not reported as final model performance.
