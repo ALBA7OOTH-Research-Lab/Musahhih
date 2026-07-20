@@ -143,10 +143,13 @@ training run completed and selected private epoch-1 `checkpoint-125` by the
 frozen common-development assistant-token loss rule. No inference or final-test
 access occurred; see
 [`../results/f2_p1_full_training_summary.json`](../results/f2_p1_full_training_summary.json).
-The next gate is the single private 25-record QALB-development pipeline smoke
-frozen in
-[`f2_p1_private_dev_smoke_protocol.md`](f2_p1_private_dev_smoke_protocol.md).
-It cannot change the selected checkpoint, prompt, parser, or research design.
+The single private 25-record QALB-development pipeline smoke frozen in
+[`f2_p1_private_dev_smoke_protocol.md`](f2_p1_private_dev_smoke_protocol.md)
+subsequently passed with 25/25 rows, zero empty outputs, and no parser warnings;
+see
+[`../results/f2_p1_dev_smoke_audit.md`](../results/f2_p1_dev_smoke_audit.md).
+Its private development metric was not published and it did not change the
+selected checkpoint, prompt, parser, or research design.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 
