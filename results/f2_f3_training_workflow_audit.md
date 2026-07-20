@@ -156,11 +156,47 @@ required final stack validated; and Unsloth warned that Gemma 3 does not accept
 `num_items_in_batch`, so gradient-accumulation equivalence remains a
 reproducibility caveat.
 
+## First F2-P1 full-training attempt
+
+After review, issue #69 separately authorized one F2-P1 two-epoch training run
+at the same workflow commit as the passing smoke. Private Kaggle version 1,
+`univverssal/musahhih-f2-p1-full-f64edea-r01`, loaded the strict full-training
+config and then failed closed at repository preflight.
+
+- approval: [exact full-training GO](https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#issuecomment-5018840589)
+- execution audit: [issue #77](https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/77)
+- approved workflow commit:
+  `f64edead0367e7659b107e5c4c309ed811d09071`
+- repository commit cloned from current `main`:
+  `1b2fc818ee043a7247d6ff00f6432f2a47d07674`
+- execution-config SHA-256:
+  `87a45e4c3f2af045f4ce4af582c27b19fd01d79999ea1ee8f7d32b668d9e87e7`
+- prior smoke-summary SHA-256:
+  `800c29215c8803fdfaf4f530609b93c96d8b767ad83eb4fc8f92ac649e6df08c`
+- terminal error: `F2F3TrainingGateError: Approved workflow commit mismatch`
+
+The notebook cloned the repository's default branch but did not check out the
+approved immutable commit before computing `ACTUAL_WORKFLOW_COMMIT`. The public
+smoke-audit merge had legitimately advanced `main` after the smoke. The exact-
+commit gate therefore rejected the run as designed.
+
+The failure occurred before private-record discovery or validation, dependency
+installation, CUDA/model loading, LoRA/trainer construction, an optimizer
+step, epoch evaluation, checkpoint or adapter creation, generation, or final-
+test access. No training summary, metric, or score exists. The GO was consumed,
+and no hot-patch or retry occurred.
+
+Issue #78 adds a clean-repository fetch and detached checkout of the exact
+approved workflow commit before verification. Because that repair creates a
+new workflow commit, it must pass a fresh same-commit F2-P1 smoke before another
+full-training run can be considered.
+
 ## What this audit does not establish
 
 The passing smoke establishes current P100 setup compatibility and measured
-memory feasibility for one worst-case optimizer step. It does not establish
-two-epoch stability, epoch losses, checkpoint existence, adapter quality, or
-benchmark performance. No score is reported here. Full F2 training, F3,
+memory feasibility for one worst-case optimizer step. The preflight failure
+does not establish two-epoch stability, epoch losses, checkpoint existence,
+adapter quality, or benchmark performance. No score is reported here. Full F2
+training, F3,
 development generation, QALB test, Nahw-Passage, safety-diagnostic reruns, and
 XG were not executed.
