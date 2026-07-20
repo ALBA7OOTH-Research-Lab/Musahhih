@@ -32,10 +32,13 @@ smoke. The immutable-checkout wrapper repair is merged at
 owner waiver of an additional repair-only smoke, one authorized F2-P1
 two-epoch run completed and selected private `checkpoint-125` by the frozen
 common-development loss rule. See `results/f2_p1_full_training_summary.json`.
-No inference or final-test access occurred. No further GPU execution is
-authorized: do not run F2 inference, F3, final-test evaluation, safety reruns,
-or XG without a fresh scope-specific GO. The proposed `XG` operator remains
-disabled pending qualified linguistic review.
+No inference or final-test access occurred during training. Issue #82 now
+authorizes exactly one private F2-P1 `checkpoint-125` smoke on 25 frozen QALB
+development records after its disabled-by-default workflow passes CI and
+merges. Follow `docs/f2_p1_private_dev_smoke_protocol.md`; the run cannot tune
+or reselect anything. Do not run further F2 inference, F3, final-test
+evaluation, safety reruns, or XG under that approval. The proposed `XG`
+operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 

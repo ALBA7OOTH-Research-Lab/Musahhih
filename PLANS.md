@@ -43,10 +43,18 @@
   `checkpoint-125` by the frozen common-development assistant-token loss rule.
 - [x] Verify and record only aggregate, corpus-text-free run evidence and the
   selected private adapter hash.
-- [ ] Review the selected adapter through a newly authorized private
-  development-inference gate before deciding whether to proceed to F3-P1.
+- [ ] Issue #82: freeze and implement a disabled-by-default F2-P1 private
+  development-smoke workflow for selected `checkpoint-125`.
+- [ ] Validate and merge the exact workflow commit before execution.
+- [ ] Execute the single authorized deterministic 25-record QALB-development
+  run, preserve its first terminal state, and publish only text-free evidence.
+- [ ] Audit the private outputs and decide whether F2-P1 is technically ready
+  for a separately authorized evaluation or whether an engineering repair is
+  required. Do not use the smoke to reselect the checkpoint or tune parsing.
 
-Do not execute F2 inference, another training run, final-test evaluation,
-safety-diagnostic reruns, F3, or XG; upload private artifacts publicly; or
-change a frozen research setting in this task. The F2-P1 training approval is
-consumed. A later GO may authorize only its explicitly named execution stage.
+Current authorization permits exactly one F2-P1 selected-adapter inference run
+on a deterministic 25-record subset of the frozen QALB development view after
+the reviewed workflow merges. Do not execute another training run, any final-
+test evaluation, safety-diagnostic rerun, F3, or XG; upload private artifacts
+publicly; or change a frozen research setting. The run may verify the pipeline
+only and cannot change the selected checkpoint, prompt, or parser.
