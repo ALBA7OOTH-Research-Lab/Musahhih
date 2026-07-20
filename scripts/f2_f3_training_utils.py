@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from scripts.f1_training_utils import (
@@ -27,6 +28,10 @@ EXPECTED_RECORD_SHA256 = {
     "development": "adfdeb0c2e5730357226ce4e5156c300679629142ea0576d32dea9ac3050a950",
 }
 GPU_SMOKE_CONFIRMATION = "RUN_F2_F3_LONGEST_RECORD_SMOKE"
+APPROVAL_REFERENCE_PATTERN = re.compile(
+    r"https://github\.com/ALBA7OOTH-Research-Lab/Musahhih/"
+    r"issues/[1-9][0-9]*#issuecomment-[1-9][0-9]*"
+)
 FULL_TRAINING_CONFIRMATION = {
     "F2-P1": "RUN_F2_P1_TWO_EPOCH_TRAINING",
     "F3-P1": "RUN_F3_P1_TWO_EPOCH_TRAINING",
@@ -226,10 +231,12 @@ def require_execution_approval(
         or approved_commit != actual_commit
     ):
         raise F2F3TrainingGateError("Approved workflow commit mismatch")
-    if not isinstance(approval_reference, str) or not approval_reference.startswith(
-        "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/69#"
-    ):
-        raise F2F3TrainingGateError("Workflow execution approval reference is missing")
+    if not isinstance(
+        approval_reference, str
+    ) or not APPROVAL_REFERENCE_PATTERN.fullmatch(approval_reference):
+        raise F2F3TrainingGateError(
+            "Workflow execution approval must be a Musahhih issue-comment URL"
+        )
 
 
 def require_smoke_confirmation(
@@ -277,6 +284,7 @@ def run_id(arm: str, stage: str) -> str:
 
 
 __all__ = [
+    "APPROVAL_REFERENCE_PATTERN",
     "ARMS",
     "COMMON_DEV_RECORDS",
     "EXPECTED_RECORD_SHA256",

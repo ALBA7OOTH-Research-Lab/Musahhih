@@ -52,6 +52,20 @@ class PrepareF2F3ExecutionConfigTests(unittest.TestCase):
         )
         self.assertEqual(config["stage"], "full-training")
 
+    def test_accepts_a_dedicated_f3_issue_comment(self):
+        approval = (
+            "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/"
+            "issues/85#issuecomment-987654"
+        )
+        config = build_execution_config(
+            arm="F3-P1",
+            stage="gpu-smoke",
+            approved_workflow_commit=self.COMMIT,
+            approval_reference=approval,
+            confirmation="RUN_F2_F3_LONGEST_RECORD_SMOKE",
+        )
+        self.assertEqual(config["approval_reference"], approval)
+
     def test_rejects_invalid_arm_stage_commit_reference_and_confirmation(self):
         valid = {
             "arm": "F2-P1",
@@ -65,6 +79,15 @@ class PrepareF2F3ExecutionConfigTests(unittest.TestCase):
             ({"stage": "training"}, ExecutionConfigError),
             ({"approved_workflow_commit": "abc"}, ExecutionConfigError),
             ({"approval_reference": "https://example.com"}, ExecutionConfigError),
+            (
+                {
+                    "approval_reference": (
+                        "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/"
+                        "issues/85#not-a-comment"
+                    )
+                },
+                ExecutionConfigError,
+            ),
             ({"confirmation": "yes"}, ExecutionConfigError),
         )
         for update, error_type in cases:

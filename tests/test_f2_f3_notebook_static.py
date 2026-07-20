@@ -36,6 +36,14 @@ class F2F3NotebookStaticTests(unittest.TestCase):
         ):
             self.assertIn(value, self.source)
 
+    def test_approval_reference_accepts_repository_issue_comments_only(self):
+        activation_source = "".join(self.payload["cells"][2]["source"])
+        self.assertIn(
+            "Musahhih/issues/[1-9][0-9]*#issuecomment-[1-9][0-9]*",
+            activation_source,
+        )
+        self.assertNotIn("Musahhih/issues/69#issuecomment", activation_source)
+
     def test_activation_uses_one_strict_private_config_without_cell_editing(self):
         for value in (
             "f2_f3_execution_config.json",
@@ -74,7 +82,7 @@ class F2F3NotebookStaticTests(unittest.TestCase):
                         "approved_workflow_commit": "a" * 40,
                         "approval_reference": (
                             "https://github.com/ALBA7OOTH-Research-Lab/"
-                            "Musahhih/issues/69#issuecomment-123456"
+                            "Musahhih/issues/85#issuecomment-123456"
                         ),
                         "confirmation": "RUN_F2_F3_LONGEST_RECORD_SMOKE",
                         "prior_smoke_summary_path": "",

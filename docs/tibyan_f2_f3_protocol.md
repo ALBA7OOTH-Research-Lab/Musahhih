@@ -206,6 +206,12 @@ decisions. The later evaluation protocol must be frozen before either adapter
 is evaluated and must reuse F1's prompt, conservative parser, deterministic
 decoding, raw-response retention, and aggregate reporting rules.
 
+Each execution approval reference must be a permanent comment URL on the
+dedicated stage-specific issue in the Musahhih GitHub repository. The workflow
+validates the repository, issue-comment URL shape, exact approved commit, arm,
+stage, and confirmation string. An earlier issue's consumed authorization must
+not be reused for a later arm or stage.
+
 Each F2/F3 adapter may access Nahw-Passage exactly once only after its model,
 checkpoint rule, parser, artifact paths, and retry rules are frozen. A failure
 after any record result exists is preserved and independently reviewed; it is
