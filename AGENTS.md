@@ -36,12 +36,12 @@ Issue #82's single private F2-P1 `checkpoint-125` smoke completed all 25 frozen
 QALB development records and passed its technical gate with zero empty outputs
 and no parser warnings. See `results/f2_p1_dev_smoke_audit.md`. Its private
 development metric and record-level responses were not published, and the
-checkpoint did not change. The authorization is consumed. Issue #85 is
-preparing the disabled-by-default F3-P1 longest-record smoke gate; preparation
-does not authorize execution. Do not run further F2 inference, an F3 smoke or
-training, final-test evaluation, safety reruns, or XG without a fresh
-scope-specific GO. The proposed `XG` operator remains disabled pending
-qualified linguistic review.
+checkpoint did not change. The authorization is consumed. Issue #85's F3-P1
+smoke-gate preparation is merged at
+`6d64f699c04168cc15c045edc86389d5dc81f1bc`; it did not authorize execution.
+Do not run further F2 inference, an F3 smoke or training, final-test evaluation,
+safety reruns, or XG without a fresh scope-specific GO. The proposed `XG`
+operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 

@@ -294,8 +294,10 @@ compositions received GO at merged commit
 implementation only. The non-executing-by-default Kaggle workflow is
 [`notebooks/04_f2_f3_qlora.ipynb`](notebooks/04_f2_f3_qlora.ipynb). A new
 exact-commit GO is still required before a GPU smoke or full-training run. Do
-not edit the Kaggle notebook to activate it. After GO, generate a strict,
-text-free private activation file with:
+not edit the Kaggle notebook to activate it. The F3-P1 smoke gate is ready at
+exact workflow commit
+`6d64f699c04168cc15c045edc86389d5dc81f1bc`, but no F3 execution is authorized.
+After GO, generate a strict, text-free private activation file with:
 
 ```bash
 python scripts/prepare_f2_f3_execution_config.py \
