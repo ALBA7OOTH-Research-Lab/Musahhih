@@ -12,6 +12,7 @@ from scripts.f2_f3_training_utils import (
     P100_HEAVY_STACK,
     locate_private_input,
     p100_stack_report,
+    require_execution_approval,
     require_full_training_confirmation,
     require_smoke_confirmation,
     run_id,
@@ -163,6 +164,33 @@ class F2F3TrainingUtilsTests(unittest.TestCase):
         require_smoke_confirmation(
             GPU_SMOKE_CONFIRMATION, "a" * 40, "a" * 40, self.APPROVAL
         )
+
+    def test_execution_approval_accepts_any_musahhih_issue_comment(self):
+        commit = "a" * 40
+        require_execution_approval(
+            commit,
+            commit,
+            "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/"
+            "issues/85#issuecomment-123456",
+        )
+
+    def test_execution_approval_rejects_non_comment_and_lookalike_urls(self):
+        commit = "a" * 40
+        repository = "https://github.com/ALBA7OOTH-Research-Lab/Musahhih"
+        invalid_references = (
+            f"{repository}/issues/85",
+            f"{repository}/pull/85#issuecomment-1",
+            "https://github.com/another/Musahhih/issues/85#issuecomment-1",
+            f"{repository}/issues/0#issuecomment-1",
+            f"{repository}/issues/85#issuecomment-0",
+            f"{repository}/issues/85#issuecomment-1?x=1",
+        )
+        for reference in invalid_references:
+            with self.subTest(reference=reference):
+                with self.assertRaisesRegex(
+                    F2F3TrainingGateError, "issue-comment URL"
+                ):
+                    require_execution_approval(commit, commit, reference)
 
     def test_full_training_requires_matching_arm_commit_and_issue_approval(self):
         arm = "F2-P1"

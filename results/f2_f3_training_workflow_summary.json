@@ -1,6 +1,7 @@
 {
   "approval_scope": "methodology-approved workflow implementation only",
   "activation_mechanism": {
+    "approval_reference": "permanent comment URL on a dedicated issue in ALBA7OOTH-Research-Lab/Musahhih",
     "config_filename": "f2_f3_execution_config.json",
     "default_stage": "disabled",
     "generated_by": "scripts/prepare_f2_f3_execution_config.py",

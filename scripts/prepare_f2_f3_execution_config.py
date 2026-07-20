@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:  # Support direct `python scripts/...py` execution
     sys.path.insert(0, str(ROOT))
 
 from scripts.f2_f3_training_utils import (  # noqa: E402
+    APPROVAL_REFERENCE_PATTERN,
     FULL_TRAINING_CONFIRMATION,
     GPU_SMOKE_CONFIRMATION,
     validate_arm,
@@ -23,10 +24,6 @@ from scripts.f2_f3_training_utils import (  # noqa: E402
 
 CONFIG_FILENAME = "f2_f3_execution_config.json"
 STAGES = ("gpu-smoke", "full-training")
-ISSUE_COMMENT_PATTERN = re.compile(
-    r"https://github\.com/ALBA7OOTH-Research-Lab/Musahhih/"
-    r"issues/69#issuecomment-[0-9]+"
-)
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 
 
@@ -50,8 +47,10 @@ def build_execution_config(
         raise ExecutionConfigError(f"Stage must be one of {STAGES}")
     if not COMMIT_PATTERN.fullmatch(approved_workflow_commit):
         raise ExecutionConfigError("Approved workflow commit must be 40 lowercase hex characters")
-    if not ISSUE_COMMENT_PATTERN.fullmatch(approval_reference):
-        raise ExecutionConfigError("Approval reference must be an issue #69 comment URL")
+    if not APPROVAL_REFERENCE_PATTERN.fullmatch(approval_reference):
+        raise ExecutionConfigError(
+            "Approval reference must be a Musahhih issue-comment URL"
+        )
 
     expected_confirmation = (
         GPU_SMOKE_CONFIRMATION

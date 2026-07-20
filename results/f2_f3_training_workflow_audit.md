@@ -40,11 +40,13 @@ requires editing a code cell to activate a run. With no unique private
 `f2_f3_execution_config.json` attached, the selected stage is `disabled`, the
 approval fields remain blank, and no GPU stage executes. The ignored config is
 created only after GO by `scripts/prepare_f2_f3_execution_config.py`, which
-requires an exact 40-character workflow commit, issue #69 comment URL, stage-
-specific confirmation, and—only for full training—a private passing smoke-
-summary path. The notebook stays disabled when the file is missing and rejects
-duplicate, malformed, or inconsistent activation files before repository or
-GPU work.
+requires an exact 40-character workflow commit, a permanent comment URL on a
+dedicated issue in this repository, stage-specific confirmation, and—only for
+full training—a private passing smoke-summary path. The notebook stays disabled
+when the file is missing and rejects duplicate, malformed, or inconsistent
+activation files before repository or GPU work. Issue #85 generalized the
+earlier issue-#69-only URL check without weakening the repository, exact-commit,
+arm, stage, or confirmation gates; it did not authorize or execute F3.
 
 The workflow:
 

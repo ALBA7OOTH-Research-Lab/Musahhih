@@ -302,7 +302,7 @@ python scripts/prepare_f2_f3_execution_config.py \
   --arm F2-P1 \
   --stage gpu-smoke \
   --approved-workflow-commit <40-character-commit> \
-  --approval-reference <issue-69-comment-url> \
+  --approval-reference <repository-issue-comment-url> \
   --confirmation RUN_F2_F3_LONGEST_RECORD_SMOKE \
   --output data/processed/f2_f3_execution_configs/<run-name>/f2_f3_execution_config.json
 ```
