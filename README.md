@@ -324,11 +324,15 @@ evidence is recorded in
 and the updated workflow audit. This is an engineering result, not a benchmark
 score. The first separately approved full-training attempt failed closed before
 private-data validation because the notebook cloned a later audit-only `main`
-commit instead of checking out the approved workflow commit. No model loaded
-and no training step or result exists from that attempt. Issue #78 repairs
-immutable approved-commit checkout; after merge, its new commit requires a
-fresh one-step smoke before any new full-training decision. No F2/F3 GPU run,
-final-test evaluation, or XG execution is currently authorized.
+commit. PR #79 repaired immutable approved-commit checkout. After a documented
+owner waiver of an additional repair-only smoke, one F2-P1 two-epoch P100 run
+completed. The frozen common-development loss rule selected private
+`checkpoint-125` (epoch 1 loss `0.5975050330162048`; epoch 2 loss
+`0.611619234085083`). These are checkpoint-selection losses, not final-test
+scores. Aggregate evidence and the private adapter hash are recorded in
+[`results/f2_p1_full_training_summary.json`](results/f2_p1_full_training_summary.json).
+No inference or final-test access occurred, and no further F2/F3 GPU run or XG
+execution is currently authorized.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
@@ -360,4 +364,7 @@ This project builds on:
 
 ## Status
 
-Early research and baseline implementation. No model-performance claims are made yet.
+The untouched baseline, prompt baselines, F1-P1 natural-data study, matched
+safety diagnostics, and F2-P1 synthetic-data training are complete. F2-P1 has
+not yet been evaluated, and F3-P1 has not been trained. Development loss is not
+reported as final model performance.

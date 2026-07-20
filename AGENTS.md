@@ -26,18 +26,16 @@ Do not tune prompts, parsing, checkpoints, training data, or experiment
 decisions from the completed Nahw-Passage or safety-diagnostic results. The
 Tibyan-derived F2/F3 methodology and compositions are frozen at commit
 `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`. The fail-closed Kaggle workflow
-and dependency preflight are merged through issue #69 at commit
-`f64edead0367e7659b107e5c4c309ed811d09071`. The exact-commit F2-P1
-longest-record, one-step P100 smoke passed; see
-`results/f2_p1_gpu_smoke_summary.json`. The first authorized full-training
-attempt then failed closed before private-data validation because the notebook
-cloned a later audit-only `main` commit instead of checking out the approved
-workflow commit. No model or training result exists. Issue #78 is the active
-immutable-checkout repair; no GPU execution is currently authorized. After the
-repair merges, a fresh same-commit smoke and separate later full-training GO
-are required. Do not run F2, F3, final-test evaluation, or XG under any prior
-authorization. The proposed `XG` operator remains disabled pending qualified
-linguistic review.
+at `f64edead0367e7659b107e5c4c309ed811d09071` passed its longest-record P100
+smoke. The immutable-checkout wrapper repair is merged at
+`ea4766ee205922c9fd4cb1af0357cca19bcfd59b`. After an explicitly documented
+owner waiver of an additional repair-only smoke, one authorized F2-P1
+two-epoch run completed and selected private `checkpoint-125` by the frozen
+common-development loss rule. See `results/f2_p1_full_training_summary.json`.
+No inference or final-test access occurred. No further GPU execution is
+authorized: do not run F2 inference, F3, final-test evaluation, safety reruns,
+or XG without a fresh scope-specific GO. The proposed `XG` operator remains
+disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 
