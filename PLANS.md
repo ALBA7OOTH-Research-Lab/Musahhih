@@ -1,6 +1,6 @@
 # Active implementation plan
 
-## Issue #85 — prepare the F3-P1 longest-record P100 smoke gate
+## Issue #85 — prepare the F3-P1 longest-record P100 smoke gate (complete)
 
 - [x] Register a dedicated GitHub issue and matching verbose Notion task.
 - [x] Confirm that F3-P1's frozen 2,000-record composition, hashes, prompt,
@@ -9,13 +9,21 @@
   issue-comment permalinks in this repository.
 - [x] Update notebook activation checks, helper tests, and user-facing docs.
 - [x] Run compilation, unit, notebook JSON/AST, CLI, privacy, and secret checks.
-- [ ] Merge the preparation through a pull request and record one exact
-  executable workflow commit.
+- [x] Merge PR #86 and record exact executable workflow commit
+  `6d64f699c04168cc15c045edc86389d5dc81f1bc`.
+
+## Next gate — decide one F3-P1 engineering smoke
+
 - [ ] Obtain a fresh, single-use owner GO before one F3-P1 longest-record,
-  one-step P100 smoke. Preparation and merge do not authorize execution.
+  one-step P100 smoke at exact commit
+  `6d64f699c04168cc15c045edc86389d5dc81f1bc`.
+- [ ] If authorized, generate one new private F3-P1 smoke config and execute
+  exactly one Kaggle P100 attempt; preserve its first terminal state.
+- [ ] Publish only aggregate, corpus-text-free evidence and then make a
+  separate GO/NO-GO decision about F3 full training.
 
 No F3 GPU work, full training, final-test evaluation, F2 rerun, safety rerun,
-or XG work is authorized by issue #85.
+or XG work was authorized by issue #85. Its preparation-only scope is complete.
 
 ## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow
 

@@ -47,6 +47,9 @@ when the file is missing and rejects duplicate, malformed, or inconsistent
 activation files before repository or GPU work. Issue #85 generalized the
 earlier issue-#69-only URL check without weakening the repository, exact-commit,
 arm, stage, or confirmation gates; it did not authorize or execute F3.
+PR #86 merged that preparation as exact executable workflow commit
+`6d64f699c04168cc15c045edc86389d5dc81f1bc`. A new, single-use owner GO tied
+to that commit is required before one F3-P1 longest-record one-step P100 smoke.
 
 The workflow:
 
