@@ -43,10 +43,15 @@ F3-P1 longest-record P100 smoke completed one optimizer step and passed with
 9,392,357,376 bytes of measured headroom. See
 `results/f3_p1_gpu_smoke_audit.md`. Trainer also wrote an incidental private
 temporary `checkpoint-1`; it was not selected, evaluated, or published. The
-smoke authorization is consumed and does not authorize full training. Do not
-run further F2 inference, another F3 smoke, F3 training, final-test evaluation,
-safety reruns, or XG without a fresh scope-specific GO. The proposed `XG`
-operator remains disabled pending qualified linguistic review.
+smoke authorization is consumed. Issue #91's separately authorized F3-P1
+two-epoch run subsequently completed all 250 optimizer steps and selected
+private `checkpoint-250` by the frozen common-development loss rule. See
+`results/f3_p1_full_training_audit.md`. No F3 inference or final-test access
+occurred, and the selected adapter remains private. The full-training
+authorization is consumed. Do not run further F2 inference, another F3 smoke,
+F3 training or inference, final-test evaluation, safety reruns, or XG without
+a fresh scope-specific GO. The proposed `XG` operator remains disabled pending
+qualified linguistic review.
 
 ## Non-negotiable research rules
 

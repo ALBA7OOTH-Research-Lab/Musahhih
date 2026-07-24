@@ -24,20 +24,23 @@
 - [x] Record only aggregate, corpus-text-free evidence and disclose the
   private automatic `checkpoint-1` artifact-hygiene caveat.
 
-## Next gate — decide F3-P1 full training
+## Issue #90/#91 — review and execute F3-P1 full training (complete)
 
-- [ ] Independently review the passing smoke, compatibility warnings, and
+- [x] Independently review the passing smoke, compatibility warnings, and
   automatic private checkpoint side effect.
-- [ ] Decide whether to repair smoke-only checkpoint saving before training or
+- [x] Decide whether to repair smoke-only checkpoint saving before training or
   accept the current exact workflow for one two-epoch run.
-- [ ] Record a separate exact-commit, single-use GO/NO-GO for F3 full training.
-- [ ] If authorized, create a new private full-training config and fresh Kaggle
+- [x] Record a separate exact-commit, single-use GO for F3 full training.
+- [x] Create a new private full-training config and fresh Kaggle
   P100 run; the smoke authorization cannot be reused.
-- [ ] After training, preserve aggregate checkpoint-selection evidence and
-  make later, separate decisions about development inference and final tests.
+- [x] Preserve the first terminal state, all 250 optimizer steps, both epoch
+  development losses, selected private `checkpoint-250`, and corpus-text-free
+  aggregate hashes.
+- [ ] Make later, separate decisions about development inference and final
+  tests.
 
-The F3 smoke authorization is consumed. The passing engineering result does not
-authorize full training, inference, final-test evaluation, safety reruns, F2
+The F3 smoke and full-training authorizations are consumed. Training completion
+does not authorize inference, final-test evaluation, safety reruns, F1/F2
 reruns, or XG.
 
 ## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow

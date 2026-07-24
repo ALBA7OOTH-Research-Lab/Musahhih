@@ -293,16 +293,20 @@ compositions received GO at merged commit
 `8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6`; this authorized guarded workflow
 implementation only. The non-executing-by-default Kaggle workflow is
 [`notebooks/04_f2_f3_qlora.ipynb`](notebooks/04_f2_f3_qlora.ipynb). A new
-exact-commit GO is still required before a GPU smoke or full-training run. Do
-not edit the Kaggle notebook to activate it. The single F3-P1 longest-record
+exact-commit GO is required before any new GPU stage. Do not edit the Kaggle
+notebook to activate it. The single F3-P1 longest-record
 smoke at exact workflow commit
 `6d64f699c04168cc15c045edc86389d5dc81f1bc` completed one optimizer step on a
 free P100 and passed with 9,392,357,376 bytes of measured headroom. See the
 corpus-text-free
 [`results/f3_p1_gpu_smoke_audit.md`](results/f3_p1_gpu_smoke_audit.md).
-This is not a model-quality result, and no F3 full training is authorized.
-After a separate future GO, generate a strict, text-free private activation
-file with:
+One separately authorized F3-P1 two-epoch run then completed 250 optimizer
+steps and selected private `checkpoint-250` because epoch-2 common-development
+loss was lower than epoch 1. See the corpus-text-free
+[`results/f3_p1_full_training_audit.md`](results/f3_p1_full_training_audit.md).
+Neither engineering status nor development loss is final model performance,
+and no F3 inference or final-test access is authorized. For a future separately
+authorized stage, generate a strict, text-free private activation file with:
 
 ```bash
 python scripts/prepare_f2_f3_execution_config.py \
@@ -345,7 +349,8 @@ outputs and no parser warnings. See
 [`results/f2_p1_dev_smoke_audit.md`](results/f2_p1_dev_smoke_audit.md). Its
 private development metric, raw responses, corpus records, and adapter artifacts
 remain private; the selected checkpoint did not change. No final-test access
-occurred, and no further F2/F3 GPU run or XG execution is authorized.
+occurred. F3-P1 full training later completed as recorded above. No further
+F2/F3 GPU run or XG execution is authorized.
 
 1. Untouched-model zero-shot baseline
 2. Prompt-only baselines
@@ -380,6 +385,7 @@ This project builds on:
 The untouched baseline, prompt baselines, F1-P1 natural-data study, matched
 safety diagnostics, and F2-P1 synthetic-data training are complete. F2-P1 has
 passed its private technical development smoke but has not received final-test
-evaluation. F3-P1 has passed its one-step engineering smoke but has not been
-fully trained. Development loss and smoke status are not reported as final
-model performance.
+evaluation. F3-P1 has completed its one-step engineering smoke and one frozen
+two-epoch training run, selecting private `checkpoint-250`; it has not received
+inference or final-test evaluation. Development loss and smoke/training status
+are not reported as final model performance.

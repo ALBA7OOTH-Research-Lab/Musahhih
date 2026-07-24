@@ -3,12 +3,12 @@
 Recorded: 2026-07-20
 
 Status: private record assembly, the guarded workflow, the longest-record
-smoke, one F2-P1 two-epoch training run, and one selected-adapter 25-record
-private development smoke are complete. The frozen common-development
-selection rule chose epoch 1 (`checkpoint-125`), and the later development
-smoke reloaded it without changing selection. No final-test score was produced,
-and neither Nahw-Passage nor QALB test was accessed. The selected adapter and
-record-level responses remain private.
+smokes, one F2-P1 two-epoch training run, one selected-adapter 25-record
+private development smoke, and one F3-P1 two-epoch training run are complete.
+The frozen common-development rule selected F2 epoch 1 (`checkpoint-125`) and
+F3 epoch 2 (`checkpoint-250`). No final-test score was produced, and neither
+Nahw-Passage nor QALB test was accessed. Selected adapters and record-level
+responses remain private.
 
 ## Frozen private inputs
 
@@ -300,12 +300,52 @@ The smoke authorization is consumed. The result is an engineering gate, not a
 quality metric, and does not authorize full training, inference, final-test
 access, safety diagnostics, F2 reruns, or XG.
 
+## Completed F3-P1 full training
+
+After the recorded GO/NO-GO review, the owner authorized one exact-commit
+F3-P1 two-epoch P100 run in issue #90. Execution issue #91 preserved private
+Kaggle kernel `univverssal/musahhih-f3-p1-full-6d64f69-r01`, version 1, at its
+first terminal state, `COMPLETE`.
+
+- workflow commit:
+  `6d64f699c04168cc15c045edc86389d5dc81f1bc`
+- activation-config SHA-256:
+  `774d881d31166c2de47817242cd0c91969ceae19c75e0d19061ac82dabfae713`
+- submitted-notebook SHA-256:
+  `07889e18a776b3b0b0aeb5178a0a32e10838ce817d2d175cf864d7fd1137ac77`
+- training: 2,000 F3-P1 records, two epochs, 250 optimizer steps
+- common development: 975 QALB-2014-L1 development records
+- epoch 1 assistant-token loss: `0.37296223640441895`
+- epoch 2 assistant-token loss: `0.3441389799118042`
+- frozen selection: private `checkpoint-250`
+- selected adapter SHA-256:
+  `95bd333caac28e08b40fcafe7bc033f323188e817d7c16ecbe7745b34c1b44dc`
+- checkpoint-selection JSON SHA-256:
+  `b4d1deda9b01b82b07abd2a21e999f92e132604ca0c8463830edd8d43dedfa81`
+
+The fresh full-training session loaded the pinned base revision and attached a
+fresh LoRA. The smoke checkpoint was not attached or resumed. Both epoch
+checkpoints and the selected adapter remain private. See
+[`f3_p1_full_training_audit.md`](f3_p1_full_training_audit.md) and
+[`f3_p1_full_training_summary.json`](f3_p1_full_training_summary.json).
+
+Kaggle preserved the private checkpoints and selection record but not the
+notebook's printed complete package-version block; its downloaded log is
+empty. The frozen core stack remained a fail-closed prerequisite before model
+loading, but exact unpinned higher-level package versions for this terminal run
+are not durably recoverable. This and the known Gemma 3
+`num_items_in_batch` warning are recorded reproducibility caveats.
+
+The full-training authorization is consumed. No inference, QALB test,
+Nahw-Passage, safety diagnostics, F1/F2 rerun, prompt/parser/data change,
+checkpoint reselection, or XG occurred.
+
 ## What this audit does not establish
 
-The completed stages establish two-epoch F2-P1 training, two frozen-development
-loss measurements, deterministic checkpoint selection, existence of the
-selected private adapter, and successful reload/generation/parsing on 25
-private development records. Development loss and the technical smoke are not
-held-out correction scores and do not establish adapter quality on a final
-test. Full F2 evaluation, F3 full training, QALB test, Nahw-Passage, safety-
-diagnostic reruns, and XG were not executed.
+The completed stages establish two-epoch F2-P1 and F3-P1 training, their frozen
+development-loss measurements, deterministic checkpoint selection, existence
+of the selected private adapters, and successful F2 reload/generation/parsing
+on 25 private development records. Development loss and technical smokes are
+not held-out correction scores and do not establish adapter quality on a final
+test. Full F2/F3 evaluation, F3 development inference, QALB test,
+Nahw-Passage, safety-diagnostic reruns, and XG were not executed.
