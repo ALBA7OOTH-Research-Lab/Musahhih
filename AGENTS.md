@@ -38,8 +38,13 @@ and no parser warnings. See `results/f2_p1_dev_smoke_audit.md`. Its private
 development metric and record-level responses were not published, and the
 checkpoint did not change. The authorization is consumed. Issue #85's F3-P1
 smoke-gate preparation is merged at
-`6d64f699c04168cc15c045edc86389d5dc81f1bc`; it did not authorize execution.
-Do not run further F2 inference, an F3 smoke or training, final-test evaluation,
+`6d64f699c04168cc15c045edc86389d5dc81f1bc`. One subsequently authorized
+F3-P1 longest-record P100 smoke completed one optimizer step and passed with
+9,392,357,376 bytes of measured headroom. See
+`results/f3_p1_gpu_smoke_audit.md`. Trainer also wrote an incidental private
+temporary `checkpoint-1`; it was not selected, evaluated, or published. The
+smoke authorization is consumed and does not authorize full training. Do not
+run further F2 inference, another F3 smoke, F3 training, final-test evaluation,
 safety reruns, or XG without a fresh scope-specific GO. The proposed `XG`
 operator remains disabled pending qualified linguistic review.
 
