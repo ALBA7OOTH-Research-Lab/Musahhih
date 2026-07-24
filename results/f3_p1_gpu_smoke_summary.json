@@ -1,0 +1,94 @@
+{
+  "total_bytes": 17059545088,
+  "peak_reserved_bytes": 7667187712,
+  "headroom_bytes": 9392357376,
+  "required_headroom_bytes": 1073741824,
+  "passed": true,
+  "contains_corpus_text": false,
+  "executed": true,
+  "arm": "F3-P1",
+  "workflow_commit": "6d64f699c04168cc15c045edc86389d5dc81f1bc",
+  "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/85#issuecomment-5070956088",
+  "model_id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+  "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+  "selection": {
+    "records": 2000,
+    "minimum": 84,
+    "maximum": 668,
+    "longest_index": 1097,
+    "validated_sequence_lengths": true,
+    "contains_corpus_text": false
+  },
+  "runtime": {
+    "executed": true,
+    "python": "3.12.13",
+    "cuda": "12.4",
+    "gpu": "Tesla P100-PCIE-16GB",
+    "cuda_capability": "6.0",
+    "visible_gpu_count": 1,
+    "selected_device": 0,
+    "p100_stack": {
+      "torch": "2.6.0",
+      "torchvision": "0.21.0",
+      "xformers": "0.0.29.post3",
+      "torchao": "0.16.0",
+      "numpy": "2.0.2",
+      "pillow": "11.3.0",
+      "index": "https://download.pytorch.org/whl/cu124"
+    },
+    "core_stack": {
+      "initial": {
+        "torch": "2.10.0+cu128",
+        "torchvision": "0.25.0+cu128",
+        "xformers": null,
+        "torchao": "0.10.0",
+        "numpy": "2.0.2"
+      },
+      "heavy_install_performed": true,
+      "heavy_install_seconds": 173.096,
+      "post_heavy": {
+        "compatible": true,
+        "required": {
+          "torch": "2.6.0",
+          "torchvision": "0.21.0",
+          "numpy": "2.0.2"
+        },
+        "installed": {
+          "torch": "2.6.0+cu124",
+          "torchvision": "0.21.0+cu124",
+          "numpy": "2.0.2"
+        },
+        "mismatches": {}
+      },
+      "final": {
+        "compatible": true,
+        "required": {
+          "torch": "2.6.0",
+          "torchvision": "0.21.0",
+          "xformers": "0.0.29.post3",
+          "torchao": "0.16.0",
+          "numpy": "2.0.2"
+        },
+        "installed": {
+          "torch": "2.6.0+cu124",
+          "torchvision": "0.21.0+cu124",
+          "xformers": "0.0.29.post3",
+          "torchao": "0.16.0",
+          "numpy": "2.0.2"
+        },
+        "mismatches": {}
+      }
+    },
+    "unsloth_compile_disabled": true,
+    "packages": {
+      "torch": "2.6.0+cu124",
+      "transformers": "4.56.2",
+      "unsloth": "2026.7.5",
+      "accelerate": "1.13.0",
+      "peft": "0.19.1",
+      "trl": "0.22.2",
+      "datasets": "4.3.0",
+      "bitsandbytes": "0.49.2"
+    }
+  }
+}

@@ -294,10 +294,15 @@ compositions received GO at merged commit
 implementation only. The non-executing-by-default Kaggle workflow is
 [`notebooks/04_f2_f3_qlora.ipynb`](notebooks/04_f2_f3_qlora.ipynb). A new
 exact-commit GO is still required before a GPU smoke or full-training run. Do
-not edit the Kaggle notebook to activate it. The F3-P1 smoke gate is ready at
-exact workflow commit
-`6d64f699c04168cc15c045edc86389d5dc81f1bc`, but no F3 execution is authorized.
-After GO, generate a strict, text-free private activation file with:
+not edit the Kaggle notebook to activate it. The single F3-P1 longest-record
+smoke at exact workflow commit
+`6d64f699c04168cc15c045edc86389d5dc81f1bc` completed one optimizer step on a
+free P100 and passed with 9,392,357,376 bytes of measured headroom. See the
+corpus-text-free
+[`results/f3_p1_gpu_smoke_audit.md`](results/f3_p1_gpu_smoke_audit.md).
+This is not a model-quality result, and no F3 full training is authorized.
+After a separate future GO, generate a strict, text-free private activation
+file with:
 
 ```bash
 python scripts/prepare_f2_f3_execution_config.py \
@@ -375,5 +380,6 @@ This project builds on:
 The untouched baseline, prompt baselines, F1-P1 natural-data study, matched
 safety diagnostics, and F2-P1 synthetic-data training are complete. F2-P1 has
 passed its private technical development smoke but has not received final-test
-evaluation, and F3-P1 has not been trained. Development loss and smoke status
-are not reported as final model performance.
+evaluation. F3-P1 has passed its one-step engineering smoke but has not been
+fully trained. Development loss and smoke status are not reported as final
+model performance.

@@ -12,18 +12,33 @@
 - [x] Merge PR #86 and record exact executable workflow commit
   `6d64f699c04168cc15c045edc86389d5dc81f1bc`.
 
-## Next gate — decide one F3-P1 engineering smoke
+## Issue #88 — execute one F3-P1 engineering smoke (complete)
 
-- [ ] Obtain a fresh, single-use owner GO before one F3-P1 longest-record,
+- [x] Obtain a fresh, single-use owner GO before one F3-P1 longest-record,
   one-step P100 smoke at exact commit
   `6d64f699c04168cc15c045edc86389d5dc81f1bc`.
-- [ ] If authorized, generate one new private F3-P1 smoke config and execute
+- [x] Generate one new private F3-P1 smoke config and execute
   exactly one Kaggle P100 attempt; preserve its first terminal state.
-- [ ] Publish only aggregate, corpus-text-free evidence and then make a
-  separate GO/NO-GO decision about F3 full training.
+- [x] Verify the terminal `COMPLETE` state, one optimizer step, registered
+  input hashes, and 9,392,357,376 bytes of measured P100 headroom.
+- [x] Record only aggregate, corpus-text-free evidence and disclose the
+  private automatic `checkpoint-1` artifact-hygiene caveat.
 
-No F3 GPU work, full training, final-test evaluation, F2 rerun, safety rerun,
-or XG work was authorized by issue #85. Its preparation-only scope is complete.
+## Next gate — decide F3-P1 full training
+
+- [ ] Independently review the passing smoke, compatibility warnings, and
+  automatic private checkpoint side effect.
+- [ ] Decide whether to repair smoke-only checkpoint saving before training or
+  accept the current exact workflow for one two-epoch run.
+- [ ] Record a separate exact-commit, single-use GO/NO-GO for F3 full training.
+- [ ] If authorized, create a new private full-training config and fresh Kaggle
+  P100 run; the smoke authorization cannot be reused.
+- [ ] After training, preserve aggregate checkpoint-selection evidence and
+  make later, separate decisions about development inference and final tests.
+
+The F3 smoke authorization is consumed. The passing engineering result does not
+authorize full training, inference, final-test evaluation, safety reruns, F2
+reruns, or XG.
 
 ## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow
 

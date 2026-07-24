@@ -150,6 +150,15 @@ see
 [`../results/f2_p1_dev_smoke_audit.md`](../results/f2_p1_dev_smoke_audit.md).
 Its private development metric was not published and it did not change the
 selected checkpoint, prompt, parser, or research design.
+One separately authorized F3-P1 longest-record P100 smoke subsequently
+validated the frozen 1,000-natural/1,000-synthetic mixture and completed one
+optimizer step with 9,392,357,376 bytes of measured headroom. This is an
+engineering result, not a model-quality metric; F3 full training remains
+unauthorized. See
+[`../results/f3_p1_gpu_smoke_audit.md`](../results/f3_p1_gpu_smoke_audit.md).
+Trainer automatically wrote a private temporary checkpoint after the smoke
+step; it was not selected or evaluated and is recorded as an artifact-hygiene
+caveat for the next GO/NO-GO review.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

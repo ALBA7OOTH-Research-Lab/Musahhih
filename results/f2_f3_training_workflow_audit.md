@@ -274,6 +274,32 @@ text-free [`f2_p1_dev_smoke_summary.json`](f2_p1_dev_smoke_summary.json). The
 run accessed no final test and performed no training, checkpoint change, F3,
 safety diagnostic, or XG execution. Its one-attempt authorization is consumed.
 
+## Passing F3-P1 engineering smoke
+
+Issue #85 recorded one exact-commit GO for an F3-P1 longest-record one-step
+P100 smoke, tracked during execution by issue #88. Private Kaggle version 1,
+`univverssal/musahhih-f3-p1-smoke-6d64f69-r01`, completed at workflow commit
+`6d64f699c04168cc15c045edc86389d5dc81f1bc`.
+
+The run validated 2,000 F3 records with 1,000 QALB-2014-L1 and 1,000
+Tibyan-corpus records, plus 975 common-development records, against their
+registered hashes. All formatted training records fit the 1,024-token limit;
+the longest was index 1097 at 668 tokens. Exactly one optimizer step ran on a
+Tesla P100-PCIE-16GB. Peak reserved memory was 7,667,187,712 bytes and measured
+headroom was 9,392,357,376 bytes, above the 1,073,741,824-byte requirement.
+
+The byte-identical corpus-text-free summary is
+[`f3_p1_gpu_smoke_summary.json`](f3_p1_gpu_smoke_summary.json), SHA-256
+`e053f2716beadd1ccf43c292f81d4bc199bba0234e8057c5a7dc5d480fed4944`.
+Trainer automatically wrote a private temporary `checkpoint-1` after the
+single step. It was not selected, evaluated, merged, or published and is
+recorded as an artifact-hygiene caveat. See
+[`f3_p1_gpu_smoke_audit.md`](f3_p1_gpu_smoke_audit.md).
+
+The smoke authorization is consumed. The result is an engineering gate, not a
+quality metric, and does not authorize full training, inference, final-test
+access, safety diagnostics, F2 reruns, or XG.
+
 ## What this audit does not establish
 
 The completed stages establish two-epoch F2-P1 training, two frozen-development
@@ -281,5 +307,5 @@ loss measurements, deterministic checkpoint selection, existence of the
 selected private adapter, and successful reload/generation/parsing on 25
 private development records. Development loss and the technical smoke are not
 held-out correction scores and do not establish adapter quality on a final
-test. Full F2 evaluation, F3 training, QALB test, Nahw-Passage, safety-
+test. Full F2 evaluation, F3 full training, QALB test, Nahw-Passage, safety-
 diagnostic reruns, and XG were not executed.

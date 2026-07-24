@@ -121,8 +121,29 @@
   },
   "full_training_executed": true,
   "f3_smoke_readiness": {
-    "execution_authorized": false,
+    "authorization_consumed": true,
+    "execution_issue": 88,
     "issue": 85,
+    "workflow_commit": "6d64f699c04168cc15c045edc86389d5dc81f1bc"
+  },
+  "f3_gpu_smoke": {
+    "automatic_private_checkpoint_written": true,
+    "config_sha256": "a292369cd92b388f5922151a0a266399b05253a849c18dabaef4cdeb0b1052a4",
+    "contains_corpus_text": false,
+    "full_training_executed": false,
+    "gpu": "Tesla P100-PCIE-16GB",
+    "headroom_bytes": 9392357376,
+    "longest_index": 1097,
+    "maximum_tokens": 668,
+    "metric_produced": false,
+    "model_loaded": true,
+    "optimizer_steps": 1,
+    "passed": true,
+    "peak_reserved_bytes": 7667187712,
+    "required_headroom_bytes": 1073741824,
+    "run": "univverssal/musahhih-f3-p1-smoke-6d64f69-r01",
+    "smoke_summary_sha256": "e053f2716beadd1ccf43c292f81d4bc199bba0234e8057c5a7dc5d480fed4944",
+    "status": "complete",
     "workflow_commit": "6d64f699c04168cc15c045edc86389d5dc81f1bc"
   },
   "f2_private_development_smoke": {
@@ -148,8 +169,8 @@
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 7,
+  "schema_version": 8,
   "seed": 3407,
   "training_executed": true,
-  "validation_scope": "private-record adapter, static notebook validation, one approved F2-P1 longest-record optimizer-step smoke, one approved F2-P1 two-epoch full-training run, and one approved 25-record private development inference smoke; no final-test access"
+  "validation_scope": "private-record adapter, static notebook validation, approved F2-P1 and F3-P1 longest-record optimizer-step smokes, one approved F2-P1 two-epoch full-training run, and one approved 25-record private F2 development inference smoke; no final-test access"
 }
