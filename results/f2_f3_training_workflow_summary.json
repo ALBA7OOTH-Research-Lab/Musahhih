@@ -146,6 +146,24 @@
     "status": "complete",
     "workflow_commit": "6d64f699c04168cc15c045edc86389d5dc81f1bc"
   },
+  "f3_full_training": {
+    "adapter_sha256": "95bd333caac28e08b40fcafe7bc033f323188e817d7c16ecbe7745b34c1b44dc",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/90#issuecomment-5072918313",
+    "arm": "F3-P1",
+    "config_sha256": "774d881d31166c2de47817242cd0c91969ceae19c75e0d19061ac82dabfae713",
+    "development_losses": {
+      "epoch_1": 0.37296223640441895,
+      "epoch_2": 0.3441389799118042
+    },
+    "nahw_passage_used": false,
+    "optimizer_steps": 250,
+    "qalb_test_used": false,
+    "run": "univverssal/musahhih-f3-p1-full-6d64f69-r01",
+    "selected_checkpoint": "checkpoint-250",
+    "status": "complete",
+    "version": 1,
+    "workflow_commit": "6d64f699c04168cc15c045edc86389d5dc81f1bc"
+  },
   "f2_private_development_smoke": {
     "adapter_model_sha256": "935fdf02c95189934e40629f877d8692d325ef22895cbaa03fdb7390b0cd7b3e",
     "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/82#issuecomment-5021082958",
@@ -169,8 +187,8 @@
   "prompt_template_sha256": "8a195a560ccda30a55a6593f794dc048bcf18f6021dfca2181d3eee2b10a62c9",
   "protocol_commit": "8ca3014e6b3659e2e8c3ffc519b0255e9af6b7a6",
   "qalb_test_used": false,
-  "schema_version": 8,
+  "schema_version": 9,
   "seed": 3407,
   "training_executed": true,
-  "validation_scope": "private-record adapter, static notebook validation, approved F2-P1 and F3-P1 longest-record optimizer-step smokes, one approved F2-P1 two-epoch full-training run, and one approved 25-record private F2 development inference smoke; no final-test access"
+  "validation_scope": "private-record adapter, static notebook validation, approved F2-P1 and F3-P1 longest-record optimizer-step smokes, one approved F2-P1 two-epoch full-training run, one approved F3-P1 two-epoch full-training run, and one approved 25-record private F2 development inference smoke; no final-test access"
 }

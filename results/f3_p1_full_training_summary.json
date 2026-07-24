@@ -1,0 +1,111 @@
+{
+  "adapter": {
+    "bytes": 131252288,
+    "private_location": "Kaggle output checkpoint-250",
+    "sha256": "95bd333caac28e08b40fcafe7bc033f323188e817d7c16ecbe7745b34c1b44dc"
+  },
+  "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/90#issuecomment-5072918313",
+  "arm": "F3-P1",
+  "checkpoint_selection": {
+    "evaluations": [
+      {
+        "epoch": 1.0,
+        "eval_loss": 0.37296223640441895,
+        "eval_runtime_seconds": 715.5916,
+        "step": 125
+      },
+      {
+        "epoch": 2.0,
+        "eval_loss": 0.3441389799118042,
+        "eval_runtime_seconds": 701.3763,
+        "step": 250
+      }
+    ],
+    "rule": "lowest common-development assistant-token loss; ties within 1e-6 choose epoch 1",
+    "selected_checkpoint": "checkpoint-250",
+    "selection_file_sha256": "b4d1deda9b01b82b07abd2a21e999f92e132604ca0c8463830edd8d43dedfa81"
+  },
+  "common_development": {
+    "records": 975,
+    "sha256": "adfdeb0c2e5730357226ce4e5156c300679629142ea0576d32dea9ac3050a950",
+    "source": "QALB-2014-L1 development"
+  },
+  "contains_corpus_text": false,
+  "execution": {
+    "config_sha256": "774d881d31166c2de47817242cd0c91969ceae19c75e0d19061ac82dabfae713",
+    "gpu": "Tesla P100-PCIE-16GB",
+    "issue": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/91",
+    "notebook_sha256": "07889e18a776b3b0b0aeb5178a0a32e10838ce817d2d175cf864d7fd1137ac77",
+    "run": "univverssal/musahhih-f3-p1-full-6d64f69-r01",
+    "status": "complete",
+    "version": 1,
+    "workflow_commit": "6d64f699c04168cc15c045edc86389d5dc81f1bc"
+  },
+  "inference_executed": false,
+  "model": {
+    "load_in_4bit": true,
+    "id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+    "lora": {
+      "alpha": 32,
+      "bias": "none",
+      "dropout": 0.0,
+      "gradient_checkpointing": "unsloth",
+      "peft_version_from_adapter": "0.19.1",
+      "rank": 16,
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "max_sequence_length": 1024,
+    "revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe"
+  },
+  "nahw_passage_used": false,
+  "prior_smoke_summary_sha256": "e053f2716beadd1ccf43c292f81d4bc199bba0234e8057c5a7dc5d480fed4944",
+  "qalb_test_used": false,
+  "runtime_evidence": {
+    "cuda_required": "12.4",
+    "durable_full_package_printout_available": false,
+    "p100_core_stack_required": {
+      "numpy": "2.0.2",
+      "torch": "2.6.0",
+      "torchao": "0.16.0",
+      "torchvision": "0.21.0",
+      "xformers": "0.0.29.post3"
+    },
+    "pinned_training_packages": {
+      "datasets": "4.3.0",
+      "transformers": "4.56.2",
+      "trl": "0.22.2"
+    }
+  },
+  "schema_version": 1,
+  "training": {
+    "epochs": 2,
+    "global_steps": 250,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 0.0002,
+    "lr_scheduler_type": "linear",
+    "max_grad_norm": 1.0,
+    "optimizer": "adamw_8bit",
+    "packing": false,
+    "per_device_batch_size": 1,
+    "records": 2000,
+    "seed": 3407,
+    "sha256": "d16decebe559e9a25da41ef59f63ca95e339972e22b9659dfc763e071fbc1546",
+    "source": "1000 QALB-2014-L1 + 1000 Tibyan-corpus",
+    "total_batch_size": 16,
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01
+  },
+  "warnings": [
+    "The Kaggle output API preserved the private checkpoints and selection record but not the notebook's printed full package-version block; the downloaded notebook log is empty.",
+    "The workflow fails closed on the frozen P100 core stack before model loading, but exact unpinned higher-level package versions for this terminal run are not durably recoverable.",
+    "The passing F3 smoke used Unsloth 2026.7.5 and emitted the known Gemma 3 num_items_in_batch gradient-accumulation warning."
+  ]
+}
