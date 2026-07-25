@@ -55,7 +55,10 @@ smoke completed the exact same 25 deterministic QALB development records used
 for F2-P1, with zero empty outputs and zero parser warnings. See
 `results/f3_p1_dev_smoke_audit.md`. The private development metric and
 record-level responses were not read or published, and `checkpoint-250` did
-not change. The authorization is consumed.
+not change. The authorization is consumed. Issue #96 prepares a single matched
+F2/F3 Nahw-Passage evaluation gate using both frozen adapters in one private
+P100 runtime. Preparation does not authorize test access or inference. QALB
+test remains outside the current study.
 The proposed `XG` operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
