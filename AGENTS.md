@@ -50,8 +50,11 @@ private `checkpoint-250` by the frozen common-development loss rule. See
 occurred, and the selected adapter remains private. The full-training
 authorization is consumed. Do not run further F2 inference, another F3 smoke,
 F3 training or inference, final-test evaluation, safety reruns, or XG without
-a fresh scope-specific GO. The proposed `XG` operator remains disabled pending
-qualified linguistic review.
+a fresh scope-specific GO. Issue #93 prepares a disabled-by-default F3-P1
+selected-adapter private development smoke over the exact same 25 deterministic
+QALB development records used for F2-P1. Preparation and static validation do
+not authorize execution; a later exact-commit, single-use owner GO is required.
+The proposed `XG` operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules
 
