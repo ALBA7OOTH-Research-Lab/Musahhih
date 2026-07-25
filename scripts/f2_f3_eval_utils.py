@@ -27,14 +27,15 @@ from scripts.f1_eval_utils import (
 )
 
 
-CONFIRMATION = "RUN_F2_F3_MATCHED_NAHW_FINAL_511"
+CONFIRMATION = "RUN_F2_F3_MATCHED_NAHW_FINAL_511_TIMEOUT_SAFE"
 RUN_ID = "F2-F3__gemma3-4b-it__nahw-passage__s3407__r01"
+SAFE_STOP_ELAPSED_SECONDS = 34_200
 EXPECTED_F1_PREDICTIONS_SHA256 = (
     "8c4d0ca25b48776a08ea02984af6c5c3ec0bc830d2d1a6994e0fb5eef995faa3"
 )
 APPROVAL_PATTERN = re.compile(
     r"https://github\.com/ALBA7OOTH-Research-Lab/Musahhih/"
-    r"issues/96#issuecomment-[1-9][0-9]*"
+    r"issues/98#issuecomment-[1-9][0-9]*"
 )
 
 
@@ -183,14 +184,14 @@ def require_execution_authorization(
     *,
     repository: Path,
 ) -> None:
-    """Require exact issue #96 approval and exact checked-out commit."""
+    """Require exact issue #98 approval and exact checked-out commit."""
 
     if confirmation != CONFIRMATION:
         raise EvaluationSafetyError("exact matched final-evaluation confirmation required")
     if not approved_commit or not re.fullmatch(r"[0-9a-f]{40}", approved_commit):
         raise EvaluationSafetyError("approved protocol commit must be lowercase SHA-1")
     if not approval_reference or not APPROVAL_PATTERN.fullmatch(approval_reference):
-        raise EvaluationSafetyError("approval must be an issue #96 comment URL")
+        raise EvaluationSafetyError("approval must be an issue #98 comment URL")
     try:
         actual = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -247,6 +248,7 @@ __all__ = [
     "EXPECTED_TEST_SHA256",
     "MAX_NEW_TOKENS",
     "RUN_ID",
+    "SAFE_STOP_ELAPSED_SECONDS",
     "SEED",
     "EvaluationSafetyError",
     "load_and_validate_nahw_records",

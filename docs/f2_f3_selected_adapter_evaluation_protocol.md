@@ -1,7 +1,10 @@
 # F2-P1/F3-P1 matched selected-adapter evaluation protocol
 
-Status: proposed freeze for independent review under issue #96. This document
-and its implementation do not authorize Nahw-Passage inference.
+Status: the original gate merged at `22cc89164b4ad00476c91cb29f95e9e34e6f56b3`.
+Its single authorized kernel reached Kaggle's hard runtime cutoff after roughly
+40,000 seconds and ended `CANCEL_ACKNOWLEDGED`, with no output downloaded and no
+metric reported. Issue #98 adds an unexecuted timeout-safe handoff repair. This
+document and its implementation do not authorize Nahw-Passage inference.
 
 ## Purpose and research position
 
@@ -73,7 +76,7 @@ exactly. There are no demonstrations or adapter-specific instructions.
 
 ## Frozen inference
 
-- one private free Kaggle NVIDIA P100 environment;
+- private free Kaggle NVIDIA P100 environments;
 - order: complete F2-P1 first, release it, then load and complete F3-P1;
 - greedy decoding with `do_sample=False`;
 - no temperature argument;
@@ -84,6 +87,28 @@ exactly. There are no demonstrations or adapter-specific instructions.
 There is no Nahw-Passage pilot. The completed private development smokes already
 validated loading, generation, parsing, serialization, and artifact handling on
 non-test records.
+
+### Timeout-safe handoff
+
+The private wrapper must capture Unix epoch time at its first executable line
+and pass it as `--kernel-start-epoch-seconds`. The evaluator stops before
+starting another record once 34,200 seconds (9.5 hours) have elapsed. This
+leaves approximately 5,800 seconds before the cutoff observed in the cancelled
+issue #96 attempt.
+
+Every private prediction row is flushed and `fsync`-ed before progress advances.
+After every row, the evaluator atomically replaces `progress.json`, which
+contains only record counts, private-file hashes, runtime metadata, elapsed
+time, frozen identities, and safety flags. It contains no corpus text,
+responses, corrections, record IDs, or metrics.
+
+A timed stop returns successfully with `run_status=incomplete_time_budget`,
+allowing Kaggle to preserve the private output. It reports no metric. A later
+kernel may continue only from that private output, only after a new exact-commit
+owner GO on issue #98. The continuation verifies the prior summary, manifest,
+protocol commit, counts, hashes, exact ordered record prefix, stored prompt and
+gold fields, parser output, and score consistency before copying the prefix. It
+starts at the first unfinished record and never regenerates a completed record.
 
 ## Frozen outcomes and comparisons
 
@@ -116,14 +141,16 @@ The committed evaluator is disabled unless `--execute` is supplied. Before it
 may load final-test data, all of the following are required:
 
 1. this protocol and implementation pass CI and merge;
-2. an independent owner review posts a new GO or NO-GO comment on issue #96;
+2. an independent owner review posts a new GO or NO-GO comment on issue #98;
 3. a GO names the exact 40-character merged commit and exactly one matched
    F2/F3 final run;
 4. the executor supplies that issue-comment URL, the exact commit, and
-   confirmation `RUN_F2_F3_MATCHED_NAHW_FINAL_511`;
+   confirmation `RUN_F2_F3_MATCHED_NAHW_FINAL_511_TIMEOUT_SAFE`;
 5. the repository checkout equals the approved commit exactly; and
 6. both private adapters, test input, B0 predictions, and F1 predictions pass
-   every frozen hash and schema check.
+   every frozen hash and schema check; and
+7. any continuation supplies only the immediately preceding timed handoff and
+   passes all private-prefix validation before new inference.
 
 Preparation, compilation, synthetic tests, `--help`, and disabled invocation
 must not read Nahw-Passage, reference predictions, private development metrics,
@@ -131,8 +158,15 @@ or adapter files. Passing software gates is not execution authorization.
 
 ## Failure and retry rules
 
-- Use only replicate `r01`; never overwrite a run directory.
+- Use only logical replicate `r01`; never overwrite a run directory.
 - Preserve the first terminal state and every partial private artifact.
+- A planned `incomplete_time_budget` handoff is not a completed evaluation and
+  publishes no metric. Preserve it privately.
+- Continuing a timed handoff requires a fresh exact-commit owner GO. The owner
+  decision may use only corpus-text-free counts, hashes, and execution
+  diagnostics, not partial scores or qualitative outputs.
+- A continuation is part of logical replicate `r01`, not a new replicate. It
+  must copy the verified prefix byte-for-byte and skip every completed record.
 - A failure before any model response may be retried only after documenting
   the cause and obtaining a fresh exact-commit owner decision.
 - A failure after any F2 or F3 response exists is result-bearing. Do not patch,
@@ -150,12 +184,14 @@ The ignored private run directory contains:
 outputs/F2-F3__gemma3-4b-it__nahw-passage__s3407__r01/
   f2-p1_predictions.jsonl
   f3-p1_predictions.jsonl
+  progress.json
   public_summary.json
   run.log
 ```
 
 Prediction rows retain test text, gold corrections, prompts, raw responses,
 parsed corrections, warnings, and exact-match flags. They remain private.
+`progress.json` is a private handoff manifest even though it is corpus-text-free.
 
 The summary contains only identities, hashes, runtime metadata, aggregate
 metrics, paired statistics, and safety flags. Audit it for corpus text before
