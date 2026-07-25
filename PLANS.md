@@ -43,7 +43,7 @@ The F3 smoke and full-training authorizations are consumed. Training completion
 does not authorize inference, final-test evaluation, safety reruns, F1/F2
 reruns, or XG.
 
-## Issue #93 — prepare the F3-P1 private development smoke gate
+## Issue #93 — prepare and execute the F3-P1 private development smoke (complete)
 
 - [x] Freeze the selected private `checkpoint-250`, adapter/config/selection
   hashes, model revision, prompt, parser, seed, and decoding contract.
@@ -54,13 +54,19 @@ reruns, or XG.
   activation-config helper.
 - [x] Complete compilation, unit, notebook JSON/AST, privacy, stale-reference,
   credential-pattern, and diff checks without executing the gate.
-- [ ] Merge the implementation PR and record its exact merge commit.
-- [ ] Obtain a separate exact-commit, single-use owner GO before any private
+- [x] Merge the implementation PR and record exact commit
+  `2982a2ed62f0d59e51eacbbddb02a03994c73e4b`.
+- [x] Obtain a separate exact-commit, single-use owner GO before any private
   model inference.
+- [x] Submit exactly one private P100 attempt and preserve its first terminal
+  `COMPLETE` state without retry.
+- [x] Verify 25/25 completed records, zero empty outputs, zero parser warnings,
+  frozen hashes, and corpus-text-free public evidence.
 
-Gate preparation does not authorize execution. Do not create an activation
-config, submit a Kaggle kernel, load the private adapter, or access private
-development records during implementation.
+The single-use authorization is consumed. The private development metric and
+record-level responses were not read or published. This technical gate does
+not authorize final-test evaluation, another development run, safety
+diagnostics, training, F1/F2, or XG.
 
 ## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow
 
