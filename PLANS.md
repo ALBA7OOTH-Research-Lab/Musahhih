@@ -82,7 +82,8 @@ diagnostics, training, F1/F2, or XG.
   completed records and always requires a fresh exact-commit GO.
 - [x] Complete compilation, unit, disabled-mode, privacy, credential-pattern,
   and diff validation without final-test access or model loading.
-- [ ] Merge the repair PR and record its exact commit for independent review.
+- [x] Merge PR #99 and record exact repair commit
+  `cf25f6691a18515407c63e7bab7b6b4af405d731` for independent review.
 
 Preparation does not authorize a retry or continuation. The cancelled issue
 #96 authorization is consumed. Every future kernel requires its own new

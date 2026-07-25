@@ -405,10 +405,11 @@ status are not reported as final model performance.
 
 Issue #96's single authorized matched private P100 run of F2-P1 followed by
 F3-P1 reached Kaggle's hard runtime cutoff and ended `CANCEL_ACKNOWLEDGED`;
-no output was downloaded and no metric was reported. Issue #98 prepares a
-disabled-by-default timeout-safe handoff that exits cleanly after 9.5 hours,
-preserves private progress, and can continue only under a fresh exact-commit
-owner GO without regenerating completed records. The protocol is
+no output was downloaded and no metric was reported. Issue #98's
+disabled-by-default timeout-safe handoff merged at
+`cf25f6691a18515407c63e7bab7b6b4af405d731`; it exits cleanly after
+9.5 hours, preserves private progress, and can continue only under a fresh
+exact-commit owner GO without regenerating completed records. The protocol is
 [`docs/f2_f3_selected_adapter_evaluation_protocol.md`](docs/f2_f3_selected_adapter_evaluation_protocol.md).
 Preparation does not authorize final-test access, inference, retry, or
 continuation. F2/F3 private development metrics remain blinded, and QALB test
