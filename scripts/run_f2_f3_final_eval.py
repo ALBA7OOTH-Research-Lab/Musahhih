@@ -9,21 +9,23 @@ from datetime import datetime, timezone
 import gc
 import importlib.metadata
 import json
+import os
 from pathlib import Path
 import platform
-import subprocess
+import shutil
+import time
 
 from scripts.f2_f3_eval_utils import (
     ARM_SPECS,
     BASE_MODEL_ID,
     BASE_MODEL_REVISION,
     BOOTSTRAP_SAMPLES,
-    CONFIRMATION,
     EXPECTED_BASELINE_PREDICTIONS_SHA256,
     EXPECTED_F1_PREDICTIONS_SHA256,
     EXPECTED_TEST_SHA256,
     MAX_NEW_TOKENS,
     RUN_ID,
+    SAFE_STOP_ELAPSED_SECONDS,
     SEED,
     EvaluationSafetyError,
     load_and_validate_nahw_records,
@@ -38,6 +40,201 @@ from scripts.nahw_baseline_utils import parse_model_response, summarize_predicti
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUTS = ROOT / "outputs"
+PROGRESS_SCHEMA_VERSION = 1
+
+
+class TimeBudgetExhausted(Exception):
+    """Signal a planned, output-preserving stop before Kaggle's hard cutoff."""
+
+
+class KernelTimeBudget:
+    """Conservative wall-clock guard measured from the private wrapper start."""
+
+    def __init__(
+        self,
+        kernel_start_epoch_seconds: float,
+        *,
+        now=time.time,
+        safe_stop_elapsed_seconds: int = SAFE_STOP_ELAPSED_SECONDS,
+    ) -> None:
+        self.kernel_start_epoch_seconds = float(kernel_start_epoch_seconds)
+        self._now = now
+        self.safe_stop_elapsed_seconds = int(safe_stop_elapsed_seconds)
+        started_ago = self._now() - self.kernel_start_epoch_seconds
+        if started_ago < -300:
+            raise EvaluationSafetyError("kernel start time is in the future")
+
+    def elapsed_seconds(self) -> int:
+        return max(0, int(self._now() - self.kernel_start_epoch_seconds))
+
+    def require_next_record_budget(self) -> None:
+        if self.elapsed_seconds() >= self.safe_stop_elapsed_seconds:
+            raise TimeBudgetExhausted
+
+
+def _fsync_stream(stream) -> None:
+    stream.flush()
+    os.fsync(stream.fileno())
+
+
+def _write_json_atomic(path: Path, payload: dict) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write(
+            json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+        )
+        _fsync_stream(stream)
+    temporary.replace(path)
+
+
+def _read_json_object(path: Path, label: str) -> dict:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise EvaluationSafetyError(f"invalid {label}") from error
+    if not isinstance(value, dict):
+        raise EvaluationSafetyError(f"{label} must be a JSON object")
+    return value
+
+
+def _read_prediction_rows(path: Path, label: str) -> list[dict]:
+    if not path.is_file():
+        return []
+    try:
+        with path.open("r", encoding="utf-8") as stream:
+            rows = [json.loads(line) for line in stream if line.strip()]
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise EvaluationSafetyError(f"invalid private {label} prefix") from error
+    if not all(isinstance(row, dict) for row in rows):
+        raise EvaluationSafetyError(f"invalid private {label} prefix rows")
+    return rows
+
+
+def _fsync_path(path: Path) -> None:
+    with path.open("rb") as stream:
+        os.fsync(stream.fileno())
+
+
+def _validate_prediction_prefix(
+    rows: list[dict], records: list[dict], *, arm: str
+) -> None:
+    if len(rows) > len(records):
+        raise EvaluationSafetyError(f"{arm} resume prefix is too long")
+    for index, row in enumerate(rows):
+        record = records[index]
+        expected = {
+            "record_id": record["id"],
+            "passage_id": record["passage_id"],
+            "source": record["source"],
+            "split": record["split"],
+            "passage": record["passage"],
+            "erroneous_word": record["error"],
+            "gold_correction": record["gold_correction"],
+            "full_prompt": record["prompt"],
+        }
+        if any(row.get(field) != value for field, value in expected.items()):
+            raise EvaluationSafetyError(f"{arm} resume prefix record mismatch")
+        if not isinstance(row.get("raw_model_response"), str):
+            raise EvaluationSafetyError(f"{arm} resume prefix response mismatch")
+        if not isinstance(row.get("parsed_correction"), str):
+            raise EvaluationSafetyError(f"{arm} resume prefix parse mismatch")
+        if not isinstance(row.get("parsing_warnings"), list):
+            raise EvaluationSafetyError(f"{arm} resume prefix warnings mismatch")
+        if row.get("exact_match") is not (
+            row["parsed_correction"] == record["gold_correction"]
+        ):
+            raise EvaluationSafetyError(f"{arm} resume prefix score mismatch")
+
+
+def load_resume_prefixes(
+    resume_from: Path | None,
+    *,
+    records: list[dict],
+    approved_protocol_commit: str,
+) -> tuple[dict[str, tuple[list[dict], Path | None]], dict[str, dict]]:
+    """Verify a private timed handoff without regenerating completed records."""
+
+    empty = {"F2-P1": ([], None), "F3-P1": ([], None)}
+    if resume_from is None:
+        return empty, {}
+    resume_dir = Path(resume_from).expanduser().resolve()
+    if _is_relative_to(resume_dir, ROOT) and not _is_relative_to(
+        resume_dir, DEFAULT_OUTPUTS.resolve()
+    ):
+        raise EvaluationSafetyError(
+            "repository-local resume artifacts must stay under ignored outputs/"
+        )
+    summary = _read_json_object(
+        resume_dir / "public_summary.json", "resume public summary"
+    )
+    progress = _read_json_object(resume_dir / "progress.json", "resume progress")
+    if summary.get("run_status") != "incomplete_time_budget":
+        raise EvaluationSafetyError("resume source is not a timed handoff")
+    if summary.get("git_commit") != approved_protocol_commit:
+        raise EvaluationSafetyError("resume source protocol commit mismatch")
+    if progress.get("schema_version") != PROGRESS_SCHEMA_VERSION:
+        raise EvaluationSafetyError("resume progress schema mismatch")
+    if progress.get("git_commit") != approved_protocol_commit:
+        raise EvaluationSafetyError("resume progress protocol commit mismatch")
+    if progress.get("experiment_id") != RUN_ID:
+        raise EvaluationSafetyError("resume progress experiment mismatch")
+
+    prefixes: dict[str, tuple[list[dict], Path | None]] = {}
+    completed = progress.get("completed_records")
+    hashes = progress.get("prediction_sha256")
+    runtimes = progress.get("runtime")
+    if (
+        not isinstance(completed, dict)
+        or not isinstance(hashes, dict)
+        or not isinstance(runtimes, dict)
+    ):
+        raise EvaluationSafetyError("resume progress fields are invalid")
+    for arm in ("F2-P1", "F3-P1"):
+        path = resume_dir / f"{arm.lower()}_predictions.jsonl"
+        rows = _read_prediction_rows(path, arm)
+        _validate_prediction_prefix(rows, records, arm=arm)
+        if completed.get(arm) != len(rows):
+            raise EvaluationSafetyError(f"{arm} resume count mismatch")
+        expected_hash = hashes.get(arm)
+        if rows:
+            if not isinstance(expected_hash, str) or sha256_file(path) != expected_hash:
+                raise EvaluationSafetyError(f"{arm} resume SHA-256 mismatch")
+            if not isinstance(runtimes.get(arm), dict):
+                raise EvaluationSafetyError(f"{arm} resume runtime metadata missing")
+            prefixes[arm] = (rows, path)
+        else:
+            if expected_hash is not None or path.exists():
+                raise EvaluationSafetyError(f"{arm} empty resume prefix mismatch")
+            prefixes[arm] = ([], None)
+    if len(prefixes["F2-P1"][0]) < len(records) and prefixes["F3-P1"][0]:
+        raise EvaluationSafetyError("F3 resume rows exist before F2 completion")
+    return prefixes, runtimes
+
+
+def _progress_payload(
+    *,
+    approved_protocol_commit: str,
+    completed: dict[str, int],
+    prediction_paths: dict[str, Path],
+    runtimes: dict[str, dict],
+    budget: KernelTimeBudget,
+    status: str,
+) -> dict:
+    hashes = {
+        arm: sha256_file(path) if path.is_file() else None
+        for arm, path in prediction_paths.items()
+    }
+    return {
+        "schema_version": PROGRESS_SCHEMA_VERSION,
+        "experiment_id": RUN_ID,
+        "git_commit": approved_protocol_commit,
+        "status": status,
+        "completed_records": dict(completed),
+        "prediction_sha256": hashes,
+        "runtime": runtimes,
+        "elapsed_seconds": budget.elapsed_seconds(),
+        "contains_corpus_text": False,
+    }
 
 
 def _versions() -> dict:
@@ -163,12 +360,19 @@ def _generate_arm(
     adapter: Path,
     records: list[dict],
     predictions_path: Path,
+    prefix_rows: list[dict],
+    budget: KernelTimeBudget,
+    progress_callback,
 ) -> tuple[list[dict], dict]:
-    rows: list[dict] = []
+    rows = list(prefix_rows)
+    if len(rows) < len(records):
+        budget.require_next_record_budget()
+    mode = "a" if predictions_path.is_file() else "x"
     generator = AdapterGenerator(adapter)
     try:
-        with predictions_path.open("x", encoding="utf-8", newline="\n") as stream:
-            for record in records:
+        with predictions_path.open(mode, encoding="utf-8", newline="\n") as stream:
+            for record in records[len(rows) :]:
+                budget.require_next_record_budget()
                 raw = generator(record["prompt"])
                 parsed, warnings = parse_model_response(raw)
                 row = {
@@ -188,8 +392,9 @@ def _generate_arm(
                 stream.write(
                     json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n"
                 )
-                stream.flush()
+                _fsync_stream(stream)
                 rows.append(row)
+                progress_callback(len(rows), generator.runtime)
         if len(rows) != 511:
             raise EvaluationSafetyError(f"{arm} did not complete exactly 511 records")
         return rows, generator.runtime
@@ -213,21 +418,69 @@ def execute(
         raise EvaluationSafetyError("run directory exists; never overwrite") from error
 
     public_summary_path = run_dir / "public_summary.json"
+    progress_path = run_dir / "progress.json"
     log_path = run_dir / "run.log"
     arm_rows: dict[str, list[dict]] = {}
-    runtimes: dict[str, dict] = {}
+    runtimes: dict[str, dict]
     completed = {"F2-P1": 0, "F3-P1": 0}
+    prediction_paths = {
+        arm: run_dir / f"{arm.lower()}_predictions.jsonl"
+        for arm in ("F2-P1", "F3-P1")
+    }
+    budget = KernelTimeBudget(args.kernel_start_epoch_seconds)
+    prefixes, runtimes = load_resume_prefixes(
+        args.resume_from,
+        records=records,
+        approved_protocol_commit=args.approved_protocol_commit,
+    )
+    for arm, (rows, _) in prefixes.items():
+        completed[arm] = len(rows)
+    for arm, (_, source_path) in prefixes.items():
+        if source_path is not None:
+            shutil.copyfile(source_path, prediction_paths[arm])
+            _fsync_path(prediction_paths[arm])
+
+    def persist_progress(status: str = "running") -> None:
+        _write_json_atomic(
+            progress_path,
+            _progress_payload(
+                approved_protocol_commit=args.approved_protocol_commit,
+                completed=completed,
+                prediction_paths=prediction_paths,
+                runtimes=runtimes,
+                budget=budget,
+                status=status,
+            ),
+        )
+
+    persist_progress()
     status = "invalid"
     try:
         for arm, adapter in (
             ("F2-P1", args.f2_adapter),
             ("F3-P1", args.f3_adapter),
         ):
+            prefix_rows, _ = prefixes[arm]
+            if len(prefix_rows) == len(records):
+                arm_rows[arm] = prefix_rows
+                completed[arm] = len(prefix_rows)
+                continue
+
+            def on_progress(
+                count: int, runtime: dict, *, current_arm: str = arm
+            ) -> None:
+                completed[current_arm] = count
+                runtimes[current_arm] = runtime
+                persist_progress()
+
             rows, runtime = _generate_arm(
                 arm=arm,
                 adapter=adapter,
                 records=records,
-                predictions_path=run_dir / f"{arm.lower()}_predictions.jsonl",
+                predictions_path=prediction_paths[arm],
+                prefix_rows=prefix_rows,
+                budget=budget,
+                progress_callback=on_progress,
             )
             arm_rows[arm] = rows
             runtimes[arm] = runtime
@@ -254,6 +507,7 @@ def execute(
                 ),
             }
         status = "complete"
+        persist_progress(status)
         summary = {
             "schema_version": 1,
             "experiment_id": run_id,
@@ -300,11 +554,43 @@ def execute(
                 "repeat_run_authorized": False,
             },
         }
-        public_summary_path.write_text(
-            json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        _write_json_atomic(public_summary_path, summary)
+        log_path.write_text("matched final evaluation completed\n", encoding="utf-8")
+        return summary
+    except TimeBudgetExhausted:
+        for arm, path in prediction_paths.items():
+            completed[arm] = (
+                sum(1 for line in path.open("rb") if line.strip())
+                if path.is_file()
+                else 0
+            )
+        status = "incomplete_time_budget"
+        persist_progress(status)
+        summary = {
+            "schema_version": 2,
+            "experiment_id": run_id,
+            "run_status": status,
+            "created_utc": datetime.now(timezone.utc)
+            .replace(microsecond=0)
+            .isoformat(),
+            "git_commit": args.approved_protocol_commit,
+            "completed_records": completed,
+            "prediction_sha256": {
+                arm: sha256_file(path) if path.is_file() else None
+                for arm, path in prediction_paths.items()
+            },
+            "elapsed_seconds": budget.elapsed_seconds(),
+            "safe_stop_elapsed_seconds": SAFE_STOP_ELAPSED_SECONDS,
+            "runtime": runtimes,
+            "contains_corpus_text": False,
+            "metrics_reported": False,
+            "resume_requires_fresh_authorization": True,
+        }
+        _write_json_atomic(public_summary_path, summary)
+        log_path.write_text(
+            "safe wall-time stop; private handoff preserved; fresh GO required\n",
             encoding="utf-8",
         )
-        log_path.write_text("matched final evaluation completed\n", encoding="utf-8")
         return summary
     except Exception as error:
         for arm in ("F2-P1", "F3-P1"):
@@ -325,11 +611,9 @@ def execute(
             "error_type": type(error).__name__,
             "contains_corpus_text": False,
         }
-        public_summary_path.write_text(
-            json.dumps(failure, indent=2) + "\n", encoding="utf-8"
-        )
+        _write_json_atomic(public_summary_path, failure)
         log_path.write_text(
-            "run invalid; preserve artifacts and review issue #96\n", encoding="utf-8"
+            "run invalid; preserve artifacts and review issue #98\n", encoding="utf-8"
         )
         raise EvaluationSafetyError(
             "matched final evaluation failed; artifacts preserved"
@@ -344,6 +628,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--baseline-predictions", type=Path, required=True)
     parser.add_argument("--f1-predictions", type=Path, required=True)
     parser.add_argument("--outputs-root", type=Path, default=DEFAULT_OUTPUTS)
+    parser.add_argument("--resume-from", type=Path)
+    parser.add_argument("--kernel-start-epoch-seconds", type=float)
     parser.add_argument("--replicate", type=int, default=1)
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--confirmation")
@@ -369,6 +655,8 @@ def main() -> None:
             return
         if args.replicate != 1:
             raise EvaluationSafetyError("only frozen replicate 1 is permitted")
+        if args.kernel_start_epoch_seconds is None:
+            raise EvaluationSafetyError("kernel start epoch is required")
         require_execution_authorization(
             args.confirmation,
             args.approved_protocol_commit,

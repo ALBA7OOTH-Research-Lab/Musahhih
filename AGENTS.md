@@ -55,10 +55,14 @@ smoke completed the exact same 25 deterministic QALB development records used
 for F2-P1, with zero empty outputs and zero parser warnings. See
 `results/f3_p1_dev_smoke_audit.md`. The private development metric and
 record-level responses were not read or published, and `checkpoint-250` did
-not change. The authorization is consumed. Issue #96 prepares a single matched
-F2/F3 Nahw-Passage evaluation gate using both frozen adapters in one private
-P100 runtime. Preparation does not authorize test access or inference. QALB
-test remains outside the current study.
+not change. The authorization is consumed. Issue #96's single authorized
+matched F2/F3 Nahw-Passage kernel reached Kaggle's hard runtime cutoff after
+roughly 40,000 seconds and ended `CANCEL_ACKNOWLEDGED`. No output was
+downloaded, no metric was reported, and no retry occurred. Its authorization
+is consumed. Issue #98 prepares only a timeout-safe, resumable private handoff
+repair with a 9.5-hour graceful-stop threshold. The repair does not authorize
+test access, inference, retry, or continuation; every future kernel requires a
+fresh exact-commit owner GO. QALB test remains outside the current study.
 The proposed `XG` operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules

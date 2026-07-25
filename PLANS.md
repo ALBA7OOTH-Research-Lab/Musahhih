@@ -68,7 +68,27 @@ record-level responses were not read or published. This technical gate does
 not authorize final-test evaluation, another development run, safety
 diagnostics, training, F1/F2, or XG.
 
-## Issue #96 — freeze the matched F2/F3 final-evaluation gate
+## Issue #98 — add a timeout-safe F2/F3 evaluation handoff
+
+- [x] Record issue #96 kernel version 1's first terminal state as
+  `CANCEL_ACKNOWLEDGED`; do not download outputs, retry, or report metrics.
+- [x] Register a repair-only issue and branch without authorizing inference.
+- [x] Add a fixed 9.5-hour safe-stop threshold measured from the private
+  wrapper's first executable line.
+- [x] Flush and `fsync` every private row and atomically maintain a
+  corpus-text-free progress manifest.
+- [x] Return a successful metric-free timed handoff before Kaggle's cutoff.
+- [x] Add a hash- and prefix-verified continuation path that never regenerates
+  completed records and always requires a fresh exact-commit GO.
+- [x] Complete compilation, unit, disabled-mode, privacy, credential-pattern,
+  and diff validation without final-test access or model loading.
+- [ ] Merge the repair PR and record its exact commit for independent review.
+
+Preparation does not authorize a retry or continuation. The cancelled issue
+#96 authorization is consumed. Every future kernel requires its own new
+scope-specific owner GO on issue #98.
+
+## Issue #96 — freeze the matched F2/F3 final-evaluation gate (complete)
 
 - [x] Register a dedicated issue and branch without authorizing execution.
 - [x] Freeze both selected checkpoints, adapter/config/selection hashes, the
@@ -80,14 +100,16 @@ diagnostics, training, F1/F2, or XG.
   not read Nahw-Passage or load a model.
 - [x] Complete compilation, focused unit/pytest, disabled-mode, metadata-only
   adapter, privacy, credential-pattern, and diff validation without test access.
-- [ ] Merge the implementation PR and record its exact commit for a later
-  independent GO/NO-GO.
-- [ ] Obtain a separate exact-commit, single-use owner GO before any
-  Nahw-Passage access or F2/F3 model inference.
+- [x] Merge the implementation through PR #97 at exact commit
+  `22cc89164b4ad00476c91cb29f95e9e34e6f56b3`.
+- [x] Obtain and consume one exact-commit owner GO.
+- [x] Preserve kernel version 1's first terminal state,
+  `CANCEL_ACKNOWLEDGED`, after Kaggle's hard runtime cutoff; report no metric,
+  download no output, and do not retry.
 
-Preparation does not authorize final evaluation. No activation config, private
-kernel, model load, final-test read, or private development-metric inspection
-belongs to this issue.
+The authorization is consumed. The cancelled run produced no reviewed result.
+Any future attempt depends on issue #98's timeout-safe repair and a fresh
+scope-specific owner GO.
 
 ## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow
 

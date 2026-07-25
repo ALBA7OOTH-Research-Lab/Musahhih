@@ -171,10 +171,12 @@ See the corpus-text-free
 [`../results/f3_p1_dev_smoke_audit.md`](../results/f3_p1_dev_smoke_audit.md).
 The private development metric remains unpublished, the checkpoint did not
 change, and the single-use authorization is consumed.
-Issue #96 prepares a single matched F2/F3 Nahw-Passage evaluation gate with the
-two frozen adapters evaluated in one private P100 runtime. The primary new
-contrast is F3-P1 minus F2-P1; staged comparisons to accepted B0 and F1-P1 are
-secondary. See
+Issue #96's single authorized matched F2/F3 Nahw-Passage kernel reached the
+Kaggle hard runtime cutoff and ended `CANCEL_ACKNOWLEDGED`; no output was
+downloaded and no metric was reported. Issue #98 prepares a timeout-safe,
+metric-free private handoff at 9.5 hours plus hash-verified continuation that
+never regenerates completed records. The primary new contrast remains F3-P1
+minus F2-P1; staged comparisons to accepted B0 and F1-P1 remain secondary. See
 [`f2_f3_selected_adapter_evaluation_protocol.md`](f2_f3_selected_adapter_evaluation_protocol.md).
 This preparation does not authorize test access or inference, and QALB test
 remains outside the current companion study.
