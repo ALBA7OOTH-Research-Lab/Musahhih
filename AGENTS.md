@@ -59,10 +59,11 @@ not change. The authorization is consumed. Issue #96's single authorized
 matched F2/F3 Nahw-Passage kernel reached Kaggle's hard runtime cutoff after
 roughly 40,000 seconds and ended `CANCEL_ACKNOWLEDGED`. No output was
 downloaded, no metric was reported, and no retry occurred. Its authorization
-is consumed. Issue #98 prepares only a timeout-safe, resumable private handoff
-repair with a 9.5-hour graceful-stop threshold. The repair does not authorize
-test access, inference, retry, or continuation; every future kernel requires a
-fresh exact-commit owner GO. QALB test remains outside the current study.
+is consumed. Issue #98's timeout-safe, resumable private handoff repair merged
+at `cf25f6691a18515407c63e7bab7b6b4af405d731` with a 9.5-hour
+graceful-stop threshold. The merge does not authorize test access, inference,
+retry, or continuation; every future kernel requires a fresh exact-commit owner
+GO. QALB test remains outside the current study.
 The proposed `XG` operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules

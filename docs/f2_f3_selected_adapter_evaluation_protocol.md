@@ -3,8 +3,9 @@
 Status: the original gate merged at `22cc89164b4ad00476c91cb29f95e9e34e6f56b3`.
 Its single authorized kernel reached Kaggle's hard runtime cutoff after roughly
 40,000 seconds and ended `CANCEL_ACKNOWLEDGED`, with no output downloaded and no
-metric reported. Issue #98 adds an unexecuted timeout-safe handoff repair. This
-document and its implementation do not authorize Nahw-Passage inference.
+metric reported. Issue #98's unexecuted timeout-safe handoff repair merged at
+`cf25f6691a18515407c63e7bab7b6b4af405d731`. This document and its
+implementation do not authorize Nahw-Passage inference.
 
 ## Purpose and research position
 
