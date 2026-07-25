@@ -171,6 +171,13 @@ See the corpus-text-free
 [`../results/f3_p1_dev_smoke_audit.md`](../results/f3_p1_dev_smoke_audit.md).
 The private development metric remains unpublished, the checkpoint did not
 change, and the single-use authorization is consumed.
+Issue #96 prepares a single matched F2/F3 Nahw-Passage evaluation gate with the
+two frozen adapters evaluated in one private P100 runtime. The primary new
+contrast is F3-P1 minus F2-P1; staged comparisons to accepted B0 and F1-P1 are
+secondary. See
+[`f2_f3_selected_adapter_evaluation_protocol.md`](f2_f3_selected_adapter_evaluation_protocol.md).
+This preparation does not authorize test access or inference, and QALB test
+remains outside the current companion study.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

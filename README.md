@@ -402,3 +402,11 @@ final-test evaluation. Its selected-adapter private development smoke completed
 25/25 records with zero empty outputs or parser warnings; the private
 development metric remains unpublished. Development loss and smoke/training
 status are not reported as final model performance.
+
+Issue #96 prepares the next non-executing gate: one matched private P100 run
+that evaluates both frozen F2-P1 and F3-P1 adapters on all 511 Nahw-Passage
+records. The protocol is
+[`docs/f2_f3_selected_adapter_evaluation_protocol.md`](docs/f2_f3_selected_adapter_evaluation_protocol.md).
+Preparation does not authorize final-test access or inference. F2/F3 private
+development metrics remain blinded, and QALB test remains outside the current
+study.

@@ -68,6 +68,27 @@ record-level responses were not read or published. This technical gate does
 not authorize final-test evaluation, another development run, safety
 diagnostics, training, F1/F2, or XG.
 
+## Issue #96 — freeze the matched F2/F3 final-evaluation gate
+
+- [x] Register a dedicated issue and branch without authorizing execution.
+- [x] Freeze both selected checkpoints, adapter/config/selection hashes, the
+  511-record Nahw input, accepted B0/F1 predictions, prompt, parser, decoding,
+  run order, statistics, and retry rules.
+- [x] Keep F2/F3 private development metrics blinded and QALB test outside the
+  current study.
+- [x] Add a disabled-by-default evaluator and synthetic/static tests that do
+  not read Nahw-Passage or load a model.
+- [x] Complete compilation, focused unit/pytest, disabled-mode, metadata-only
+  adapter, privacy, credential-pattern, and diff validation without test access.
+- [ ] Merge the implementation PR and record its exact commit for a later
+  independent GO/NO-GO.
+- [ ] Obtain a separate exact-commit, single-use owner GO before any
+  Nahw-Passage access or F2/F3 model inference.
+
+Preparation does not authorize final evaluation. No activation config, private
+kernel, model load, final-test read, or private development-metric inspection
+belongs to this issue.
+
 ## Issue #69 — build guarded F2/F3 Kaggle QLoRA workflow
 
 - [x] Record GO for methodology commit
