@@ -1,6 +1,6 @@
 # F3-P1 selected-adapter private development smoke
 
-Status: implementation draft for issue #93; no inference authorized.
+Status: frozen and executed once for issue #93. The authorization is consumed.
 
 ## Purpose
 

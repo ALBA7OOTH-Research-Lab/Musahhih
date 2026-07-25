@@ -162,11 +162,15 @@ optimizer steps and selected private epoch-2 `checkpoint-250` by the frozen
 common-development assistant-token loss rule. No inference or final-test
 access occurred; see
 [`../results/f3_p1_full_training_audit.md`](../results/f3_p1_full_training_audit.md).
-Issue #93 prepares, but does not execute, a private selected-adapter technical
-smoke over the exact same 25 deterministic QALB development records used for
-F2-P1. The disabled gate and frozen contract are documented in
+Issue #93's single authorized private selected-adapter technical smoke
+completed the exact same 25 deterministic QALB development records used for
+F2-P1, with zero empty outputs and zero parser warnings. The frozen contract is
+documented in
 [`f3_p1_private_dev_smoke_protocol.md`](f3_p1_private_dev_smoke_protocol.md).
-Execution still requires a separate exact-commit, single-use owner GO.
+See the corpus-text-free
+[`../results/f3_p1_dev_smoke_audit.md`](../results/f3_p1_dev_smoke_audit.md).
+The private development metric remains unpublished, the checkpoint did not
+change, and the single-use authorization is consumed.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

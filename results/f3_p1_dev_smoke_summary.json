@@ -1,0 +1,85 @@
+{
+  "checkpoint": {
+    "adapter_config_sha256": "917893c00ea8f02f784ce21db4448b774e6a892fede6f484da18606bca884c21",
+    "adapter_merged": false,
+    "adapter_model_sha256": "95bd333caac28e08b40fcafe7bc033f323188e817d7c16ecbe7745b34c1b44dc",
+    "checkpoint_selection_sha256": "b4d1deda9b01b82b07abd2a21e999f92e132604ca0c8463830edd8d43dedfa81",
+    "model_revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+    "selected_checkpoint": "checkpoint-250"
+  },
+  "decoding": {
+    "do_sample": false,
+    "max_new_tokens": 256,
+    "seed": 3407,
+    "temperature_argument": null
+  },
+  "execution": {
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/93#issuecomment-5077818701",
+    "platform": "Kaggle",
+    "repository_commit": "2982a2ed62f0d59e51eacbbddb02a03994c73e4b"
+  },
+  "gate": "private_25_record_development_smoke",
+  "gate_status": "passed",
+  "parsing": {
+    "empty_output_count": 0,
+    "warning_counts": {}
+  },
+  "protocol_id": "F3-P1",
+  "records": {
+    "completed": 25,
+    "expected": 25,
+    "maximum_input_tokens": 194,
+    "private_predictions_sha256": "d76a4f7dd1dbf760caad40bd01fd00ca65afa7f02d33176c0df7d6e9cda39198",
+    "selected_record_ids_sha256": "7cf5e1fbced3f28551053abb08d7747ae7eedcd70ca6900be2ea9ce4e58c4527"
+  },
+  "runtime": {
+    "core_stack": {
+      "compatible": true,
+      "installed": {
+        "numpy": "2.0.2",
+        "torch": "2.6.0+cu124",
+        "torchao": "0.16.0",
+        "torchvision": "0.21.0+cu124",
+        "xformers": "0.0.29.post3"
+      },
+      "mismatches": {},
+      "required": {
+        "numpy": "2.0.2",
+        "torch": "2.6.0",
+        "torchao": "0.16.0",
+        "torchvision": "0.21.0",
+        "xformers": "0.0.29.post3"
+      }
+    },
+    "cuda": "12.4",
+    "cuda_capability": "6.0",
+    "executed": true,
+    "gpu": "Tesla P100-PCIE-16GB",
+    "heavy_install_performed": true,
+    "heavy_install_seconds": 169.398,
+    "packages": {
+      "accelerate": "1.13.0",
+      "bitsandbytes": "0.50.0",
+      "datasets": "4.3.0",
+      "peft": "0.19.1",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.56.2",
+      "trl": "0.22.2",
+      "unsloth": "2026.7.5"
+    },
+    "python": "3.12.13",
+    "visible_gpu_count": 1
+  },
+  "safeguards": {
+    "checkpoint_selection_changed": false,
+    "contains_corpus_text": false,
+    "f2_executed": false,
+    "f3_selected_adapter_inference_executed": true,
+    "nahw_passage_used": false,
+    "private_development_metric_published": false,
+    "qalb_test_used": false,
+    "safety_diagnostics_executed": false,
+    "training_executed_in_smoke_kernel": false,
+    "xg_executed": false
+  }
+}
