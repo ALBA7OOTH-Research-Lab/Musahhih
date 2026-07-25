@@ -305,8 +305,16 @@ steps and selected private `checkpoint-250` because epoch-2 common-development
 loss was lower than epoch 1. See the corpus-text-free
 [`results/f3_p1_full_training_audit.md`](results/f3_p1_full_training_audit.md).
 Neither engineering status nor development loss is final model performance,
-and no F3 inference or final-test access is authorized. For a future separately
-authorized stage, generate a strict, text-free private activation file with:
+and no F3 inference or final-test access is authorized. Issue #93 prepares a
+disabled-by-default F3-P1 selected-adapter development smoke in
+[`notebooks/06_f3_private_dev_smoke.ipynb`](notebooks/06_f3_private_dev_smoke.ipynb)
+under the frozen
+[`docs/f3_p1_private_dev_smoke_protocol.md`](docs/f3_p1_private_dev_smoke_protocol.md).
+It reuses the exact same 25 deterministic QALB development records as the
+completed F2-P1 smoke. Preparation does not authorize execution; a later
+exact-commit, single-use owner GO and private activation file are required.
+For a future separately authorized training stage, generate a strict,
+text-free private activation file with:
 
 ```bash
 python scripts/prepare_f2_f3_execution_config.py \
@@ -387,5 +395,6 @@ safety diagnostics, and F2-P1 synthetic-data training are complete. F2-P1 has
 passed its private technical development smoke but has not received final-test
 evaluation. F3-P1 has completed its one-step engineering smoke and one frozen
 two-epoch training run, selecting private `checkpoint-250`; it has not received
-inference or final-test evaluation. Development loss and smoke/training status
-are not reported as final model performance.
+inference or final-test evaluation. Its selected-adapter private development
+smoke gate is prepared but disabled and unexecuted. Development loss and
+smoke/training status are not reported as final model performance.
