@@ -12,6 +12,10 @@ Treat this file as a map, not a full manual. Follow the linked docs for details.
 - Experimental design: `docs/research_plan.md`
 - Dataset roles and leakage rules: `docs/dataset_audit.md`
 - Prior work and research gap: `docs/literature_matrix.md`
+- Research completion status: `docs/research_completion_matrix.md`
+- Publication synthesis: `docs/paper_outline.md`
+- Artifact release constraints: `docs/artifact_release_audit.md`
+- Qualified linguistic review boundary: `docs/qualified_linguistic_review_plan.md`
 - Current implementation task: `docs/tasks/001_colab_unsloth_baseline.md`
 
 ## Current milestone
@@ -78,6 +82,9 @@ Private predictions and logs remain ignored. The continuation authorization is
 consumed. Do not repeat the final evaluation or tune any decision from its
 results. QALB test remains outside the current study.
 The proposed `XG` operator remains disabled pending qualified linguistic review.
+Issue #104 is preparing the corpus-text-free publication synthesis and remaining
+gate plans. It authorizes no inference, test access, adapter release, linguistic
+labeling, or new GPU run.
 
 ## Non-negotiable research rules
 
