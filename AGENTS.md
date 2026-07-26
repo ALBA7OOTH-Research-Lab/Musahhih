@@ -92,6 +92,13 @@ metric-free handoff, exact-prefix continuation, and strict exact-commit
 activation. The implementation does not authorize model loading,
 Nahw-Passage access, inference, Kaggle submission, or continuation. Every
 future segment requires independent review and a fresh scope-specific owner GO.
+Issue #109's single authorized B1-P1 segment on new Kaggle account
+`alba7oothresearchlab` failed closed after approximately 1.07 seconds because
+the runtime had no `nvidia-smi` executable. No repository checkout, private
+input access, model loading, inference, predictions, or metric occurred. See
+`results/b1_p1_final_attempt_failure_audit.md`. The authorization is consumed;
+do not retry or submit another version. Any future B1 attempt requires verified
+GPU eligibility and a fresh exact-commit owner GO.
 
 ## Non-negotiable research rules
 

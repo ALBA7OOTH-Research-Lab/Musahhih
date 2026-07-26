@@ -1,0 +1,26 @@
+{
+  "authorization_consumed": true,
+  "failure": {
+    "elapsed_seconds_approx": 1.07,
+    "error_type": "FileNotFoundError",
+    "stage": "p100_runtime_gate",
+    "summary": "nvidia-smi was unavailable"
+  },
+  "issue": 109,
+  "kernel": {
+    "account": "alba7oothresearchlab",
+    "slug": "musahhih-b1-final-timeout-safe-16b4ca3-r01",
+    "terminal_state": "ERROR",
+    "version": 1
+  },
+  "private_log_sha256": "26c9e08ae4b83bbd2ba8f94708f2f4c5f2d0bcc442bb9dfaaf02004ad8a18f26",
+  "research_execution": {
+    "inference_executed": false,
+    "metric_computed": false,
+    "model_loaded": false,
+    "predictions_created": false,
+    "private_input_accessed": false,
+    "repository_checked_out": false
+  },
+  "status": "failed_before_research_execution"
+}
