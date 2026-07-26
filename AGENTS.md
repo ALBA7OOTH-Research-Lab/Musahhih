@@ -63,7 +63,13 @@ is consumed. Issue #98's timeout-safe, resumable private handoff repair merged
 at `cf25f6691a18515407c63e7bab7b6b4af405d731` with a 9.5-hour
 graceful-stop threshold. The merge does not authorize test access, inference,
 retry, or continuation; every future kernel requires a fresh exact-commit owner
-GO. QALB test remains outside the current study.
+GO. One subsequently authorized replacement segment completed F2-P1 511/511
+and F3-P1 168/511 before returning the planned metric-free
+`incomplete_time_budget` handoff. See
+`results/f2_f3_final_evaluation_handoff_audit.md`. Private predictions remain
+ignored; no score or partial comparison was reported. The authorization is
+consumed, and continuation requires another fresh exact-commit owner GO. QALB
+test remains outside the current study.
 The proposed `XG` operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules

@@ -84,10 +84,21 @@ diagnostics, training, F1/F2, or XG.
   and diff validation without final-test access or model loading.
 - [x] Merge PR #99 and record exact repair commit
   `cf25f6691a18515407c63e7bab7b6b4af405d731` for independent review.
+- [x] Obtain one fresh owner GO for a replacement segment at exact workflow
+  commit `80194505bd00513f4e1661ef10798f79b83ae16b`.
+- [x] Submit exactly one private P100 segment and preserve terminal Kaggle
+  `COMPLETE` / evaluator `incomplete_time_budget`.
+- [x] Audit the metric-free handoff: F2-P1 511/511, F3-P1 168/511, exact frozen
+  hashes, ordered-prefix alignment, and corpus-text-free summaries passed.
+- [ ] Merge the narrow public handoff audit and record its exact commit.
 
 Preparation does not authorize a retry or continuation. The cancelled issue
 #96 authorization is consumed. Every future kernel requires its own new
 scope-specific owner GO on issue #98.
+
+The issue #98 replacement authorization is also consumed. Its private handoff
+is recoverable, but no continuation is authorized. Do not inspect or publish
+partial metrics to decide whether to continue.
 
 ## Issue #96 — freeze the matched F2/F3 final-evaluation gate (complete)
 
