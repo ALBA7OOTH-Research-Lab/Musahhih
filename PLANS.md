@@ -1,5 +1,25 @@
 # Active implementation plan
 
+## Issue #114 — execute one repaired B1-P1 final attempt
+
+- [x] Record a fresh exact-repair-commit, account-specific, single-use owner
+  GO.
+- [x] Prepare a fresh private kernel slug without editing or versioning the
+  failed issue #109 kernel.
+- [x] Verify the repaired wrapper order, frozen hashes, private dataset, P100
+  metadata, GPU quota, and permanent GO before submission.
+- [x] Submit exactly one private kernel version and consume the authorization.
+- [x] Preserve terminal Kaggle `ERROR` after repeated DNS failures resolving
+  `download.pytorch.org` during the pinned PyTorch install.
+- [x] Confirm that repository checkout, repaired GPU preflight, private-input
+  access, model loading, inference, predictions, and metrics never occurred.
+- [x] Record the corpus-text-free failure diagnostic without retry.
+
+Issue #114 produced no research result and did not exercise the issue #112 GPU
+repair. Do not edit the kernel, push another version, retry, resubmit, or run
+B2-P1. Any future attempt requires a fresh exact-commit, scope-specific owner
+GO.
+
 ## Issue #112 — repair the B1/B2 GPU preflight
 
 - [x] Register a repair-only issue and branch without authorizing another

@@ -1,0 +1,28 @@
+{
+  "authorization_consumed": true,
+  "failure": {
+    "elapsed_seconds_approx": 204,
+    "error_type": "CalledProcessError",
+    "network_attempts": 5,
+    "stage": "pinned_pytorch_install",
+    "summary": "temporary DNS resolution failure for download.pytorch.org"
+  },
+  "issue": 114,
+  "kernel": {
+    "account": "alba7oothresearchlab",
+    "slug": "musahhih-b1-final-repaired-f8c7ffd-r02",
+    "terminal_state": "ERROR",
+    "version": 1
+  },
+  "private_log_sha256": "bb94cfd2991bb6e1819f16e7b4c71a524667b79ed04c2ba19446f5fd87a14052",
+  "research_execution": {
+    "gpu_preflight_executed": false,
+    "inference_executed": false,
+    "metric_computed": false,
+    "model_loaded": false,
+    "predictions_created": false,
+    "private_input_accessed": false,
+    "repository_checked_out": false
+  },
+  "status": "network_failure_before_research_execution"
+}
