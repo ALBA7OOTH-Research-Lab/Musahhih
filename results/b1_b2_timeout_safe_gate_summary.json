@@ -1,0 +1,27 @@
+{
+  "artifact_type": "corpus-text-free implementation audit",
+  "execution": {
+    "final_test_accessed": false,
+    "inference_executed": false,
+    "model_loaded": false,
+    "private_records_read": false
+  },
+  "issue": 107,
+  "safe_stop_elapsed_seconds": 34200,
+  "status": "implementation_prepared_not_authorized",
+  "validation": {
+    "pytest_subtests_passed": 62,
+    "pytest_tests_passed": 207
+  },
+  "synthetic_coverage": [
+    "timed_interruption",
+    "successful_prefix_resume",
+    "identity_mismatch",
+    "prediction_hash_mismatch",
+    "schema_mismatch",
+    "record_order_mismatch",
+    "score_mismatch",
+    "private_path_guard",
+    "write_once_guard"
+  ]
+}
