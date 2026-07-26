@@ -1,5 +1,24 @@
 # Active implementation plan
 
+## Issue #112 — repair the B1/B2 GPU preflight
+
+- [x] Register a repair-only issue and branch without authorizing another
+  kernel.
+- [x] Replace the external `nvidia-smi` assumption with a reusable PyTorch
+  CUDA/device guard.
+- [x] Require CUDA, exactly one device, and a P100 identity without loading a
+  model or reading private inputs.
+- [x] Reuse the same guard inside the final Gemma backend.
+- [x] Add a wrapper-facing aggregate-only preflight command.
+- [x] Cover passing P100, missing CUDA, wrong device count, wrong GPU type, and
+  absence of external-command dependencies with synthetic tests.
+- [ ] Complete full validation, merge, and record the exact executable repair
+  commit for independent review.
+
+Issue #112 is preparation only. It does not authorize a Kaggle submission,
+kernel version, retry, final-test access, model loading, inference, B2-P1, or
+continuation. A future attempt requires a fresh exact-commit owner GO.
+
 ## Issue #109 — execute one timeout-safe B1-P1 final segment
 
 - [x] Record an exact-commit, account-specific, single-use owner GO.

@@ -235,6 +235,17 @@ fresh exact-commit issue-comment GO; the implementation itself is not execution
 authorization. See
 [`docs/b1_b2_final_gate_readiness.md`](docs/b1_b2_final_gate_readiness.md).
 
+Before discovering or reading any private B1/B2 input, a future private wrapper
+must run the aggregate-only PyTorch runtime gate:
+
+```bash
+python -m scripts.check_b1_b2_gpu_preflight
+```
+
+It verifies CUDA availability, exactly one device, and the required P100 name.
+It does not invoke `nvidia-smi`, load a model, or access corpus records. Passing
+this command is a technical prerequisite, not execution authorization.
+
 Authenticate with Hugging Face if the selected model is gated:
 
 ```bash

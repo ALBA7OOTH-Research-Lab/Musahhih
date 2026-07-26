@@ -217,6 +217,12 @@ a new record once 34,200 elapsed seconds have passed, flushes and `fsync`s every
 completed private JSONL row, and atomically replaces a corpus-text-free
 `progress.json`.
 
+After environment setup and approved-commit checkout—but before discovering or
+reading private inputs—the wrapper must run
+`python -m scripts.check_b1_b2_gpu_preflight`. This uses PyTorch to verify CUDA,
+exactly one device, and the P100 identity. It must not depend on the external
+`nvidia-smi` command, load a model, or access corpus records.
+
 A timed segment returns `incomplete_time_budget` successfully. Its public
 handoff contains counts, hashes, runtime identity, and elapsed time, but no
 partial exact-match score. Continuation is a new write-once run directory and
