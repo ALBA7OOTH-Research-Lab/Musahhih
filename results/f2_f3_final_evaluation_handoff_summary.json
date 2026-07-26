@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "experiment_id": "F2-F3__gemma3-4b-it__nahw-passage__s3407__r01",
+  "kernel": {
+    "url": "https://www.kaggle.com/code/univverssal/musahhih-f2-f3-final-timeout-safe-8019450-r02",
+    "version": 1,
+    "kaggle_terminal_state": "COMPLETE",
+    "evaluator_terminal_state": "incomplete_time_budget"
+  },
+  "authorization": {
+    "approved_workflow_commit": "80194505bd00513f4e1661ef10798f79b83ae16b",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/98#issuecomment-5081097772",
+    "authorization_consumed": true,
+    "continuation_requires_fresh_go": true
+  },
+  "execution": {
+    "elapsed_seconds": 34277,
+    "safe_stop_elapsed_seconds": 34200,
+    "completed_records": {
+      "F2-P1": 511,
+      "F3-P1": 168
+    },
+    "runtime": {
+      "gpu": "Tesla P100-PCIE-16GB",
+      "gpu_total_memory_bytes": 17059545088,
+      "cuda": "12.4",
+      "python": "3.12.13",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.56.2",
+      "unsloth": "2026.7.5",
+      "peft": "0.19.1",
+      "trl": "0.22.2",
+      "accelerate": "1.13.0"
+    }
+  },
+  "sha256": {
+    "private_wrapper": "54a622290f93ca5a8b114a75c6522b9a97c155018df99a24df9eece97f9456dd",
+    "kernel_metadata": "cdd895936c469caa347b69d85c78b83a27a68f5b599e40bba1dadbd01ef93d5a",
+    "nahw_prepared_input": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b",
+    "accepted_b0_predictions": "6997b6fe5959f5502511ebdd1885d05a89ebaefeb27eefb73520842598f36ebc",
+    "accepted_f1_predictions": "8c4d0ca25b48776a08ea02984af6c5c3ec0bc830d2d1a6994e0fb5eef995faa3",
+    "private_f2_predictions": "ca4a6eb2f5e40a60be14f59cdc7365a0f327b41ab0b8f46c8a08c43cfb442753",
+    "private_f3_prefix": "420e5f2f8d44230e3b9df516f55bfcc331e9fb5f20b570213f3aa5d851f5ec14"
+  },
+  "audit": {
+    "ordered_prefix_alignment": true,
+    "unique_record_ids": true,
+    "private_row_schema_valid": true,
+    "parser_output_types_valid": true,
+    "exact_match_consistency_valid": true,
+    "public_summary_corpus_text_free": true,
+    "metrics_reported": false,
+    "partial_comparisons_reported": false,
+    "private_artifacts_published": false
+  }
+}

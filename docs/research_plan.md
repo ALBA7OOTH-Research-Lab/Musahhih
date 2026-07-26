@@ -181,6 +181,12 @@ F2-P1; staged comparisons to accepted B0 and F1-P1 remain secondary. See
 [`f2_f3_selected_adapter_evaluation_protocol.md`](f2_f3_selected_adapter_evaluation_protocol.md).
 This preparation does not authorize test access or inference, and QALB test
 remains outside the current companion study.
+
+The first timeout-safe replacement segment completed F2-P1 511/511 and
+preserved F3-P1 168/511 before returning the preregistered metric-free
+`incomplete_time_budget` handoff. The private prefix passed exact hash, schema,
+and ordered-alignment audit. No score or partial comparison was reported, and
+continuation requires a fresh exact-commit owner GO.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

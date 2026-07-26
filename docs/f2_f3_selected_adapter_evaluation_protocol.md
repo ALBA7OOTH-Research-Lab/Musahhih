@@ -7,6 +7,12 @@ metric reported. Issue #98's unexecuted timeout-safe handoff repair merged at
 `cf25f6691a18515407c63e7bab7b6b4af405d731`. This document and its
 implementation do not authorize Nahw-Passage inference.
 
+One later authorized replacement segment at workflow commit
+`80194505bd00513f4e1661ef10798f79b83ae16b` completed F2-P1 511/511 and
+F3-P1 168/511, then returned the planned metric-free
+`incomplete_time_budget` handoff. The segment authorization is consumed. This
+record does not authorize continuation.
+
 ## Purpose and research position
 
 This protocol defines the single matched final evaluation of the selected

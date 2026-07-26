@@ -414,3 +414,10 @@ exact-commit owner GO without regenerating completed records. The protocol is
 Preparation does not authorize final-test access, inference, retry, or
 continuation. F2/F3 private development metrics remain blinded, and QALB test
 remains outside the current study.
+
+One separately authorized timeout-safe replacement segment later completed all
+511 F2-P1 records and preserved an ordered 168-record F3-P1 prefix before the
+planned metric-free `incomplete_time_budget` stop. See
+[`results/f2_f3_final_evaluation_handoff_audit.md`](results/f2_f3_final_evaluation_handoff_audit.md).
+No score or partial comparison is published. Continuation requires another
+fresh exact-commit owner GO.
