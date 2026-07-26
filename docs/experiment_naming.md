@@ -48,8 +48,8 @@ The accepted pattern is:
 | `B1` | Untouched few-shot model | `B1-P1` |
 | `B2` | Untouched expert-style prompted model | `B2-P1` |
 | `F1` | Natural-data fine-tuning | `F1-P1`; training, checkpoint selection, frozen Nahw-Passage evaluation, and matched safety diagnostics complete |
-| `F2` | Synthetic-data fine-tuning | `F2-P1`; training, checkpoint selection, and private development smoke complete; timeout-safe matched handoff preserved 511/511 records without publishing a score |
-| `F3` | Mixed natural and synthetic fine-tuning | `F3-P1`; fixed 50:50 training, checkpoint selection, and private development smoke complete; timeout-safe matched handoff preserved 168/511 records without publishing a partial score |
+| `F2` | Synthetic-data fine-tuning | `F2-P1`; training, checkpoint selection, private development smoke, and frozen matched Nahw-Passage evaluation complete |
+| `F3` | Mixed natural and synthetic fine-tuning | `F3-P1`; fixed 50:50 training, checkpoint selection, private development smoke, and frozen matched Nahw-Passage evaluation complete |
 | `F4` | Registered mixture or data-size ablation | Not yet registered |
 
 `B1` remains the few-shot family and `B2` remains the expert-style prompt family.

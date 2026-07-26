@@ -68,8 +68,15 @@ and F3-P1 168/511 before returning the planned metric-free
 `incomplete_time_budget` handoff. See
 `results/f2_f3_final_evaluation_handoff_audit.md`. Private predictions remain
 ignored; no score or partial comparison was reported. The authorization is
-consumed, and continuation requires another fresh exact-commit owner GO. QALB
-test remains outside the current study.
+consumed. A separately authorized exact-commit continuation then reused the
+byte-identical F2-P1 result and preserved F3-P1 prefix, completed F3-P1
+511/511, and closed the frozen matched evaluation. See
+`results/f2_f3_final_evaluation_audit.md`. F3-P1 achieved 162/511 exact
+matches versus F2-P1's 105/511; the preregistered paired difference was 11.15
+percentage points with a 95% paired-bootstrap interval of 7.05–15.26 points.
+Private predictions and logs remain ignored. The continuation authorization is
+consumed. Do not repeat the final evaluation or tune any decision from its
+results. QALB test remains outside the current study.
 The proposed `XG` operator remains disabled pending qualified linguistic review.
 
 ## Non-negotiable research rules

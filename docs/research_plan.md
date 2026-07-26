@@ -186,7 +186,15 @@ The first timeout-safe replacement segment completed F2-P1 511/511 and
 preserved F3-P1 168/511 before returning the preregistered metric-free
 `incomplete_time_budget` handoff. The private prefix passed exact hash, schema,
 and ordered-alignment audit. No score or partial comparison was reported, and
-continuation requires a fresh exact-commit owner GO.
+continuation required a fresh exact-commit owner GO. The separately authorized
+continuation reused those exact artifacts, completed F3-P1 511/511, and closed
+the frozen matched evaluation. F2-P1 produced 105/511 exact matches and F3-P1
+produced 162/511. The primary F3-P1-minus-F2-P1 difference was
+`0.11154598825831702`, with a preregistered paired-bootstrap 95% interval of
+`[0.07045009784735812, 0.15264187866927592]`. See
+[`../results/f2_f3_final_evaluation_audit.md`](../results/f2_f3_final_evaluation_audit.md).
+The continuation authorization is consumed; the final evaluation must not be
+repeated or used for tuning.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 

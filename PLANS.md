@@ -92,14 +92,20 @@ diagnostics, training, F1/F2, or XG.
   hashes, ordered-prefix alignment, and corpus-text-free summaries passed.
 - [x] Merge the narrow public handoff audit through PR #101 at exact commit
   `75cc315a7f1f231dc2dea8c777c7e729739050c8`.
+- [x] Obtain a separate exact-commit continuation GO on issue #98 and submit
+  exactly one private continuation kernel.
+- [x] Reuse the byte-identical 511-record F2-P1 artifact and 168-record F3-P1
+  prefix without regenerating completed records.
+- [x] Complete F3-P1 511/511 and preserve terminal Kaggle/evaluator `COMPLETE`.
+- [x] Audit exact hashes, ordered alignment, schemas, score consistency, arm
+  counts, warnings, and all five preregistered paired comparisons without
+  printing corpus text or private responses.
+- [x] Publish only the reviewed corpus-text-free final audit and summary.
 
-Preparation does not authorize a retry or continuation. The cancelled issue
-#96 authorization is consumed. Every future kernel requires its own new
-scope-specific owner GO on issue #98.
-
-The issue #98 replacement authorization is also consumed. Its private handoff
-is recoverable, but no continuation is authorized. Do not inspect or publish
-partial metrics to decide whether to continue.
+The cancelled issue #96 authorization and both issue #98 segment
+authorizations are consumed. The matched evaluation is complete. Do not repeat
+it or use its frozen-test results to tune prompts, parsing, checkpoints,
+training data, or experiment decisions.
 
 ## Issue #96 — freeze the matched F2/F3 final-evaluation gate (complete)
 
