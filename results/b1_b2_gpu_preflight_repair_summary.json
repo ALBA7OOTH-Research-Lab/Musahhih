@@ -6,6 +6,7 @@
     "private_input_accessed": false
   },
   "issue": 112,
+  "implementation_commit": "f8c7ffd74993785f118bb32e0145295b31c5048d",
   "repair": {
     "external_nvidia_smi_dependency": false,
     "requires_cuda": true,
@@ -14,6 +15,10 @@
     "runtime_api": "PyTorch"
   },
   "status": "repair_prepared_not_authorized",
+  "validation": {
+    "pytest_subtests_passed": 65,
+    "pytest_tests_passed": 211
+  },
   "synthetic_coverage": [
     "p100_pass",
     "cuda_unavailable",

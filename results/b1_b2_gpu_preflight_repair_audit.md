@@ -7,6 +7,9 @@ is implementation evidence only. No private input was read, no model was
 loaded, no Kaggle kernel was edited or submitted, and no inference or metric
 occurred.
 
+The exact executable repair commit is
+`f8c7ffd74993785f118bb32e0145295b31c5048d`.
+
 ## Repair
 
 `scripts.check_b1_b2_gpu_preflight` now performs the wrapper-facing runtime
@@ -24,6 +27,10 @@ GPU checks.
 Synthetic tests cover a passing P100, absent CUDA, multiple devices, a non-P100
 device, aggregate-only CLI output, and static absence of `nvidia-smi` and
 `subprocess` dependencies.
+
+Validation completed with `python -m compileall scripts`, 211 passing tests and
+65 passing subtests, JSON parsing, credential-pattern scanning, and
+`git diff --check`.
 
 ## Authorization boundary
 

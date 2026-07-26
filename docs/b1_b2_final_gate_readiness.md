@@ -14,7 +14,9 @@ Issue #112 replaces that brittle assumption with
 `python -m scripts.check_b1_b2_gpu_preflight`. The command uses PyTorch to
 require CUDA, exactly one device, and a P100 identity before any private-input
 access or model loading. It emits only aggregate runtime metadata. This repair
-must be merged and independently reviewed before a fresh owner GO.
+is implemented at exact executable commit
+`f8c7ffd74993785f118bb32e0145295b31c5048d`; it must be merged and
+independently reviewed before a fresh owner GO.
 
 ## Decision
 

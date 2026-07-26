@@ -102,6 +102,12 @@ private input access, model loading, inference, predictions, or metric occurred.
 See `results/b1_p1_final_attempt_failure_audit.md`. The authorization is
 consumed; do not retry or submit another version. Any future B1 attempt requires
 a reviewed GPU-preflight repair and a fresh exact-commit owner GO.
+Issue #112's PyTorch CUDA/P100 preflight repair is implemented at exact
+executable commit `f8c7ffd74993785f118bb32e0145295b31c5048d`. It
+requires CUDA, exactly one device, and a P100 before private-input access, with
+no dependency on external `nvidia-smi`. The repair does not authorize another
+kernel; any future B1 attempt requires independent review and a fresh
+scope-specific owner GO.
 
 ## Non-negotiable research rules
 

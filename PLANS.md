@@ -12,8 +12,8 @@
 - [x] Add a wrapper-facing aggregate-only preflight command.
 - [x] Cover passing P100, missing CUDA, wrong device count, wrong GPU type, and
   absence of external-command dependencies with synthetic tests.
-- [ ] Complete full validation, merge, and record the exact executable repair
-  commit for independent review.
+- [x] Complete full validation and record exact executable repair commit
+  `f8c7ffd74993785f118bb32e0145295b31c5048d` for independent review.
 
 Issue #112 is preparation only. It does not authorize a Kaggle submission,
 kernel version, retry, final-test access, model loading, inference, B2-P1, or
