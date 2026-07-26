@@ -4,7 +4,9 @@ Status updated: 2026-07-26. Implementation prepared; no execution authorized.
 
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07
-seconds because the runtime did not expose `nvidia-smi`. It did not reach
+seconds because the wrapper assumed an external `nvidia-smi` executable that
+was unavailable. Server metadata recorded GPU enabled and the account had
+30 GPU-hours remaining; CUDA availability was never measured. It did not reach
 repository checkout, private-input access, model loading, inference, or a
 metric. The authorization is consumed; this does not authorize a retry.
 

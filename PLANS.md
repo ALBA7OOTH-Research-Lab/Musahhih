@@ -7,17 +7,19 @@
   hashes without printing corpus text.
 - [x] Create a private input dataset and submit exactly one private kernel
   version from Kaggle account `alba7oothresearchlab`.
-- [x] Preserve terminal Kaggle `ERROR` after the runtime could not find
-  `nvidia-smi` at approximately 1.07 seconds.
+- [x] Preserve terminal Kaggle `ERROR` after the wrapper could not find the
+  external `nvidia-smi` executable at approximately 1.07 seconds.
 - [x] Confirm that repository checkout, private-input access, model loading,
   inference, predictions, and metrics never occurred.
 - [x] Record the corpus-text-free failure diagnostic and consume the
   authorization without retry.
 
-Issue #109 produced no research result. Do not edit the kernel, push another
-version, retry, resubmit, or run B2-P1. A future attempt requires verified GPU
-eligibility on the submitting account and a new exact-commit, scope-specific
-owner GO.
+Issue #109 produced no research result. Server metadata confirms that GPU was
+requested and the account had 30 GPU-hours remaining; the failure does not
+establish whether CUDA was available because the wrapper stopped before checking
+it. Do not edit the kernel, push another version, retry, resubmit, or run B2-P1.
+A future attempt requires a reviewed repair of the brittle external-command GPU
+preflight and a new exact-commit, scope-specific owner GO.
 
 ## Issue #107 — add a timeout-safe resumable B1/B2 final gate
 
