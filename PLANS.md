@@ -19,8 +19,9 @@
   model loading.
 - [x] Cover interruption, successful continuation, hash/schema/order/score
   tampering, path privacy, and write-once behavior with synthetic fixtures.
-- [ ] Complete full validation, independent review, PR merge, and record the
-  exact merged commit.
+- [x] Complete full validation, publish PR #108, and record exact executable
+  implementation commit `16b4ca3dec6e757b41e233b22bc16cc6a57be4dd`
+  for independent review.
 
 Issue #107 is implementation only. It does not authorize Nahw-Passage access,
 model loading, inference, Kaggle submission, continuation, QALB test, training,

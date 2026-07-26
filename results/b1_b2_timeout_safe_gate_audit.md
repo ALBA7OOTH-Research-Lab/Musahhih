@@ -7,6 +7,10 @@ hard runtime cutoff. This is implementation evidence only. No model was loaded,
 no private or final-test record was read, no inference ran, and no result was
 produced.
 
+The exact executable implementation commit is
+`16b4ca3dec6e757b41e233b22bc16cc6a57be4dd`; the PR #108 follow-up commit only
+records this milestone identity.
+
 ## Implemented controls
 
 - fixed 34,200-second safe stop measured from the private wrapper start;

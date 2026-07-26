@@ -85,6 +85,13 @@ The proposed `XG` operator remains disabled pending qualified linguistic review.
 Issue #104 is preparing the corpus-text-free publication synthesis and remaining
 gate plans. It authorizes no inference, test access, adapter release, linguistic
 labeling, or new GPU run.
+Issue #107's timeout-safe resumable B1-P1/B2-P1 final gate is implemented at
+exact executable commit `16b4ca3dec6e757b41e233b22bc16cc6a57be4dd`
+through PR #108. It adds a 9.5-hour safe stop, per-row persistence,
+metric-free handoff, exact-prefix continuation, and strict exact-commit
+activation. The implementation does not authorize model loading,
+Nahw-Passage access, inference, Kaggle submission, or continuation. Every
+future segment requires independent review and a fresh scope-specific owner GO.
 
 ## Non-negotiable research rules
 

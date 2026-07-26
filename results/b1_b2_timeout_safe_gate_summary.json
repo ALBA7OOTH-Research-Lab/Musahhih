@@ -7,6 +7,7 @@
     "private_records_read": false
   },
   "issue": 107,
+  "implementation_commit": "16b4ca3dec6e757b41e233b22bc16cc6a57be4dd",
   "safe_stop_elapsed_seconds": 34200,
   "status": "implementation_prepared_not_authorized",
   "validation": {

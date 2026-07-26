@@ -7,6 +7,8 @@ Status updated: 2026-07-26. Implementation prepared; no execution authorized.
 Issue #107 implements the required timeout-safe persistence and exact-prefix
 continuation controls without changing either frozen prompt, demonstration
 bundle, parser, decoding setting, input, statistic, or canonical run identity.
+The exact executable implementation is
+`16b4ca3dec6e757b41e233b22bc16cc6a57be4dd` in PR #108.
 The gate remains disabled and must not be submitted until the implementation is
 merged, independently reviewed at its exact commit, and named by a fresh
 single-use owner GO.
