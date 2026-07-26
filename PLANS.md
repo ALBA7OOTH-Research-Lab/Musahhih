@@ -16,8 +16,9 @@
   ArabicMMLU capability-retention diagnostics.
 - [x] Validate compilation, tests, JSON, cross-document metrics, privacy,
   credential patterns, ignored artifacts, and diff hygiene.
-- [ ] Merge only corpus-text-free planning and aggregate evidence, then obtain
-  separate owner decisions for each optional future experiment or release.
+- [x] Merge only corpus-text-free planning and aggregate evidence through PR
+  #105 at `418c127bd0016a91b30ef2d02da8447cdeaa66ef`; obtain separate owner
+  decisions for each optional future experiment or release.
 
 Issue #104 does not authorize B1/B2 final inference, F2/F3 safety diagnostics,
 QALB test access, training, checkpoint changes, Nahw-Passage access, XG,
