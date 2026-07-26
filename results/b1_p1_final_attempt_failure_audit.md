@@ -12,9 +12,23 @@ version 1. Kaggle reported terminal `ERROR`.
 
 ## Failure
 
-The wrapper failed at approximately 1.07 seconds while invoking
-`nvidia-smi`. The executable was unavailable, so the fail-closed P100 runtime
-gate stopped the process with `FileNotFoundError`.
+The wrapper failed at approximately 1.07 seconds while invoking the external
+`nvidia-smi` command. The executable was unavailable, so the fail-closed P100
+runtime gate stopped the process with `FileNotFoundError`.
+
+A follow-up metadata audit found:
+
+- Kaggle stored `enable_gpu: true`;
+- Kaggle stored the normalized machine shape `Gpu`;
+- the account reported 30.00 GPU-hours remaining; and
+- the official Kaggle CLI documentation lists `NvidiaTeslaP100` as a valid
+  accelerator identifier.
+
+The evidence therefore does not show an account-eligibility failure or prove
+that no CUDA device was assigned. The wrapper stopped before measuring
+`torch.cuda.is_available()` or the CUDA device name. The correct diagnosis is a
+brittle wrapper preflight that treated the presence of one external executable
+as the GPU test.
 
 The failure occurred before:
 
@@ -37,7 +51,7 @@ model quality. The single-use authorization was consumed by the submission.
 No edit, new kernel version, retry, resubmission, hot-patch, B2-P1 run, or
 continuation was launched.
 
-Before any future B1-P1 attempt, the submitting Kaggle account must demonstrate
-GPU eligibility and assignment without accessing private inputs or loading the
-model. A future submission still requires a fresh exact-commit, scope-specific
-owner GO.
+Before any future B1-P1 attempt, replace the external-command assumption with a
+reviewed, fail-closed CUDA/device check that does not read private inputs or load
+the model. A future submission still requires a fresh exact-commit,
+scope-specific owner GO.

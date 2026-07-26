@@ -4,7 +4,7 @@
     "elapsed_seconds_approx": 1.07,
     "error_type": "FileNotFoundError",
     "stage": "p100_runtime_gate",
-    "summary": "nvidia-smi was unavailable"
+    "summary": "the wrapper assumed an external nvidia-smi executable that was unavailable"
   },
   "issue": 109,
   "kernel": {
@@ -14,6 +14,12 @@
     "version": 1
   },
   "private_log_sha256": "26c9e08ae4b83bbd2ba8f94708f2f4c5f2d0bcc442bb9dfaaf02004ad8a18f26",
+  "server_metadata_audit": {
+    "account_gpu_hours_remaining": 30.0,
+    "cuda_availability_measured": false,
+    "enable_gpu": true,
+    "machine_shape": "Gpu"
+  },
   "research_execution": {
     "inference_executed": false,
     "metric_computed": false,
@@ -22,5 +28,5 @@
     "private_input_accessed": false,
     "repository_checked_out": false
   },
-  "status": "failed_before_research_execution"
+  "status": "wrapper_gpu_preflight_failed_before_research_execution"
 }
