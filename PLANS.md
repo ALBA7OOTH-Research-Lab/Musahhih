@@ -1,5 +1,33 @@
 # Active implementation plan
 
+## Issue #107 — add a timeout-safe resumable B1/B2 final gate
+
+- [x] Register and claim a dedicated implementation issue and branch without
+  authorizing model loading, inference, or final-test access.
+- [x] Preserve the frozen B1-P1/B2-P1 prompts, bundle, parser, input identity,
+  model revision, decoding, seed, statistic, and canonical run IDs.
+- [x] Add a 9.5-hour safe stop measured from the private wrapper's first
+  executable line.
+- [x] Flush and `fsync` each private prediction row and atomically maintain a
+  corpus-text-free progress manifest.
+- [x] Return a successful metric-free `incomplete_time_budget` handoff that
+  explicitly requires a fresh owner GO.
+- [x] Verify the exact execution identity and complete private prefix before
+  copying it into a new write-once segment; never regenerate completed rows.
+- [x] Require the exact approved commit, issue-comment GO, frozen model/input/
+  bundle identities, P100 runtime, and explicit final confirmation before
+  model loading.
+- [x] Cover interruption, successful continuation, hash/schema/order/score
+  tampering, path privacy, and write-once behavior with synthetic fixtures.
+- [x] Complete full validation, publish PR #108, and record exact executable
+  implementation commit `16b4ca3dec6e757b41e233b22bc16cc6a57be4dd`
+  for independent review.
+
+Issue #107 is implementation only. It does not authorize Nahw-Passage access,
+model loading, inference, Kaggle submission, continuation, QALB test, training,
+safety diagnostics, prompt/parser changes, or XG. Every future segment requires
+a fresh exact-commit, scope-specific owner GO.
+
 ## Issue #104 — prepare publication synthesis and remaining research gates
 
 - [x] Register and claim the publication-readiness issue without authorizing

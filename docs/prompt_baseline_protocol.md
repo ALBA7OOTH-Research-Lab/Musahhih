@@ -208,6 +208,29 @@ experiment IDs. Do not use either final result to tune the prompt, demonstration
 parser, checkpoint, or model. Any later exploratory protocol must be labeled
 separately and cannot replace the preregistered comparison.
 
+### Timeout-safe execution contract
+
+Issue #107 adds an execution guard without revising the frozen scientific
+protocol. The private wrapper must capture its start epoch as its first
+executable operation and pass it to the runner. The runner stops before starting
+a new record once 34,200 elapsed seconds have passed, flushes and `fsync`s every
+completed private JSONL row, and atomically replaces a corpus-text-free
+`progress.json`.
+
+A timed segment returns `incomplete_time_budget` successfully. Its public
+handoff contains counts, hashes, runtime identity, and elapsed time, but no
+partial exact-match score. Continuation is a new write-once run directory and
+requires a fresh exact-commit owner GO. Before copying the prefix, the runner
+verifies the frozen input, prompt, optional B1 bundle, protocol, model revision,
+decoding, seed, approved commit, row schema/order, rerendered prompts, parser
+outputs, score consistency, and prediction hash. Completed records are skipped
+and never regenerated.
+
+The CLI remains disabled by default. A final execution additionally requires
+the exact confirmation phrase, a Musahhih issue-comment approval permalink, the
+approved checkout SHA, the frozen 511-record input hash, the frozen model
+revision, and one P100 GPU. Preparation and merge do not authorize a segment.
+
 ## Sources
 
 - [Beyond English: Evaluating LLMs for Arabic Grammatical Error Correction](https://aclanthology.org/2023.arabicnlp-1.9/)

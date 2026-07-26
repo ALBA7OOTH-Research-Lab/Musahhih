@@ -1,5 +1,6 @@
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -10,11 +11,16 @@ from unittest.mock import patch
 
 from scripts.run_prompt_baseline import (
     DEFAULT_MAX_NEW_TOKENS,
+    FINAL_CONFIRMATION,
+    FINAL_MODEL_ID,
+    FINAL_MODEL_REVISION,
     GemmaGenerator,
+    KernelTimeBudget,
     ROOT,
     PromptRecord,
     RunConfig,
     RunSafetyError,
+    TimeBudgetExhausted,
     assert_final_eval_allowed,
     build_summary,
     execute_run,
@@ -23,6 +29,7 @@ from scripts.run_prompt_baseline import (
     load_prompt_records,
     load_protocol_demos,
     prepare_run_directory,
+    require_final_execution_authorization,
     sha256_file,
     validate_private_path,
     validate_experiment_id,
@@ -55,9 +62,13 @@ class PromptBaselineRunTests(unittest.TestCase):
             bfloat16="bfloat16",
             float16="float16",
             float32="float32",
+            manual_seed=lambda seed: calls.append(("manual_seed", seed)),
             cuda=SimpleNamespace(
                 is_available=lambda: True,
                 is_bf16_supported=lambda: False,
+                device_count=lambda: 1,
+                get_device_name=lambda index: "Tesla P100-PCIE-16GB",
+                manual_seed_all=lambda seed: calls.append(("cuda_seed", seed)),
             ),
         )
         generator = GemmaGenerator("example/model", "pinned-revision", 32)
@@ -71,7 +82,7 @@ class PromptBaselineRunTests(unittest.TestCase):
             generator._load()
 
         self.assertEqual(
-            calls[0],
+            next(call for call in calls if isinstance(call, dict)),
             {
                 "model_name": "example/model",
                 "revision": "pinned-revision",
@@ -81,9 +92,27 @@ class PromptBaselineRunTests(unittest.TestCase):
                 "full_finetuning": False,
             },
         )
-        self.assertEqual(calls[1], "eval")
+        self.assertIn("eval", calls)
         self.assertEqual(generator.metadata["backend"], "unsloth")
         self.assertTrue(generator.metadata["load_in_4bit"])
+        self.assertEqual(generator.metadata["temperature"], None)
+        self.assertEqual(generator.metadata["seed"], 3407)
+
+    def test_kernel_budget_stops_at_safe_boundary_and_rejects_future_start(self):
+        now = 100_000.0
+        budget = KernelTimeBudget(
+            now - 34_199,
+            now=lambda: now,
+        )
+        budget.require_next_record_budget()
+        boundary = KernelTimeBudget(
+            now - 34_200,
+            now=lambda: now,
+        )
+        with self.assertRaises(TimeBudgetExhausted):
+            boundary.require_next_record_budget()
+        with self.assertRaisesRegex(RunSafetyError, "future"):
+            KernelTimeBudget(now + 301, now=lambda: now)
 
     def test_experiment_id_uses_canonical_pattern(self):
         run_id = experiment_id("B1-P1", "gemma3-4b-it", "qalb14-dev", 3407, 1)
@@ -423,6 +452,379 @@ class PromptBaselineRunTests(unittest.TestCase):
             self.assertNotIn("private text", log_text)
             self.assertEqual(log_text, "run invalid: inference execution failed\n")
 
+    def test_timeout_handoff_is_metric_free_and_resume_skips_exact_prefix(self):
+        class OneRecordBudget:
+            safe_stop_elapsed_seconds = 34_200
+
+            def __init__(self):
+                self.checks = 0
+
+            def elapsed_seconds(self):
+                return 34_200 if self.checks > 1 else 100
+
+            def require_next_record_budget(self):
+                self.checks += 1
+                if self.checks > 1:
+                    raise TimeBudgetExhausted
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            input_path = root / "input.jsonl"
+            prompt_path = root / "prompt.txt"
+            input_path.write_text('{"private":"payload"}\n', encoding="utf-8")
+            prompt_path.write_text("frozen-template", encoding="utf-8")
+            records = [
+                PromptRecord("r1", "first private passage", "first", "one", {}),
+                PromptRecord("r2", "second private passage", "second", "two", {}),
+            ]
+            config = RunConfig(
+                experiment_id="B2-P1__gemma3-4b-it__nahw-passage__s3407__r01",
+                protocol_id="B2-P1",
+                model_slug="gemma3-4b-it",
+                evaluation_slug="nahw-passage",
+                seed=3407,
+                replicate=1,
+            )
+            commit = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=ROOT,
+                check=True,
+                text=True,
+                capture_output=True,
+            ).stdout.strip()
+            identity_args = {
+                "model_id": FINAL_MODEL_ID,
+                "model_revision": FINAL_MODEL_REVISION,
+                "approved_protocol_commit": commit,
+            }
+            first_summary = execute_run(
+                config,
+                records,
+                [],
+                lambda prompt: "one",
+                outputs_root=root / "segment-one",
+                input_path=input_path,
+                prompt_template_path=prompt_path,
+                runtime_metadata={"backend": "synthetic"},
+                allow_outside_private_output=True,
+                budget=OneRecordBudget(),
+                **identity_args,
+            )
+            first_dir = root / "segment-one" / config.experiment_id
+            first_bytes = (first_dir / "predictions.jsonl").read_bytes()
+            public_text = (first_dir / "summary.json").read_text(encoding="utf-8")
+            progress = json.loads(
+                (first_dir / "progress.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(first_summary["run_status"], "incomplete_time_budget")
+            self.assertEqual(first_summary["completed_records"], 1)
+            self.assertFalse(first_summary["metrics_reported"])
+            self.assertNotIn("counts", first_summary)
+            self.assertNotIn("number_correct", public_text)
+            self.assertNotIn("private passage", public_text)
+            self.assertEqual(progress["status"], "incomplete_time_budget")
+            self.assertEqual(progress["completed_records"], 1)
+
+            generated = []
+
+            def finish(prompt):
+                generated.append(prompt)
+                return "two"
+
+            final_summary = execute_run(
+                config,
+                records,
+                [],
+                finish,
+                outputs_root=root / "segment-two",
+                input_path=input_path,
+                prompt_template_path=prompt_path,
+                runtime_metadata={"backend": "synthetic"},
+                allow_outside_private_output=True,
+                resume_from=first_dir,
+                **identity_args,
+            )
+            final_dir = root / "segment-two" / config.experiment_id
+            self.assertEqual(final_summary["run_status"], "complete")
+            self.assertEqual(len(generated), 1)
+            self.assertIn("second private passage", generated[0])
+            self.assertTrue(
+                (final_dir / "predictions.jsonl").read_bytes().startswith(first_bytes)
+            )
+            self.assertEqual(final_summary["counts"]["number_of_records"], 2)
+
+    def test_resume_rejects_tampered_private_prefix_before_new_directory(self):
+        class ImmediateBudget:
+            safe_stop_elapsed_seconds = 34_200
+
+            def elapsed_seconds(self):
+                return 34_200
+
+            def require_next_record_budget(self):
+                raise TimeBudgetExhausted
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            input_path = root / "input.jsonl"
+            prompt_path = root / "prompt.txt"
+            input_path.write_text('{"private":"payload"}\n', encoding="utf-8")
+            prompt_path.write_text("frozen-template", encoding="utf-8")
+            records = [PromptRecord("r1", "private passage", "private", "fixed", {})]
+            config = RunConfig(
+                experiment_id="B2-P1__gemma3-4b-it__nahw-passage__s3407__r01",
+                protocol_id="B2-P1",
+                model_slug="gemma3-4b-it",
+                evaluation_slug="nahw-passage",
+                seed=3407,
+                replicate=1,
+            )
+            commit = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=ROOT,
+                check=True,
+                text=True,
+                capture_output=True,
+            ).stdout.strip()
+            identity_args = {
+                "model_id": FINAL_MODEL_ID,
+                "model_revision": FINAL_MODEL_REVISION,
+                "approved_protocol_commit": commit,
+            }
+            execute_run(
+                config,
+                records,
+                [],
+                lambda prompt: "fixed",
+                outputs_root=root / "source",
+                input_path=input_path,
+                prompt_template_path=prompt_path,
+                allow_outside_private_output=True,
+                budget=ImmediateBudget(),
+                **identity_args,
+            )
+            source = root / "source" / config.experiment_id
+            progress_path = source / "progress.json"
+            progress = json.loads(progress_path.read_text(encoding="utf-8"))
+            progress["identity"]["model_revision"] = "tampered"
+            progress_path.write_text(json.dumps(progress), encoding="utf-8")
+
+            destination = root / "destination"
+            with self.assertRaisesRegex(RunSafetyError, "identity mismatch"):
+                execute_run(
+                    config,
+                    records,
+                    [],
+                    lambda prompt: "fixed",
+                    outputs_root=destination,
+                    input_path=input_path,
+                    prompt_template_path=prompt_path,
+                    allow_outside_private_output=True,
+                    resume_from=source,
+                    **identity_args,
+                )
+            self.assertFalse((destination / config.experiment_id).exists())
+
+            progress["identity"]["model_revision"] = FINAL_MODEL_REVISION
+            progress_path.write_text(json.dumps(progress), encoding="utf-8")
+            resumed = execute_run(
+                config,
+                records,
+                [],
+                lambda prompt: "fixed",
+                outputs_root=root / "empty-prefix-resume",
+                input_path=input_path,
+                prompt_template_path=prompt_path,
+                allow_outside_private_output=True,
+                resume_from=source,
+                **identity_args,
+            )
+            self.assertEqual(resumed["run_status"], "complete")
+            self.assertEqual(resumed["counts"]["number_of_records"], 1)
+
+    def test_resume_rejects_hash_schema_order_and_score_tampering(self):
+        class TwoRecordBudget:
+            safe_stop_elapsed_seconds = 34_200
+
+            def __init__(self):
+                self.checks = 0
+
+            def elapsed_seconds(self):
+                return 34_200 if self.checks > 2 else 100
+
+            def require_next_record_budget(self):
+                self.checks += 1
+                if self.checks > 2:
+                    raise TimeBudgetExhausted
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            input_path = root / "input.jsonl"
+            prompt_path = root / "prompt.txt"
+            input_path.write_text('{"private":"payload"}\n', encoding="utf-8")
+            prompt_path.write_text("frozen-template", encoding="utf-8")
+            records = [
+                PromptRecord("r1", "private one", "one", "fixed-1", {}),
+                PromptRecord("r2", "private two", "two", "fixed-2", {}),
+                PromptRecord("r3", "private three", "three", "fixed-3", {}),
+            ]
+            config = RunConfig(
+                experiment_id="B2-P1__gemma3-4b-it__nahw-passage__s3407__r01",
+                protocol_id="B2-P1",
+                model_slug="gemma3-4b-it",
+                evaluation_slug="nahw-passage",
+                seed=3407,
+                replicate=1,
+            )
+            commit = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=ROOT,
+                check=True,
+                text=True,
+                capture_output=True,
+            ).stdout.strip()
+            identity_args = {
+                "model_id": FINAL_MODEL_ID,
+                "model_revision": FINAL_MODEL_REVISION,
+                "approved_protocol_commit": commit,
+            }
+            responses = iter(("fixed-1", "fixed-2"))
+            execute_run(
+                config,
+                records,
+                [],
+                lambda prompt: next(responses),
+                outputs_root=root / "source-root",
+                input_path=input_path,
+                prompt_template_path=prompt_path,
+                allow_outside_private_output=True,
+                budget=TwoRecordBudget(),
+                **identity_args,
+            )
+            source = root / "source-root" / config.experiment_id
+
+            def synchronize_hashes(case_dir):
+                prediction_hash = sha256_file(case_dir / "predictions.jsonl")
+                for name in ("progress.json", "summary.json"):
+                    path = case_dir / name
+                    payload = json.loads(path.read_text(encoding="utf-8"))
+                    payload["prediction_sha256"] = prediction_hash
+                    path.write_text(json.dumps(payload), encoding="utf-8")
+
+            cases = {}
+            for case_name in ("hash", "schema", "order", "score"):
+                case_dir = root / f"case-{case_name}"
+                shutil.copytree(source, case_dir)
+                cases[case_name] = case_dir
+
+            with (cases["hash"] / "predictions.jsonl").open(
+                "a", encoding="utf-8"
+            ) as stream:
+                stream.write(" ")
+
+            schema_rows = [
+                json.loads(line)
+                for line in (cases["schema"] / "predictions.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            ]
+            schema_rows[0]["unexpected"] = True
+            self.write_jsonl(cases["schema"] / "predictions.jsonl", schema_rows)
+            synchronize_hashes(cases["schema"])
+
+            order_rows = [
+                json.loads(line)
+                for line in (cases["order"] / "predictions.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            ]
+            order_rows.reverse()
+            self.write_jsonl(cases["order"] / "predictions.jsonl", order_rows)
+            synchronize_hashes(cases["order"])
+
+            score_rows = [
+                json.loads(line)
+                for line in (cases["score"] / "predictions.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            ]
+            score_rows[0]["exact_match"] = False
+            self.write_jsonl(cases["score"] / "predictions.jsonl", score_rows)
+            synchronize_hashes(cases["score"])
+
+            expected_messages = {
+                "hash": "SHA-256 mismatch",
+                "schema": "schema mismatch",
+                "order": "record mismatch",
+                "score": "score mismatch",
+            }
+            for case_name, case_dir in cases.items():
+                destination = root / f"destination-{case_name}"
+                with self.subTest(case=case_name), self.assertRaisesRegex(
+                    RunSafetyError, expected_messages[case_name]
+                ):
+                    execute_run(
+                        config,
+                        records,
+                        [],
+                        lambda prompt: "fixed-3",
+                        outputs_root=destination,
+                        input_path=input_path,
+                        prompt_template_path=prompt_path,
+                        allow_outside_private_output=True,
+                        resume_from=case_dir,
+                        **identity_args,
+                    )
+                self.assertFalse((destination / config.experiment_id).exists())
+
+    def test_final_authorization_requires_exact_frozen_identity(self):
+        config = RunConfig(
+            experiment_id="B2-P1__gemma3-4b-it__nahw-passage__s3407__r01",
+            protocol_id="B2-P1",
+            model_slug="gemma3-4b-it",
+            evaluation_slug="nahw-passage",
+            seed=3407,
+            replicate=1,
+        )
+        commit = "a" * 40
+        with (
+            patch("scripts.run_prompt_baseline.git_commit_sha", return_value=commit),
+            patch(
+                "scripts.run_prompt_baseline.sha256_file",
+                return_value="acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b",
+            ),
+        ):
+            require_final_execution_authorization(
+                confirmation=FINAL_CONFIRMATION,
+                approved_protocol_commit=commit,
+                approval_reference=(
+                    "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/"
+                    "issues/107#issuecomment-123"
+                ),
+                model_id=FINAL_MODEL_ID,
+                model_revision=FINAL_MODEL_REVISION,
+                max_new_tokens=32,
+                config=config,
+                input_path=Path("synthetic-private-input"),
+                bundle_path=None,
+                record_count=511,
+            )
+            with self.assertRaisesRegex(RunSafetyError, "confirmation"):
+                require_final_execution_authorization(
+                    confirmation="wrong",
+                    approved_protocol_commit=commit,
+                    approval_reference=(
+                        "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/"
+                        "issues/107#issuecomment-123"
+                    ),
+                    model_id=FINAL_MODEL_ID,
+                    model_revision=FINAL_MODEL_REVISION,
+                    max_new_tokens=32,
+                    config=config,
+                    input_path=Path("synthetic-private-input"),
+                    bundle_path=None,
+                    record_count=511,
+                )
+
     def test_cli_help_exposes_explicit_execution_controls_without_model_loading(self):
         result = subprocess.run(
             [sys.executable, "-m", "scripts.run_prompt_baseline", "--help"],
@@ -433,6 +835,10 @@ class PromptBaselineRunTests(unittest.TestCase):
         self.assertIn("--execute", result.stdout)
         self.assertIn("--model-revision", result.stdout)
         self.assertIn("--allow-outside-private-output", result.stdout)
+        self.assertIn("--kernel-start-epoch-seconds", result.stdout)
+        self.assertIn("--resume-from", result.stdout)
+        self.assertIn("--approved-protocol-commit", result.stdout)
+        self.assertIn("--approval-reference", result.stdout)
         self.assertEqual(DEFAULT_MAX_NEW_TOKENS, 32)
 
     def test_cli_defaults_to_planned_scaffold(self):

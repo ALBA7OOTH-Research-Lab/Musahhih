@@ -182,13 +182,15 @@ Canonical output directories for prompt-baseline runs use:
 
 ```text
 outputs/<experiment-id>/predictions.jsonl
+outputs/<experiment-id>/progress.json
 outputs/<experiment-id>/summary.json
 outputs/<experiment-id>/run.log
 ```
 
 `scripts/run_prompt_baseline.py` refuses to overwrite an existing run directory
-and refuses `nahw-passage` unless `--confirm-final-eval` is passed deliberately.
-Use QALB development for technical validation before any final Nahw-Passage run.
+and refuses `nahw-passage` unless both its ordinary confirmation and the
+timeout-safe final authorization contract pass. Use QALB development for
+technical validation before any final Nahw-Passage run.
 
 The private JSONL input contract is one object per line with `record_id`,
 `passage`, and `error` strings. `gold_correction` may be a string or null, and
@@ -222,6 +224,16 @@ Predictions contain private prompts and model responses and therefore remain
 ignored under `outputs/`. The runner records input, template, bundle, prompt,
 and prediction hashes plus runtime metadata. A failed inference keeps a partial
 prediction file and marks the run `invalid`; reruns must use a new experiment ID.
+
+For the frozen B1-P1/B2-P1 final gate, every private wrapper must capture its
+start epoch before setup and pass it through `--kernel-start-epoch-seconds`.
+The runner safely stops at 34,200 elapsed seconds, persists every row with
+`fsync`, and emits a metric-free `incomplete_time_budget` handoff. A continuation
+uses `--resume-from` in a new write-once output root and verifies the entire
+prefix and execution identity before skipping completed records. It requires a
+fresh exact-commit issue-comment GO; the implementation itself is not execution
+authorization. See
+[`docs/b1_b2_final_gate_readiness.md`](docs/b1_b2_final_gate_readiness.md).
 
 Authenticate with Hugging Face if the selected model is gated:
 
