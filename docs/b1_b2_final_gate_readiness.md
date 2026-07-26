@@ -18,6 +18,12 @@ is implemented at exact executable commit
 `f8c7ffd74993785f118bb32e0145295b31c5048d`; it must be merged and
 independently reviewed before a fresh owner GO.
 
+Issue #114 subsequently authorized one fresh B1-P1 attempt at the repaired
+commit. It failed before repository checkout because Kaggle repeatedly could
+not resolve `download.pytorch.org` during dependency installation. The repaired
+GPU preflight and all research stages were never reached. Its authorization is
+consumed; this does not authorize a retry.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix

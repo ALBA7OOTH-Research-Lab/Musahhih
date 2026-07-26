@@ -108,6 +108,12 @@ requires CUDA, exactly one device, and a P100 before private-input access, with
 no dependency on external `nvidia-smi`. The repair does not authorize another
 kernel; any future B1 attempt requires independent review and a fresh
 scope-specific owner GO.
+Issue #114's single authorized repaired B1-P1 attempt failed closed before
+repository checkout because Kaggle could not resolve `download.pytorch.org`
+across all pinned-PyTorch install retries. The repaired GPU preflight, private
+input, model, inference, predictions, and metrics were never reached. See
+`results/b1_p1_repaired_attempt_failure_audit.md`. The authorization is
+consumed; do not edit the kernel, push another version, or retry.
 
 ## Non-negotiable research rules
 
