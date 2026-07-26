@@ -11,7 +11,11 @@ One later authorized replacement segment at workflow commit
 `80194505bd00513f4e1661ef10798f79b83ae16b` completed F2-P1 511/511 and
 F3-P1 168/511, then returned the planned metric-free
 `incomplete_time_budget` handoff. The segment authorization is consumed. This
-record does not authorize continuation.
+record did not authorize continuation. A separately authorized continuation at
+the same executable commit verified and reused that handoff, completed F3-P1
+511/511, and returned terminal `complete`. The matched evaluation is accepted
+in `../results/f2_f3_final_evaluation_audit.md`. Its authorization is consumed;
+this result does not authorize repetition or tuning from the test set.
 
 ## Purpose and research position
 

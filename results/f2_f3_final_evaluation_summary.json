@@ -1,0 +1,199 @@
+{
+  "protocol_id": "F2-F3",
+  "recorded_date": "2026-07-26",
+  "run_status": "complete",
+  "execution": {
+    "platform": "Kaggle",
+    "kernel": "univverssal/musahhih-f2-f3-final-cont-8019450-r03",
+    "kernel_version": 1,
+    "repository_commit": "80194505bd00513f4e1661ef10798f79b83ae16b",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/98#issuecomment-5083063424",
+    "resumed_from": "univverssal/musahhih-f2-f3-final-timeout-safe-8019450-r02",
+    "elapsed_seconds": 14370,
+    "gpu": "Tesla P100-PCIE-16GB"
+  },
+  "models": {
+    "F2-P1": {
+      "selected_checkpoint": "checkpoint-125",
+      "adapter_model_sha256": "935fdf02c95189934e40629f877d8692d325ef22895cbaa03fdb7390b0cd7b3e",
+      "adapter_config_sha256": "b07ab34155647961ea1de8fbfff0db8e17d00229da01f2b941a15a78499da986",
+      "checkpoint_selection_sha256": "39edee5e31d79c791a4ab0b14b7b85b838e28bcc302d9e552f168a03ac870e1b",
+      "adapter_merged": false
+    },
+    "F3-P1": {
+      "selected_checkpoint": "checkpoint-250",
+      "adapter_model_sha256": "95bd333caac28e08b40fcafe7bc033f323188e817d7c16ecbe7745b34c1b44dc",
+      "adapter_config_sha256": "917893c00ea8f02f784ce21db4448b774e6a892fede6f484da18606bca884c21",
+      "checkpoint_selection_sha256": "b4d1deda9b01b82b07abd2a21e999f92e132604ca0c8463830edd8d43dedfa81",
+      "adapter_merged": false
+    }
+  },
+  "data": {
+    "name": "Nahw-Passage",
+    "split": "test",
+    "records": 511,
+    "input_sha256": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b"
+  },
+  "decoding": {
+    "do_sample": false,
+    "temperature_argument": null,
+    "max_new_tokens": 32,
+    "seed": 3407
+  },
+  "arm_metrics": {
+    "F2-P1": {
+      "number_of_records": 511,
+      "number_correct": 105,
+      "exact_match_accuracy": 0.2054794520547945,
+      "invalid_or_empty_count": 0,
+      "parsing_failure_count": 0,
+      "suspicious_output_count": 20,
+      "multi_token_count": 20,
+      "warning_counts": {
+        "multiple_words": 20
+      }
+    },
+    "F3-P1": {
+      "number_of_records": 511,
+      "number_correct": 162,
+      "exact_match_accuracy": 0.31702544031311153,
+      "invalid_or_empty_count": 0,
+      "parsing_failure_count": 0,
+      "suspicious_output_count": 2,
+      "multi_token_count": 2,
+      "warning_counts": {
+        "multiple_words": 2
+      }
+    }
+  },
+  "comparisons": {
+    "primary_f3_minus_f2": {
+      "baseline_correct": 105,
+      "baseline_accuracy": 0.2054794520547945,
+      "adapter_correct": 162,
+      "adapter_accuracy": 0.31702544031311153,
+      "accuracy_difference_adapter_minus_baseline": 0.11154598825831702,
+      "baseline_wrong_adapter_right": 89,
+      "baseline_right_adapter_wrong": 32,
+      "mcnemar_two_sided_exact_p_value": 2.149916251790228e-07,
+      "paired_bootstrap_95_percentile_ci": [
+        0.07045009784735812,
+        0.15264187866927592
+      ],
+      "number_of_paired_records": 511,
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 3407
+    },
+    "secondary_f2_minus_b0": {
+      "baseline_correct": 86,
+      "baseline_accuracy": 0.16829745596868884,
+      "adapter_correct": 105,
+      "adapter_accuracy": 0.2054794520547945,
+      "accuracy_difference_adapter_minus_baseline": 0.03718199608610567,
+      "baseline_wrong_adapter_right": 77,
+      "baseline_right_adapter_wrong": 58,
+      "mcnemar_two_sided_exact_p_value": 0.12101372565511773,
+      "paired_bootstrap_95_percentile_ci": [
+        -0.007827788649706457,
+        0.0821917808219178
+      ],
+      "number_of_paired_records": 511,
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 3407
+    },
+    "secondary_f3_minus_b0": {
+      "baseline_correct": 86,
+      "baseline_accuracy": 0.16829745596868884,
+      "adapter_correct": 162,
+      "adapter_accuracy": 0.31702544031311153,
+      "accuracy_difference_adapter_minus_baseline": 0.1487279843444227,
+      "baseline_wrong_adapter_right": 100,
+      "baseline_right_adapter_wrong": 24,
+      "mcnemar_two_sided_exact_p_value": 3.1933211380352095e-12,
+      "paired_bootstrap_95_percentile_ci": [
+        0.10763209393346379,
+        0.1898238747553816
+      ],
+      "number_of_paired_records": 511,
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 3407
+    },
+    "secondary_f2_minus_f1": {
+      "baseline_correct": 145,
+      "baseline_accuracy": 0.2837573385518591,
+      "adapter_correct": 105,
+      "adapter_accuracy": 0.2054794520547945,
+      "accuracy_difference_adapter_minus_baseline": -0.07827788649706457,
+      "baseline_wrong_adapter_right": 55,
+      "baseline_right_adapter_wrong": 95,
+      "mcnemar_two_sided_exact_p_value": 0.0013699461049548254,
+      "paired_bootstrap_95_percentile_ci": [
+        -0.12524461839530332,
+        -0.03131115459882583
+      ],
+      "number_of_paired_records": 511,
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 3407
+    },
+    "secondary_f3_minus_f1": {
+      "baseline_correct": 145,
+      "baseline_accuracy": 0.2837573385518591,
+      "adapter_correct": 162,
+      "adapter_accuracy": 0.31702544031311153,
+      "accuracy_difference_adapter_minus_baseline": 0.033268101761252444,
+      "baseline_wrong_adapter_right": 55,
+      "baseline_right_adapter_wrong": 38,
+      "mcnemar_two_sided_exact_p_value": 0.09656519729770464,
+      "paired_bootstrap_95_percentile_ci": [
+        -0.003913894324853229,
+        0.07045009784735812
+      ],
+      "number_of_paired_records": 511,
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 3407
+    }
+  },
+  "artifacts": {
+    "accepted_b0_predictions_sha256": "6997b6fe5959f5502511ebdd1885d05a89ebaefeb27eefb73520842598f36ebc",
+    "accepted_f1_predictions_sha256": "8c4d0ca25b48776a08ea02984af6c5c3ec0bc830d2d1a6994e0fb5eef995faa3",
+    "private_f2_predictions_sha256": "ca4a6eb2f5e40a60be14f59cdc7365a0f327b41ab0b8f46c8a08c43cfb442753",
+    "private_f3_predictions_sha256": "ccb296e0f091bf28ebe4d7c8b9ed454934f4dade0b5793dcf1b3a5706379c35c",
+    "private_progress_sha256": "873d0347cc98294e1f68b50bc9bcde3cdd52acee1111ad3b7dddb357ab1e4d81",
+    "private_public_summary_sha256": "0fcc52f430f190fe3e7271327503c8afb163bbccc4d296e75d04c065b16a7eb6"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "cuda": "12.4",
+    "packages": {
+      "torch": "2.6.0+cu124",
+      "transformers": "4.56.2",
+      "unsloth": "2026.7.5",
+      "accelerate": "1.13.0",
+      "peft": "0.19.1",
+      "trl": "0.22.2"
+    }
+  },
+  "audit": {
+    "ordered_alignment": true,
+    "unique_record_ids": true,
+    "private_row_schema_valid": true,
+    "parser_output_types_valid": true,
+    "exact_match_consistency_valid": true,
+    "all_comparisons_reproduced_exactly": true,
+    "public_summary_corpus_text_free": true,
+    "private_artifacts_published": false
+  },
+  "safeguards": {
+    "contains_corpus_text": false,
+    "training_executed": false,
+    "test_pilot_executed": false,
+    "checkpoint_changed": false,
+    "prompt_or_parser_changed": false,
+    "qalb_test_used": false,
+    "f1_rerun": false,
+    "development_metric_read": false,
+    "adapter_merged": false,
+    "repeat_run_authorized": false,
+    "authorization_consumed": true
+  }
+}

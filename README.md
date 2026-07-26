@@ -395,9 +395,9 @@ This project builds on:
 
 The untouched baseline, prompt baselines, F1-P1 natural-data study, matched
 safety diagnostics, and F2-P1 synthetic-data training are complete. F2-P1 has
-passed its private technical development smoke but has not received final-test
-evaluation. F3-P1 has completed its one-step engineering smoke and one frozen
-two-epoch training run, selecting private `checkpoint-250`; it has not received
+passed its private technical development smoke and frozen final-test
+evaluation. F3-P1 has completed its one-step engineering smoke, one frozen
+two-epoch training run selecting private `checkpoint-250`, and frozen
 final-test evaluation. Its selected-adapter private development smoke completed
 25/25 records with zero empty outputs or parser warnings; the private
 development metric remains unpublished. Development loss and smoke/training
@@ -419,5 +419,11 @@ One separately authorized timeout-safe replacement segment later completed all
 511 F2-P1 records and preserved an ordered 168-record F3-P1 prefix before the
 planned metric-free `incomplete_time_budget` stop. See
 [`results/f2_f3_final_evaluation_handoff_audit.md`](results/f2_f3_final_evaluation_handoff_audit.md).
-No score or partial comparison is published. Continuation requires another
-fresh exact-commit owner GO.
+No partial score or comparison was published. A separately authorized
+continuation reused those exact artifacts, completed F3-P1 511/511, and closed
+the frozen matched evaluation. F2-P1 achieved 105/511 exact matches and F3-P1
+achieved 162/511; the primary paired difference was 11.15 percentage points
+with a 95% paired-bootstrap interval of 7.05–15.26 points. See
+[`results/f2_f3_final_evaluation_audit.md`](results/f2_f3_final_evaluation_audit.md).
+The authorization is consumed, and the final evaluation must not be repeated
+or used for tuning.
