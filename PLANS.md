@@ -1,5 +1,28 @@
 # Active implementation plan
 
+## Issue #104 — prepare publication synthesis and remaining research gates
+
+- [x] Register and claim the publication-readiness issue without authorizing
+  inference, test access, training, or artifact release.
+- [x] Audit the completed B0/F1/F2/F3 evidence, B1/B2 technical gate, F1 safety
+  protocol, dataset licenses, and current private-artifact boundaries.
+- [x] Add a machine-readable consolidated aggregate result.
+- [x] Add a claim-by-claim research-completion matrix and paper outline.
+- [x] Add an artifact-release audit that distinguishes technically available
+  artifacts from artifacts legally and ethically cleared for release.
+- [x] Record the execution-free B1/B2 final-gate readiness gaps, including a
+  timeout-safe continuation requirement before any future Kaggle submission.
+- [x] Propose, but do not freeze or execute, matched F2/F3 overcorrection and
+  ArabicMMLU capability-retention diagnostics.
+- [x] Validate compilation, tests, JSON, cross-document metrics, privacy,
+  credential patterns, ignored artifacts, and diff hygiene.
+- [ ] Merge only corpus-text-free planning and aggregate evidence, then obtain
+  separate owner decisions for each optional future experiment or release.
+
+Issue #104 does not authorize B1/B2 final inference, F2/F3 safety diagnostics,
+QALB test access, training, checkpoint changes, Nahw-Passage access, XG,
+linguistic labeling, or publication of adapters and record-level artifacts.
+
 ## Issue #85 — prepare the F3-P1 longest-record P100 smoke gate (complete)
 
 - [x] Register a dedicated GitHub issue and matching verbose Notion task.

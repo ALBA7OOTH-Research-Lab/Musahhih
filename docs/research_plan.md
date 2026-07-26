@@ -203,9 +203,16 @@ disclose the staged design and cannot call all arms simultaneously preregistered
 A credible paper should contribute:
 1. A controlled extension of Nahw from GU fine-tuning to actual GEC fine-tuning.
 2. A natural-versus-synthetic-versus-mixed comparison.
-3. Reproducible open adapters and evaluation code.
+3. Reproducible evaluation code and adapter identities; adapter weights only
+   if a separate release review clears them.
 4. Error/capability-retention analysis.
 5. Clear limitations: no claim of expert-level Arabic and no manual linguistic annotation by non-linguists.
+
+The current claim-by-claim status is recorded in
+[`research_completion_matrix.md`](research_completion_matrix.md), the draft
+manuscript structure in [`paper_outline.md`](paper_outline.md), and the current
+public-release boundary in [`artifact_release_audit.md`](artifact_release_audit.md).
+These planning documents do not authorize any optional remaining experiment.
 
 ## Go/no-go rule after the pilot
 

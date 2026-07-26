@@ -427,3 +427,17 @@ with a 95% paired-bootstrap interval of 7.05–15.26 points. See
 [`results/f2_f3_final_evaluation_audit.md`](results/f2_f3_final_evaluation_audit.md).
 The authorization is consumed, and the final evaluation must not be repeated
 or used for tuning.
+
+Publication-readiness status, permitted claims, missing prompt/safety
+comparisons, and release blockers are consolidated in
+[`docs/research_completion_matrix.md`](docs/research_completion_matrix.md),
+[`docs/paper_outline.md`](docs/paper_outline.md), and
+[`docs/artifact_release_audit.md`](docs/artifact_release_audit.md). The
+B1-P1/B2-P1 execution-free readiness review is
+[`docs/b1_b2_final_gate_readiness.md`](docs/b1_b2_final_gate_readiness.md).
+The proposed F2-P1/F3-P1 safety extension is planning-only and authorizes no
+execution; see
+[`docs/f2_f3_capability_retention_protocol.md`](docs/f2_f3_capability_retention_protocol.md).
+Any qualitative error analysis requires the owner and a qualified Arabic
+linguist to approve the private procedure in
+[`docs/qualified_linguistic_review_plan.md`](docs/qualified_linguistic_review_plan.md).
