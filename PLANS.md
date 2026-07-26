@@ -90,7 +90,8 @@ diagnostics, training, F1/F2, or XG.
   `COMPLETE` / evaluator `incomplete_time_budget`.
 - [x] Audit the metric-free handoff: F2-P1 511/511, F3-P1 168/511, exact frozen
   hashes, ordered-prefix alignment, and corpus-text-free summaries passed.
-- [ ] Merge the narrow public handoff audit and record its exact commit.
+- [x] Merge the narrow public handoff audit through PR #101 at exact commit
+  `75cc315a7f1f231dc2dea8c777c7e729739050c8`.
 
 Preparation does not authorize a retry or continuation. The cancelled issue
 #96 authorization is consumed. Every future kernel requires its own new
