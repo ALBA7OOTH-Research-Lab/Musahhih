@@ -29,6 +29,7 @@ from scripts.run_prompt_baseline import (
     load_prompt_records,
     load_protocol_demos,
     prepare_run_directory,
+    require_single_p100_runtime,
     require_final_execution_authorization,
     sha256_file,
     validate_private_path,
@@ -113,6 +114,63 @@ class PromptBaselineRunTests(unittest.TestCase):
             boundary.require_next_record_budget()
         with self.assertRaisesRegex(RunSafetyError, "future"):
             KernelTimeBudget(now + 301, now=lambda: now)
+
+    def test_p100_preflight_uses_pytorch_cuda_without_external_command(self):
+        fake_torch = SimpleNamespace(
+            cuda=SimpleNamespace(
+                is_available=lambda: True,
+                device_count=lambda: 1,
+                get_device_name=lambda index: "Tesla P100-PCIE-16GB",
+            )
+        )
+        self.assertEqual(
+            require_single_p100_runtime(fake_torch),
+            {
+                "cuda_available": True,
+                "cuda_device_count": 1,
+                "device_name": "Tesla P100-PCIE-16GB",
+                "require_p100": True,
+            },
+        )
+
+    def test_p100_preflight_fails_closed_on_cuda_count_and_device(self):
+        cases = [
+            (
+                SimpleNamespace(
+                    cuda=SimpleNamespace(
+                        is_available=lambda: False,
+                        device_count=lambda: 0,
+                        get_device_name=lambda index: "",
+                    )
+                ),
+                "requires CUDA",
+            ),
+            (
+                SimpleNamespace(
+                    cuda=SimpleNamespace(
+                        is_available=lambda: True,
+                        device_count=lambda: 2,
+                        get_device_name=lambda index: "Tesla P100",
+                    )
+                ),
+                "exactly one CUDA device",
+            ),
+            (
+                SimpleNamespace(
+                    cuda=SimpleNamespace(
+                        is_available=lambda: True,
+                        device_count=lambda: 1,
+                        get_device_name=lambda index: "Tesla T4",
+                    )
+                ),
+                "requires a P100",
+            ),
+        ]
+        for fake_torch, message in cases:
+            with self.subTest(message=message), self.assertRaisesRegex(
+                RunSafetyError, message
+            ):
+                require_single_p100_runtime(fake_torch)
 
     def test_experiment_id_uses_canonical_pattern(self):
         run_id = experiment_id("B1-P1", "gemma3-4b-it", "qalb14-dev", 3407, 1)

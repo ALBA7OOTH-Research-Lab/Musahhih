@@ -55,3 +55,6 @@ Before any future B1-P1 attempt, replace the external-command assumption with a
 reviewed, fail-closed CUDA/device check that does not read private inputs or load
 the model. A future submission still requires a fresh exact-commit,
 scope-specific owner GO.
+
+Issue #112 implements that repair with a reusable PyTorch CUDA/P100 preflight.
+Its implementation and synthetic validation do not authorize another attempt.

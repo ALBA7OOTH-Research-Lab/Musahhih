@@ -66,6 +66,32 @@ class RunSafetyError(ValueError):
     """Raised when a baseline run would violate a frozen safety rule."""
 
 
+def require_single_p100_runtime(torch_module=None) -> dict:
+    """Verify one P100 through PyTorch without loading a model or private data."""
+
+    if torch_module is None:
+        try:
+            import torch as torch_module
+        except (ImportError, OSError) as error:
+            raise RunSafetyError("PyTorch CUDA preflight is unavailable") from error
+    if not torch_module.cuda.is_available():
+        raise RunSafetyError("B1/B2 final execution requires CUDA")
+    device_count = torch_module.cuda.device_count()
+    if device_count != 1:
+        raise RunSafetyError(
+            "B1/B2 final execution requires exactly one CUDA device"
+        )
+    device_name = torch_module.cuda.get_device_name(0)
+    if not isinstance(device_name, str) or "P100" not in device_name.upper():
+        raise RunSafetyError("B1/B2 final execution requires a P100 GPU")
+    return {
+        "cuda_available": True,
+        "cuda_device_count": device_count,
+        "device_name": device_name,
+        "require_p100": True,
+    }
+
+
 class TimeBudgetExhausted(Exception):
     """Signal a planned, output-preserving stop before Kaggle's hard cutoff."""
 
@@ -152,14 +178,16 @@ class GemmaGenerator:
             raise RunSafetyError("Gemma inference dependencies are unavailable") from error
 
         if self.require_p100:
-            if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-                raise RunSafetyError(
-                    "B1/B2 final execution requires exactly one CUDA device"
-                )
-            device_name = torch.cuda.get_device_name(0)
-            if "P100" not in device_name.upper():
-                raise RunSafetyError("B1/B2 final execution requires a P100 GPU")
+            p100_metadata = require_single_p100_runtime(torch)
+            device_name = p100_metadata["device_name"]
         else:
+            p100_metadata = {
+                "cuda_available": torch.cuda.is_available(),
+                "cuda_device_count": (
+                    torch.cuda.device_count() if torch.cuda.is_available() else 0
+                ),
+                "require_p100": False,
+            }
             device_name = (
                 torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
             )
@@ -191,12 +219,8 @@ class GemmaGenerator:
                 "device": device,
                 "dtype": str(dtype),
                 "load_in_4bit": True,
-                "cuda_available": torch.cuda.is_available(),
-                "cuda_device_count": (
-                    torch.cuda.device_count() if torch.cuda.is_available() else 0
-                ),
                 "device_name": device_name,
-                "require_p100": self.require_p100,
+                **p100_metadata,
             }
         )
 

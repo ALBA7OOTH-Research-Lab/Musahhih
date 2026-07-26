@@ -10,6 +10,14 @@ was unavailable. Server metadata recorded GPU enabled and the account had
 repository checkout, private-input access, model loading, inference, or a
 metric. The authorization is consumed; this does not authorize a retry.
 
+Issue #112 replaces that brittle assumption with
+`python -m scripts.check_b1_b2_gpu_preflight`. The command uses PyTorch to
+require CUDA, exactly one device, and a P100 identity before any private-input
+access or model loading. It emits only aggregate runtime metadata. This repair
+is implemented at exact executable commit
+`f8c7ffd74993785f118bb32e0145295b31c5048d`; it must be merged and
+independently reviewed before a fresh owner GO.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix
@@ -47,19 +55,20 @@ was read or printed during this readiness review.
 `scripts/run_prompt_baseline.py` now provides:
 
 1. a required wrapper-start epoch captured before setup or network work;
-2. a fixed 34,200-second safe-stop threshold below Kaggle's hard cutoff;
-3. one flushed and `fsync`-ed private JSONL row after every completed record;
-4. an atomically replaced corpus-text-free progress manifest;
-5. a successful `incomplete_time_budget` state that reports counts and hashes
+2. a PyTorch CUDA/P100 preflight before private-input access;
+3. a fixed 34,200-second safe-stop threshold below Kaggle's hard cutoff;
+4. one flushed and `fsync`-ed private JSONL row after every completed record;
+5. an atomically replaced corpus-text-free progress manifest;
+6. a successful `incomplete_time_budget` state that reports counts and hashes
    but no partial metric;
-6. a resume loader that verifies the exact input, protocol, bundle, prompt,
+7. a resume loader that verifies the exact input, protocol, bundle, prompt,
    model revision, completed prefix, schema, order, score consistency, and
    prediction hash before copying it;
-7. skip logic that never regenerates a completed record;
-8. an exact approved commit and fresh Musahhih issue-comment GO for every
+8. skip logic that never regenerates a completed record;
+9. an exact approved commit and fresh Musahhih issue-comment GO for every
    submitted segment;
-9. first-terminal-state preservation with no automatic retry; and
-10. private outputs under ignored paths only.
+10. first-terminal-state preservation with no automatic retry; and
+11. private outputs under ignored paths only.
 
 Synthetic-fixture tests cover interruption, identity and hash mismatch, malformed
 schemas, reordered records, score mismatch, unexpected existing directories,
