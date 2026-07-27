@@ -34,6 +34,13 @@ resolution or import fails. Implementation does not authorize a kernel.
 The exact executable dependency-smoke commit is
 `3b28f99f4bbfe889ffaf56b1063ebfdc23a6ae72`.
 
+That smoke subsequently completed installation, preserved the exact base
+runtime, and imported both Unsloth and bitsandbytes. Its global `pip check`
+returned one, however, and the diagnostic recorded only an output hash. See
+`results/b1_b2_dependency_smoke_audit.md`. The run is therefore not a passing
+final gate: a fresh no-private diagnostic must classify the conflict before
+B1-P1 inference. The smoke authorization is consumed.
+
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07
 seconds because the wrapper assumed an external `nvidia-smi` executable that
