@@ -9,6 +9,7 @@ import importlib.metadata
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -46,6 +47,7 @@ REPORT_PACKAGES = (
     "accelerate",
     "peft",
 )
+SAFE_CONFLICT_CHARACTERS = re.compile(r"[^A-Za-z0-9_.+<>=!~;:,() /-]")
 
 
 def _version(name: str, version_getter=importlib.metadata.version) -> str | None:
@@ -95,6 +97,20 @@ def base_runtime_report(torch_module, *, version_getter=importlib.metadata.versi
 
 def _sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def sanitize_pip_check(value: str, *, limit: int = 20) -> list[str]:
+    """Retain bounded package diagnostics without arbitrary terminal content."""
+
+    lines = []
+    for raw_line in value.splitlines():
+        stripped = raw_line.strip()
+        if not stripped:
+            continue
+        lines.append(SAFE_CONFLICT_CHARACTERS.sub("?", stripped)[:300])
+        if len(lines) == limit:
+            break
+    return lines
 
 
 def run_dependency_smoke(
@@ -201,6 +217,9 @@ def run_dependency_smoke(
         "install_stdout_sha256": _sha256_text(installed.stdout),
         "install_stderr_sha256": _sha256_text(installed.stderr),
         "pip_check_returncode": None if checked is None else checked.returncode,
+        "pip_check_conflicts": (
+            [] if checked is None else sanitize_pip_check(checked.stdout + checked.stderr)
+        ),
         "imports": imported,
         "base_before": before,
         "base_after": after,

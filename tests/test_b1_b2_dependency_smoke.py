@@ -109,6 +109,21 @@ class B1B2DependencySmokeTests(unittest.TestCase):
         self.assertNotIn("resolver output", rendered)
         self.assertNotIn("network error", rendered)
 
+    def test_pip_check_diagnostics_are_bounded_and_sanitized(self):
+        unsafe = "package-a 1.0 requires package-b<2, but you have 3.0.\n秘密\n"
+        self.assertEqual(
+            check_b1_b2_dependency_smoke.sanitize_pip_check(unsafe),
+            [
+                "package-a 1.0 requires package-b<2, but you have 3.0.",
+                "??",
+            ],
+        )
+        many = "\n".join(f"package-{index} conflict" for index in range(30))
+        self.assertEqual(
+            len(check_b1_b2_dependency_smoke.sanitize_pip_check(many)),
+            20,
+        )
+
     def test_source_contains_no_research_or_model_access(self):
         source = Path(check_b1_b2_dependency_smoke.__file__).read_text(
             encoding="utf-8"
