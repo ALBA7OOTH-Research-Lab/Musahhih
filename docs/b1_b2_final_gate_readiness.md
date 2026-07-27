@@ -1,7 +1,7 @@
 # B1-P1/B2-P1 final-gate readiness review
 
-Status updated: 2026-07-27. Network-safe runtime probe in review; no execution
-authorized.
+Status updated: 2026-07-27. Network-safe runtime probe complete; final
+execution remains unauthorized.
 
 Issue #116 separates runtime discovery from dependency installation after the
 issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
@@ -13,6 +13,16 @@ Kaggle. The exact executable probe commit is
 `9572bad1c77b30cf8edef58d1619a94c869c835e`. A future probe needs a fresh GO
 naming that exact reviewed commit, and a later B1-P1 final segment needs its
 own separate GO after the probe is audited.
+
+That single probe subsequently completed on phone-verified account `thgh15`.
+It confirmed one Tesla P100, CUDA 12.8, and working preinstalled PyTorch
+2.10.0+cu128. Unsloth and bitsandbytes were absent, so the environment is not
+yet ready for the frozen inference backend. See
+`results/b1_b2_kaggle_runtime_probe_audit.md`. The probe accessed no private
+input, loaded no model, and attempted no network access. Its authorization is
+consumed. The next implementation must preserve the working PyTorch stack and
+validate only the missing inference layer under a fresh no-private GO before a
+separately authorized B1-P1 segment.
 
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07
