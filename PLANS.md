@@ -1,5 +1,27 @@
 # Active implementation plan
 
+## Issue #116 — make the B1/B2 Kaggle bootstrap network-safe
+
+- [x] Register a repair-only issue and branch without authorizing another
+  final attempt.
+- [x] Separate corpus-text-free runtime discovery from dependency
+  installation, repository checkout, private-input access, and model loading.
+- [x] Add a standalone probe for Python, PyTorch, CUDA, GPU identity, and
+  installed inference-package metadata.
+- [x] Validate the standalone probe with synthetic fixtures, compilation, the
+  full test suite, and static forbidden-access checks.
+- [ ] Merge the repair; its exact executable implementation commit is
+  `9572bad1c77b30cf8edef58d1619a94c869c835e`.
+- [ ] Obtain a fresh scope-specific owner GO before one no-private Kaggle
+  runtime probe on the newly verified account.
+- [ ] Audit the probe before deciding the dependency bootstrap for a later
+  separately authorized B1-P1 segment.
+
+Issue #116 authorizes no Kaggle execution, Nahw-Passage or QALB access, model
+loading, inference, training, prompt/parser changes, metric access, or final
+attempt. The runtime probe and B1-P1 final segment require separate
+authorizations.
+
 ## Issue #114 — execute one repaired B1-P1 final attempt
 
 - [x] Record a fresh exact-repair-commit, account-specific, single-use owner
