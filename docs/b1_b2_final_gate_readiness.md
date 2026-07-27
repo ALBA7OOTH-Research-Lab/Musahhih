@@ -9,8 +9,10 @@ probe that imports only PyTorch, reads installed package metadata, and reports
 aggregate Python/CUDA/GPU/package information. It does not clone the
 repository, install packages, access private inputs, load a model, or perform
 inference. This repair issue does not authorize even the probe to run on
-Kaggle. A future probe needs a fresh GO naming its exact reviewed commit, and a
-later B1-P1 final segment needs its own separate GO after the probe is audited.
+Kaggle. The exact executable probe commit is
+`9572bad1c77b30cf8edef58d1619a94c869c835e`. A future probe needs a fresh GO
+naming that exact reviewed commit, and a later B1-P1 final segment needs its
+own separate GO after the probe is audited.
 
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07

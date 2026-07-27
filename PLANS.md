@@ -10,7 +10,8 @@
   installed inference-package metadata.
 - [x] Validate the standalone probe with synthetic fixtures, compilation, the
   full test suite, and static forbidden-access checks.
-- [ ] Merge the repair and record its exact executable commit.
+- [ ] Merge the repair; its exact executable implementation commit is
+  `9572bad1c77b30cf8edef58d1619a94c869c835e`.
 - [ ] Obtain a fresh scope-specific owner GO before one no-private Kaggle
   runtime probe on the newly verified account.
 - [ ] Audit the probe before deciding the dependency bootstrap for a later
