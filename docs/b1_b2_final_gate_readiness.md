@@ -24,6 +24,16 @@ consumed. The next implementation must preserve the working PyTorch stack and
 validate only the missing inference layer under a fresh no-private GO before a
 separately authorized B1-P1 segment.
 
+Issue #119 implements the resulting dependency-only smoke. It fails closed
+unless the exact observed PyTorch 2.10.0+cu128, torchvision 0.25.0+cu128,
+NumPy 2.0.2, CUDA 12.8, single-P100 base is present; installs only from public
+PyPI under constraints that preserve that base; and import-checks Unsloth
+2026.7.2 and bitsandbytes 0.49.2 without loading a model or touching private
+input. The smoke returns a completed aggregate diagnostic even if dependency
+resolution or import fails. Implementation does not authorize a kernel.
+The exact executable dependency-smoke commit is
+`3b28f99f4bbfe889ffaf56b1063ebfdc23a6ae72`.
+
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07
 seconds because the wrapper assumed an external `nvidia-smi` executable that
