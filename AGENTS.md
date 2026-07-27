@@ -124,6 +124,13 @@ occurred. See `results/b1_b2_kaggle_runtime_probe_audit.md`. The probe
 authorization is consumed. Preserve the working PyTorch stack; any
 dependency-only smoke and any later B1 attempt require separate fresh,
 scope-specific owner GOs.
+Issue #119's single authorized dependency/import smoke then preserved the
+PyTorch/CUDA/P100 base and successfully imported pinned Unsloth 2026.7.2 and
+bitsandbytes 0.49.2, but reported `ready: false` because global `pip check`
+returned one. The check output was hashed rather than classified. See
+`results/b1_b2_dependency_smoke_audit.md`. No private input, model loading,
+inference, or metric occurred. Its authorization is consumed. Do not start B1
+until a fresh no-private diagnostic classifies the package conflict.
 
 ## Non-negotiable research rules
 

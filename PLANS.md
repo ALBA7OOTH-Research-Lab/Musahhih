@@ -11,7 +11,13 @@
 - [x] Complete focused and full validation.
 - [ ] Merge; the exact executable implementation commit is
   `3b28f99f4bbfe889ffaf56b1063ebfdc23a6ae72`.
-- [ ] Obtain a fresh GO before one no-private dependency/import smoke.
+- [x] Obtain and consume a fresh GO for one no-private dependency/import
+  smoke.
+- [x] Preserve terminal `COMPLETE`, successful installation and imports, and
+  unchanged PyTorch/CUDA/P100 base.
+- [x] Record the remaining global `pip check` failure without guessing its
+  source.
+- [ ] Repair the aggregate diagnostic to classify the package conflict.
 
 Issue #119 authorizes no Kaggle submission, private-input access, model loading,
 inference, training, metric, prompt/parser change, or B1/B2 final segment.
