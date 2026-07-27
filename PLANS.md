@@ -1,5 +1,20 @@
 # Active implementation plan
 
+## Issue #119 — add a PyTorch-preserving B1/B2 dependency smoke
+
+- [x] Register a dedicated implementation issue and branch.
+- [x] Freeze the observed P100 base runtime before package installation.
+- [x] Use public PyPI only and constrain PyTorch, torchvision, NumPy, and
+  xformers so the working CUDA stack cannot be replaced.
+- [x] Pin the validated Unsloth, bitsandbytes, Transformers, and TRL layer.
+- [x] Add import checks without private input or model loading.
+- [x] Complete focused and full validation.
+- [ ] Merge and record the exact executable commit.
+- [ ] Obtain a fresh GO before one no-private dependency/import smoke.
+
+Issue #119 authorizes no Kaggle submission, private-input access, model loading,
+inference, training, metric, prompt/parser change, or B1/B2 final segment.
+
 ## Issue #116 — make the B1/B2 Kaggle bootstrap network-safe
 
 - [x] Register a repair-only issue and branch without authorizing another
