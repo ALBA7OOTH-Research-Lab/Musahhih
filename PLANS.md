@@ -10,17 +10,24 @@
   installed inference-package metadata.
 - [x] Validate the standalone probe with synthetic fixtures, compilation, the
   full test suite, and static forbidden-access checks.
-- [ ] Merge the repair; its exact executable implementation commit is
+- [x] Merge the repair; its exact executable implementation commit is
   `9572bad1c77b30cf8edef58d1619a94c869c835e`.
-- [ ] Obtain a fresh scope-specific owner GO before one no-private Kaggle
-  runtime probe on the newly verified account.
-- [ ] Audit the probe before deciding the dependency bootstrap for a later
-  separately authorized B1-P1 segment.
+- [x] Obtain and consume a fresh scope-specific owner GO for one no-private
+  Kaggle runtime probe on phone-verified account `thgh15`.
+- [x] Preserve terminal `COMPLETE` and audit one P100, CUDA 12.8, working
+  PyTorch 2.10.0+cu128, and the missing Unsloth/bitsandbytes inference layer.
+- [x] Confirm zero datasets or models attached and no network, private-input,
+  model-loading, inference, or metric access.
+- [ ] Implement a dependency-only bootstrap that preserves the working
+  PyTorch installation.
+- [ ] Obtain a separate GO for a no-private import smoke before any B1-P1
+  final segment.
+- [ ] Obtain another separate exact-commit GO before a B1-P1 final segment.
 
-Issue #116 authorizes no Kaggle execution, Nahw-Passage or QALB access, model
-loading, inference, training, prompt/parser changes, metric access, or final
-attempt. The runtime probe and B1-P1 final segment require separate
-authorizations.
+The runtime-probe authorization is consumed. It did not authorize
+Nahw-Passage or QALB access, model loading, inference, training, prompt/parser
+changes, metric access, or a final attempt. The dependency smoke and B1-P1
+final segment require separate authorizations.
 
 ## Issue #114 — execute one repaired B1-P1 final attempt
 

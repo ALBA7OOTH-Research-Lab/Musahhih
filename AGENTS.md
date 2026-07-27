@@ -114,6 +114,16 @@ across all pinned-PyTorch install retries. The repaired GPU preflight, private
 input, model, inference, predictions, and metrics were never reached. See
 `results/b1_p1_repaired_attempt_failure_audit.md`. The authorization is
 consumed; do not edit the kernel, push another version, or retry.
+Issue #116's separately authorized, corpus-text-free runtime probe subsequently
+completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
+Tesla P100, CUDA 12.8, and working preinstalled PyTorch 2.10.0+cu128. Unsloth
+and bitsandbytes were absent, so the runtime is not yet ready for the frozen
+B1/B2 backend. No datasets or models were attached; no repository checkout,
+package installation, private-input access, model loading, inference, or metric
+occurred. See `results/b1_b2_kaggle_runtime_probe_audit.md`. The probe
+authorization is consumed. Preserve the working PyTorch stack; any
+dependency-only smoke and any later B1 attempt require separate fresh,
+scope-specific owner GOs.
 
 ## Non-negotiable research rules
 
