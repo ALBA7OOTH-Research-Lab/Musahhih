@@ -1,5 +1,17 @@
 # Active implementation plan
 
+## Issue #122 — classify the B1/B2 global package conflict
+
+- [x] Register a diagnostic-repair issue and branch.
+- [x] Preserve the exact issue #119 installation, runtime, and import checks.
+- [x] Add bounded, character-sanitized `pip check` conflict lines.
+- [x] Complete focused and full validation.
+- [ ] Merge and record the exact executable commit.
+- [ ] Obtain a fresh GO for one no-private diagnostic smoke.
+
+Issue #122 authorizes no kernel, private-input access, model load, inference,
+training, metric, or B1/B2 final segment.
+
 ## Issue #119 — add a PyTorch-preserving B1/B2 dependency smoke
 
 - [x] Register a dedicated implementation issue and branch.
