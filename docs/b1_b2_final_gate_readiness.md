@@ -1,6 +1,16 @@
 # B1-P1/B2-P1 final-gate readiness review
 
-Status updated: 2026-07-26. Implementation prepared; no execution authorized.
+Status updated: 2026-07-27. Network-safe runtime probe in review; no execution
+authorized.
+
+Issue #116 separates runtime discovery from dependency installation after the
+issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
+probe that imports only PyTorch, reads installed package metadata, and reports
+aggregate Python/CUDA/GPU/package information. It does not clone the
+repository, install packages, access private inputs, load a model, or perform
+inference. This repair issue does not authorize even the probe to run on
+Kaggle. A future probe needs a fresh GO naming its exact reviewed commit, and a
+later B1-P1 final segment needs its own separate GO after the probe is audited.
 
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07
