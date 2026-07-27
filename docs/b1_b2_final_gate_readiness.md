@@ -41,6 +41,13 @@ returned one, however, and the diagnostic recorded only an output hash. See
 final gate: a fresh no-private diagnostic must classify the conflict before
 B1-P1 inference. The smoke authorization is consumed.
 
+Issue #122's fresh no-input diagnostic classified every `pip check` complaint
+as an unrelated preinstalled Kaggle-image conflict. None concerns the frozen
+B1/B2 inference packages; installation, imports, CUDA, and the P100 base all
+passed. See `results/b1_b2_pip_check_diagnostic_audit.md`. The dependency gate
+is cleared. That diagnostic authorization is consumed and does not authorize
+final inference.
+
 Issue #109 subsequently authorized one B1-P1 segment on Kaggle account
 `alba7oothresearchlab`. Kernel version 1 failed closed at approximately 1.07
 seconds because the wrapper assumed an external `nvidia-smi` executable that

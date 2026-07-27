@@ -131,6 +131,12 @@ returned one. The check output was hashed rather than classified. See
 `results/b1_b2_dependency_smoke_audit.md`. No private input, model loading,
 inference, or metric occurred. Its authorization is consumed. Do not start B1
 until a fresh no-private diagnostic classifies the package conflict.
+Issue #122's fresh no-input diagnostic classified all global `pip check`
+complaints as unrelated preinstalled Kaggle-image conflicts; none involves the
+B1/B2 inference package layer. Installation and Unsloth/bitsandbytes imports
+passed while PyTorch/CUDA/P100 remained unchanged. See
+`results/b1_b2_pip_check_diagnostic_audit.md`. The dependency gate is cleared,
+but the diagnostic authorization is consumed and does not authorize B1.
 
 ## Non-negotiable research rules
 

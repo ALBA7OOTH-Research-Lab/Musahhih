@@ -8,7 +8,9 @@
 - [x] Complete focused and full validation.
 - [ ] Merge; the exact executable implementation commit is
   `1968cada39efd60a446a89271fe20c4276cd0127`.
-- [ ] Obtain a fresh GO for one no-private diagnostic smoke.
+- [x] Obtain and consume a fresh GO for one no-private diagnostic smoke.
+- [x] Classify every global conflict as unrelated to the B1/B2 inference
+  package layer.
 
 Issue #122 authorizes no kernel, private-input access, model load, inference,
 training, metric, or B1/B2 final segment.
