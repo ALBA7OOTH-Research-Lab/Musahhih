@@ -9,7 +9,8 @@
 - [x] Pin the validated Unsloth, bitsandbytes, Transformers, and TRL layer.
 - [x] Add import checks without private input or model loading.
 - [x] Complete focused and full validation.
-- [ ] Merge and record the exact executable commit.
+- [ ] Merge; the exact executable implementation commit is
+  `3b28f99f4bbfe889ffaf56b1063ebfdc23a6ae72`.
 - [ ] Obtain a fresh GO before one no-private dependency/import smoke.
 
 Issue #119 authorizes no Kaggle submission, private-input access, model loading,
