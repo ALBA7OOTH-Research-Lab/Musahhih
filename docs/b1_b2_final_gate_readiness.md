@@ -122,6 +122,13 @@ compilation disabled. See `results/b1_b2_restored_p100_smoke_audit.md`. The
 authorization is consumed. The runtime blocker is cleared, but no B1/B2
 evaluation is authorized.
 
+Issue #137 adds a deterministic, write-once generator for one private B1-P1
+final segment. The generated wrapper verifies the exact approved checkout,
+runs the passing restored-P100 gate before private-input discovery, verifies
+the frozen input and bundle hashes, and invokes the existing timeout-safe
+runner. See `results/b1_p1_timeout_safe_kernel_preparation_audit.md`. This
+preparation authorizes no Kaggle submission or inference.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix
@@ -147,9 +154,9 @@ single-use owner GO.
 - The frozen prepared Nahw-Passage test input is locally available under
   ignored storage with SHA-256
   `acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b`.
-- That artifact is not consumer-ready for `run_prompt_baseline`: it uses `id`
-  rather than the required `record_id`. Hash validation alone did not test this
-  schema contract.
+- The exact artifact passes `run_prompt_baseline` through the reviewed,
+  deterministic `id` alias without changing its bytes; conflicting identity
+  aliases fail closed.
 - Prompt assembly, parsing, canonical run paths, non-overwrite behavior, and
   disabled final-test gating have unit coverage.
 - Neither B1-P1 nor B2-P1 has accessed Nahw-Passage.

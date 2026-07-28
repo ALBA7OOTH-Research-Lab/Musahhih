@@ -469,3 +469,19 @@ evaluation.
 Issue #135's authorization is consumed. No retry or second version is allowed.
 B1/B2 evaluation remains unauthorized pending a separately reviewed,
 timeout-safe wrapper and fresh exact-commit GO.
+
+## Issue #137 — prepare timeout-safe B1-P1 final segment
+
+- [x] Reuse the restored P100 runtime that passed issue #135.
+- [x] Generate a write-once private P100 package from an exact commit and GO.
+- [x] Keep private-input discovery after the restored-runtime gate.
+- [x] Freeze the B1 input, bundle, model, revision, prompt, seed, and decoding.
+- [x] Retain the 34,200-second safe stop and per-row durable persistence.
+- [x] Accept only complete or metric-free resumable handoff terminal states.
+- [x] Add synthetic/static tests without reading private corpus text.
+- [ ] Merge the preparation and record its exact executable commit.
+- [ ] Obtain a separate owner GO before any Kaggle submission.
+
+Issue #137 authorizes preparation only. It authorizes no private-input access,
+model loading, inference, metric, Kaggle submission, retry, continuation, or
+B2-P1 run.
