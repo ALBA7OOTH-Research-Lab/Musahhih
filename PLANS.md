@@ -413,3 +413,20 @@ fresh scope-specific owner GO.
 
 Issue #127 authorizes no Kaggle submission or research execution. Even a later
 passing P100 smoke would not authorize B1-P1 or B2-P1 inference.
+
+## Issue #130 — run one repaired no-input P100 operation smoke (complete)
+
+- [x] Obtain a fresh exact-commit owner GO for one no-input/no-model smoke.
+- [x] Submit exactly one private P100 kernel version with zero dataset and model
+  attachments.
+- [x] Verify startup immediately and preserve first terminal `ERROR`.
+- [x] Confirm exact repository checkout and fast fail-closed rejection of the
+  incompatible PyTorch/P100 CUDA operation.
+- [x] Confirm no private input, model loading, inference, training,
+  predictions, or metric.
+- [x] Preserve only the ignored private log and publish aggregate evidence.
+
+Issue #130's authorization is consumed. Do not edit, retry, resubmit, or launch
+an evaluation. A future repair must choose and review a P100-compatible runtime
+or another accelerator, then obtain a fresh GO for another no-input executable
+smoke.
