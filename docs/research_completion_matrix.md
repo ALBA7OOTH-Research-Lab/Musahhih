@@ -6,7 +6,7 @@ Status reviewed: 2026-07-28
 
 The controlled natural-only, synthetic-only, and fixed mixed-data GEC
 comparison is complete. The original broader research plan is partially
-complete because the frozen prompt baselines lack final results, safety
+complete because the B2-P1 prompt baseline lacks a final result, safety
 diagnostics cover F1-P1 but not F2-P1/F3-P1, qualified linguistic error
 analysis has not occurred, release clearance is unresolved, and the manuscript
 has not been written.
@@ -22,7 +22,7 @@ This distinction must remain visible in project status and any paper.
 | Synthetic-only versus mixed training | Complete, preregistered primary comparison | `results/f2_f3_final_evaluation_audit.md` | F3-P1 exceeded F2-P1 by 11.15 points; the frozen interval was 7.05–15.26 points. | None; never repeat because of the result. |
 | Natural-only versus synthetic-only | Complete, staged secondary comparison | `results/f2_f3_final_evaluation_audit.md` | F1-P1 exceeded F2-P1 by 7.83 points in the observed runs. | Disclose that F1 results predated the F2/F3 companion freeze. |
 | Mixed versus natural-only | Complete, staged secondary comparison | `results/f2_f3_final_evaluation_audit.md` | F3-P1 was 3.33 points higher, but the interval included zero; no difference is established. | Do not describe F3 as proven superior to F1. |
-| Fine-tuning versus five-shot B1-P1 | Incomplete | `results/b1_b2_qalb_dev_gpu_validation.md`; `results/b1_p1_final_attempt_failure_audit.md`; `results/b1_p1_repaired_attempt_failure_audit.md`; `results/b1_p1_8710263_r03_failure_audit.md`; `results/b1_b2_preflight_repair_audit.md`; `results/b1_b2_p100_operation_smoke_audit.md`; `results/b1_b2_proven_p100_runtime_restore_audit.md`; `results/b1_b2_restored_p100_smoke_audit.md`; `results/b1_p1_timeout_safe_kernel_preparation_audit.md` | The 25-record development gate passed technically. Three final attempts produced no model result. The current worker passes the restored P100 runtime gate, and a deterministic timeout-safe B1 kernel generator is prepared. | Merge and independently review the preparation, then obtain a fresh exact-commit GO for one B1-P1 segment. |
+| Fine-tuning versus five-shot B1-P1 | Complete, staged comparisons | `results/b1_p1_final_evaluation_audit.md` | B1-P1 achieved 89/511. F1-P1 and F3-P1 exceeded B1-P1; no difference was established for F2-P1 versus B1-P1. | Do not rerun or tune from B1-P1. Disclose staged timing. |
 | Fine-tuning versus expert-style B2-P1 | Incomplete | `results/b1_b2_qalb_dev_gpu_validation.md` | The 25-record development gate passed technically; issue #107 implements timeout-safe continuation. | Merge and independently review the guard, then obtain a fresh exact-commit GO for one frozen 511-record final run. |
 | F1-P1 overcorrection | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | F1-P1 preserved already-correct selected tokens more often than B0. | Do not generalize to all correct Arabic text. |
 | F1-P1 general Arabic capability retention | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | No measured ArabicMMLU difference was established; the interval was −3.2 to +1.9 points. | This is not a formal non-inferiority result. |
@@ -37,9 +37,9 @@ This distinction must remain visible in project status and any paper.
 
 ### H1: fine-tuning outperforms zero-shot and few-shot prompting
 
-Partially supported. F1-P1 and F3-P1 exceeded the accepted zero-shot B0 run.
-The final B1-P1 and B2-P1 Nahw-Passage prompt baselines do not exist, so the
-few-shot and expert-style part of H1 remains unanswered.
+Partially supported. F1-P1 and F3-P1 exceeded both the accepted zero-shot B0
+run and the frozen five-shot B1-P1 run. F2-P1 was not established as different
+from either B0 or B1-P1. The final B2-P1 expert-style baseline does not exist.
 
 ### H2: natural data is more sample-efficient than synthetic data
 
@@ -67,12 +67,12 @@ comparison if it:
 - presents F3-P1 versus F2-P1 as the primary preregistered result;
 - presents B0/F1 comparisons as staged secondary evidence;
 - does not claim superiority of F3-P1 over F1-P1;
-- does not claim comparison with B1-P1/B2-P1 final prompt baselines;
+- presents B1-P1 comparisons as staged and does not claim a B2-P1 result;
 - does not claim F2-P1/F3-P1 capability retention;
 - reports exact-match limitations and the absence of independent linguistic
   validation; and
 - keeps private/restricted artifacts out of the public paper package.
 
-Completing B1-P1/B2-P1 and F2-P1/F3-P1 safety diagnostics would strengthen the
+Completing B2-P1 and F2-P1/F3-P1 safety diagnostics would strengthen the
 paper, but each is a new optional execution decision rather than a requirement
 to accept the already completed core result.

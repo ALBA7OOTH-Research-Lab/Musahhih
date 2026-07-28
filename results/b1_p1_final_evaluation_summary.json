@@ -1,0 +1,107 @@
+{
+  "protocol_id": "B1-P1",
+  "recorded_date": "2026-07-28",
+  "run_status": "complete",
+  "execution": {
+    "platform": "Kaggle",
+    "kernel": "thgh15/musahhih-b1-final-0c34d18-r04",
+    "kernel_version": 1,
+    "repository_commit": "0c34d1846cebc81ea847d8c2c352c353f8988d46",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/139#issuecomment-5103481369",
+    "elapsed_seconds": 22612,
+    "gpu": "Tesla P100-PCIE-16GB"
+  },
+  "data": {
+    "name": "Nahw-Passage",
+    "split": "test",
+    "records": 511,
+    "input_sha256": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b",
+    "bundle_sha256": "760674f0d6cc85c48b2be18d175b87e2025cd3d01fde31a6e25afaa08f9fc11a"
+  },
+  "model": {
+    "id": "unsloth/gemma-3-4b-it-unsloth-bnb-4bit",
+    "revision": "316726ca0bd24aa323bfaf86e8a379ee1176d1fe",
+    "adapter": null
+  },
+  "decoding": {
+    "do_sample": false,
+    "temperature_argument": null,
+    "max_new_tokens": 32,
+    "seed": 3407
+  },
+  "metrics": {
+    "number_of_records": 511,
+    "number_correct": 89,
+    "exact_match_accuracy": 0.17416829745596868,
+    "invalid_or_empty_count": 0,
+    "suspicious_output_count": 16,
+    "multi_token_count": 16,
+    "suspicious_exact_match_count": 0
+  },
+  "comparisons": {
+    "b0_minus_b1": {
+      "accuracy_difference": -0.005870841487279843,
+      "paired_bootstrap_95_percentile_ci": [
+        -0.033268101761252444,
+        0.021526418786692758
+      ],
+      "mcnemar_two_sided_exact_p_value": 0.7754496546815659
+    },
+    "f1_minus_b1": {
+      "accuracy_difference": 0.1095890410958904,
+      "paired_bootstrap_95_percentile_ci": [
+        0.07240704500978473,
+        0.14677103718199608
+      ],
+      "mcnemar_two_sided_exact_p_value": 1.590532847378614e-08
+    },
+    "f2_minus_b1": {
+      "accuracy_difference": 0.03131115459882583,
+      "paired_bootstrap_95_percentile_ci": [
+        -0.011741682974559686,
+        0.07436399217221135
+      ],
+      "mcnemar_two_sided_exact_p_value": 0.18122406088142373
+    },
+    "f3_minus_b1": {
+      "accuracy_difference": 0.14285714285714285,
+      "paired_bootstrap_95_percentile_ci": [
+        0.10176125244618395,
+        0.18395303326810175
+      ],
+      "mcnemar_two_sided_exact_p_value": 6.968772941670867e-11
+    },
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 3407
+  },
+  "artifacts": {
+    "aggregate_prompt_sha256": "cd89f88bf9d78e624a209c609fbd5ac24c2ed548bf681a19c6e2591e4f363df8",
+    "private_predictions_sha256": "b239b429ab99f2692d1e17cf5f6ebe47fbb94e6e3007ccf5df4143b86dfdccf2",
+    "private_summary_sha256": "45db8e3e68862e157e31bcf5f5fcce679e26efd46b4afe60d536fdc1c1e22905",
+    "private_progress_sha256": "edc8da5ddaa7c1d3cd7eb711964fc45bcedf16062705a4df98ca27214018e0ea",
+    "private_run_log_sha256": "8742cecc01c515a58062688d4407c1dc6e8e6d35ac46d2354fc3d5f3116c190d"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.56.2",
+    "unsloth": "2026.7.3"
+  },
+  "audit": {
+    "ordered_alignment": true,
+    "unique_record_ids": true,
+    "prompt_rerender_valid": true,
+    "exact_match_consistency_valid": true,
+    "all_hashes_valid": true,
+    "all_comparisons_reproduced": true,
+    "contains_corpus_text": false,
+    "private_artifacts_published": false
+  },
+  "safeguards": {
+    "training_executed": false,
+    "prompt_or_parser_changed": false,
+    "repeat_run_authorized": false,
+    "authorization_consumed": true,
+    "b2_executed": false
+  }
+}

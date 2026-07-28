@@ -198,6 +198,16 @@ repeated or used for tuning.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 
+One separately authorized B1-P1 five-shot final run subsequently completed all
+511 frozen Nahw-Passage records at exact executable commit
+`0c34d1846cebc81ea847d8c2c352c353f8988d46`. It produced 89/511 exact
+matches (17.42%). The paired B0-minus-B1 interval included zero. F1-P1 and
+F3-P1 exceeded B1-P1 in staged comparisons, while the F2-P1-minus-B1-P1
+interval included zero. See
+[`../results/b1_p1_final_evaluation_audit.md`](../results/b1_p1_final_evaluation_audit.md).
+The authorization is consumed; do not repeat or tune from this result. B2-P1
+remains unevaluated.
+
 ## Phase E — Paper contribution
 
 A credible paper should contribute:

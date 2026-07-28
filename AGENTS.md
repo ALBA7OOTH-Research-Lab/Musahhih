@@ -170,6 +170,15 @@ metric-free resumable handoff. See
 authorize Kaggle submission, private-input access, model loading, inference,
 metrics, retry, continuation, or B2-P1. A real segment requires a fresh owner
 GO naming the exact merged commit.
+Issue #139's single authorized B1-P1 segment subsequently completed all 511
+frozen Nahw-Passage records in 22,612 seconds. B1-P1 achieved 89/511 exact
+matches (17.42%) with zero empty outputs. See
+`results/b1_p1_final_evaluation_audit.md`. The paired B0-minus-B1 interval
+included zero; F1-P1 and F3-P1 exceeded B1-P1 in staged comparisons, while the
+F2-P1-minus-B1 interval included zero. Private predictions, prompts, raw
+responses, gold values, and logs remain ignored. The authorization is
+consumed; do not repeat B1-P1 or tune from its result. B2-P1 remains
+unauthorized.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
