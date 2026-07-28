@@ -17,6 +17,7 @@ class B1B2GpuPreflightTests(unittest.TestCase):
                 return_value={
                     "cuda_available": True,
                     "cuda_device_count": 1,
+                    "cuda_operation_passed": True,
                     "device_name": "Tesla P100-PCIE-16GB",
                     "require_p100": True,
                 },
@@ -27,6 +28,7 @@ class B1B2GpuPreflightTests(unittest.TestCase):
         payload = json.loads(output.getvalue())
         self.assertEqual(payload["stage"], "b1_b2_gpu_preflight")
         self.assertTrue(payload["passed"])
+        self.assertTrue(payload["cuda_operation_passed"])
         self.assertNotIn("record_id", payload)
         self.assertNotIn("prompt", payload)
 

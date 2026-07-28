@@ -37,6 +37,17 @@ from scripts.run_prompt_baseline import (
 )
 
 
+class FakeCudaProbe:
+    def __add__(self, other):
+        return self
+
+    def sum(self):
+        return self
+
+    def item(self):
+        return 2
+
+
 class PromptBaselineRunTests(unittest.TestCase):
     def write_jsonl(self, path, rows):
         path.write_text(
@@ -64,12 +75,14 @@ class PromptBaselineRunTests(unittest.TestCase):
             float16="float16",
             float32="float32",
             manual_seed=lambda seed: calls.append(("manual_seed", seed)),
+            ones=lambda *args, **kwargs: FakeCudaProbe(),
             cuda=SimpleNamespace(
                 is_available=lambda: True,
                 is_bf16_supported=lambda: False,
                 device_count=lambda: 1,
                 get_device_name=lambda index: "Tesla P100-PCIE-16GB",
                 manual_seed_all=lambda seed: calls.append(("cuda_seed", seed)),
+                synchronize=lambda: calls.append("cuda_synchronize"),
             ),
         )
         generator = GemmaGenerator("example/model", "pinned-revision", 32)
@@ -117,10 +130,12 @@ class PromptBaselineRunTests(unittest.TestCase):
 
     def test_p100_preflight_uses_pytorch_cuda_without_external_command(self):
         fake_torch = SimpleNamespace(
+            ones=lambda *args, **kwargs: FakeCudaProbe(),
             cuda=SimpleNamespace(
                 is_available=lambda: True,
                 device_count=lambda: 1,
                 get_device_name=lambda index: "Tesla P100-PCIE-16GB",
+                synchronize=lambda: None,
             )
         )
         self.assertEqual(
@@ -128,10 +143,26 @@ class PromptBaselineRunTests(unittest.TestCase):
             {
                 "cuda_available": True,
                 "cuda_device_count": 1,
+                "cuda_operation_passed": True,
                 "device_name": "Tesla P100-PCIE-16GB",
                 "require_p100": True,
             },
         )
+
+    def test_p100_preflight_fails_closed_when_cuda_operation_cannot_execute(self):
+        fake_torch = SimpleNamespace(
+            ones=lambda *args, **kwargs: (_ for _ in ()).throw(
+                RuntimeError("no kernel image is available")
+            ),
+            cuda=SimpleNamespace(
+                is_available=lambda: True,
+                device_count=lambda: 1,
+                get_device_name=lambda index: "Tesla P100-PCIE-16GB",
+                synchronize=lambda: None,
+            ),
+        )
+        with self.assertRaisesRegex(RunSafetyError, "executable P100 CUDA operation"):
+            require_single_p100_runtime(fake_torch)
 
     def test_p100_preflight_fails_closed_on_cuda_count_and_device(self):
         cases = [
@@ -271,6 +302,42 @@ class PromptBaselineRunTests(unittest.TestCase):
             )
             self.assertIsNone(rows[1].gold_correction)
             self.assertEqual(rows[1].metadata, {})
+
+    def test_load_prompt_records_accepts_frozen_nahw_id_alias(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "input.jsonl"
+            self.write_jsonl(
+                path,
+                [
+                    {
+                        "id": "nahw-1",
+                        "passage": "alpha beta",
+                        "error": "beta",
+                        "gold_correction": "better",
+                    }
+                ],
+            )
+
+            rows = load_prompt_records(path)
+
+            self.assertEqual(rows[0].record_id, "nahw-1")
+
+    def test_load_prompt_records_rejects_conflicting_id_aliases(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "input.jsonl"
+            self.write_jsonl(
+                path,
+                [
+                    {
+                        "id": "legacy",
+                        "record_id": "canonical",
+                        "passage": "alpha beta",
+                        "error": "beta",
+                    }
+                ],
+            )
+            with self.assertRaisesRegex(RunSafetyError, "disagree"):
+                load_prompt_records(path)
 
     def test_load_prompt_records_rejects_duplicates_and_invalid_fields(self):
         cases = [

@@ -67,7 +67,7 @@ class RunSafetyError(ValueError):
 
 
 def require_single_p100_runtime(torch_module=None) -> dict:
-    """Verify one P100 through PyTorch without loading a model or private data."""
+    """Verify one executable P100 through PyTorch before private-data access."""
 
     if torch_module is None:
         try:
@@ -84,9 +84,20 @@ def require_single_p100_runtime(torch_module=None) -> dict:
     device_name = torch_module.cuda.get_device_name(0)
     if not isinstance(device_name, str) or "P100" not in device_name.upper():
         raise RunSafetyError("B1/B2 final execution requires a P100 GPU")
+    try:
+        probe = torch_module.ones(1, device="cuda")
+        probe_result = (probe + probe).sum()
+        torch_module.cuda.synchronize()
+        if probe_result.item() != 2:
+            raise RuntimeError("unexpected CUDA probe result")
+    except Exception as error:
+        raise RunSafetyError(
+            "B1/B2 final execution requires an executable P100 CUDA operation"
+        ) from error
     return {
         "cuda_available": True,
         "cuda_device_count": device_count,
+        "cuda_operation_passed": True,
         "device_name": device_name,
         "require_p100": True,
     }
@@ -277,6 +288,32 @@ def _require_string(value: object, *, field: str, line_number: int) -> str:
     return value
 
 
+def _resolve_record_id(payload: dict, *, line_number: int) -> str:
+    """Accept the canonical field or the frozen prepared-Nahw legacy alias."""
+
+    if "record_id" in payload:
+        record_id = _require_string(
+            payload["record_id"],
+            field="record_id",
+            line_number=line_number,
+        )
+        if "id" in payload and payload["id"] != record_id:
+            raise RunSafetyError(
+                f"id and record_id disagree at input line {line_number}"
+            )
+    else:
+        record_id = _require_string(
+            payload.get("id"),
+            field="id or record_id",
+            line_number=line_number,
+        )
+    if not record_id:
+        raise RunSafetyError(
+            f"id or record_id must be non-empty at input line {line_number}"
+        )
+    return record_id
+
+
 def load_prompt_records(path: Path) -> list[PromptRecord]:
     """Load private prompt records without logging text-bearing fields."""
 
@@ -298,15 +335,7 @@ def load_prompt_records(path: Path) -> list[PromptRecord]:
                     raise RunSafetyError(
                         f"input line {line_number} must be a JSON object"
                     )
-                record_id = _require_string(
-                    payload.get("record_id"),
-                    field="record_id",
-                    line_number=line_number,
-                )
-                if not record_id:
-                    raise RunSafetyError(
-                        f"record_id must be non-empty at input line {line_number}"
-                    )
+                record_id = _resolve_record_id(payload, line_number=line_number)
                 if record_id in seen_ids:
                     raise RunSafetyError(f"duplicate record_id at input line {line_number}")
                 passage = _require_string(
