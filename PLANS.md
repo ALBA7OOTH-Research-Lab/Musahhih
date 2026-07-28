@@ -454,3 +454,18 @@ smoke.
 Issue #132 authorizes no Kaggle submission or B1/B2 inference. A later passing
 runtime smoke would consume its own GO and still would not authorize final
 evaluation.
+
+## Issue #135 — run one credit-capped restored-P100 smoke (complete)
+
+- [x] Obtain one exact-commit, no-input/no-model owner GO.
+- [x] Submit one private P100 kernel with zero dataset/model attachments.
+- [x] Verify startup immediately and monitor through terminal `COMPLETE`.
+- [x] Restore the recorded PyTorch 2.6.0+cu124/CUDA 12.4 inference stack.
+- [x] Pass exact identities, a synchronized CUDA operation, and
+  Unsloth/bitsandbytes imports with compilation disabled.
+- [x] Complete in approximately 268 seconds under the hard time caps.
+- [x] Publish only aggregate evidence and keep the private log ignored.
+
+Issue #135's authorization is consumed. No retry or second version is allowed.
+B1/B2 evaluation remains unauthorized pending a separately reviewed,
+timeout-safe wrapper and fresh exact-commit GO.

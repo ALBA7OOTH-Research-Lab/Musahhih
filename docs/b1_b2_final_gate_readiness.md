@@ -115,6 +115,13 @@ with Unsloth compilation disabled. See
 tested without Kaggle execution. A separately authorized no-input/no-model
 smoke remains required after merge.
 
+Issue #135's single no-input/no-model restored-runtime smoke then completed in
+approximately 268 seconds. All exact restored identities matched, the P100 CUDA
+operation and synchronization passed, and Unsloth/bitsandbytes imported with
+compilation disabled. See `results/b1_b2_restored_p100_smoke_audit.md`. The
+authorization is consumed. The runtime blocker is cleared, but no B1/B2
+evaluation is authorized.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix
