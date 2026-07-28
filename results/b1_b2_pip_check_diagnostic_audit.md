@@ -39,3 +39,11 @@ Kaggle image health is not a study requirement.
 
 The authorization is consumed. This diagnostic clears the dependency gate but
 does not itself authorize final inference.
+
+## Retrospective correction
+
+Issue #125 later exposed a separate runtime blocker outside this diagnostic's
+package-conflict checks: PyTorch 2.10.0+cu128 does not include the P100's
+`sm_60` CUDA architecture. Imports passing did not establish executable GPU
+compatibility. The dependency result remains valid only for resolution and
+imports, not for P100 execution readiness.
