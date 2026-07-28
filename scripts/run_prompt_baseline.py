@@ -29,6 +29,10 @@ from scripts.baseline_prompts import (
     render_b1_prompt,
     render_b2_prompt,
 )
+from scripts.bootstrap_b1_b2_p100_runtime import (
+    P100BootstrapError,
+    require_proven_p100_stack,
+)
 from scripts.nahw_baseline_utils import parse_model_response
 
 
@@ -182,10 +186,12 @@ class GemmaGenerator:
         }
 
     def _load(self) -> None:
+        os.environ["UNSLOTH_COMPILE_DISABLE"] = "1"
         try:
             import torch
+            require_proven_p100_stack(torch)
             from unsloth import FastModel
-        except (ImportError, OSError) as error:
+        except (ImportError, OSError, P100BootstrapError) as error:
             raise RunSafetyError("Gemma inference dependencies are unavailable") from error
 
         if self.require_p100:

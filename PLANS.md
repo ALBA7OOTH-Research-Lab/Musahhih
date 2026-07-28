@@ -430,3 +430,25 @@ Issue #130's authorization is consumed. Do not edit, retry, resubmit, or launch
 an evaluation. A future repair must choose and review a P100-compatible runtime
 or another accelerator, then obtain a fresh GO for another no-input executable
 smoke.
+
+## Issue #132 — restore the already proven P100 runtime
+
+- [x] Recover the exact successful F2/F3 P100 bootstrap and final recorded
+  package identities.
+- [x] Conditionally restore official PyTorch 2.6.0/torchvision 0.21.0 CUDA
+  12.4 wheels rather than preserving incompatible PyTorch 2.10.
+- [x] Pin the recorded compatible inference stack and the minimum matching
+  Unsloth Zoo companion version.
+- [x] Disable Unsloth compilation on `sm_60`.
+- [x] Require fresh-process package identity, CUDA-operation, synchronization,
+  and inference-import validation before private input.
+- [x] Enforce the same runtime contract again inside `GemmaGenerator`.
+- [x] Pass compilation, focused tests, and the full test suite without Kaggle
+  or model execution.
+- [ ] Merge the reviewed repair and record its merge commit.
+- [ ] Under a separate fresh GO, run one no-input/no-model restored-runtime
+  smoke.
+
+Issue #132 authorizes no Kaggle submission or B1/B2 inference. A later passing
+runtime smoke would consume its own GO and still would not authorize final
+evaluation.

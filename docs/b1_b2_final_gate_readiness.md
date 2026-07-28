@@ -104,6 +104,17 @@ The current P100 runtime is not execution-ready; another B1 attempt is
 ineligible until a reviewed compatible-runtime or accelerator repair passes a
 separately authorized no-input executable smoke.
 
+Issue #132 returns to the already successful F2/F3 P100 pattern instead of
+changing accelerators. At exact code commit
+`9bc36e31fe486350319f363f79bfca06dbb5e7af`, a conditional bootstrap
+restores official PyTorch 2.6.0/torchvision 0.21.0 CUDA 12.4 wheels and the
+recorded compatible inference stack, then validates identities, a real CUDA
+operation, synchronization, and Unsloth/bitsandbytes imports in a fresh process
+with Unsloth compilation disabled. See
+`results/b1_b2_proven_p100_runtime_restore_audit.md`. This was implemented and
+tested without Kaggle execution. A separately authorized no-input/no-model
+smoke remains required after merge.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix

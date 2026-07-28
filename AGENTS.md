@@ -144,6 +144,15 @@ model load, inference, training, prediction, or metric occurred. See
 do not retry. A future path requires a reviewed P100-compatible runtime
 strategy or accelerator change, another no-input executable smoke, and fresh
 scope-specific GOs.
+Issue #132 restores the already successful F2/F3 P100 runtime pattern at exact
+code commit `9bc36e31fe486350319f363f79bfca06dbb5e7af`: official PyTorch
+2.6.0/torchvision 0.21.0 CUDA 12.4 wheels, the recorded compatible inference
+stack, `UNSLOTH_COMPILE_DISABLE=1`, fresh-process identity/import validation,
+and the executable CUDA-operation guard. See
+`results/b1_b2_proven_p100_runtime_restore_audit.md`. All 235 tests and 65
+subtests pass. No Kaggle or model execution occurred. After merge, only a
+fresh-GO no-input/no-model restored-runtime smoke is eligible; B1/B2 inference
+remains unauthorized.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
