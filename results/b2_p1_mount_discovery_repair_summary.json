@@ -1,0 +1,18 @@
+{
+  "issue": 145,
+  "status": "repaired_not_executed",
+  "failed_assumption_removed": "fixed_kaggle_mount_path",
+  "discovery": {
+    "filename": "nahw_gec_test.jsonl",
+    "recursive": true,
+    "exactly_one_required": true,
+    "sha256_required": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b",
+    "b1_bundle_opened": false,
+    "b1_bundle_passed": false
+  },
+  "kaggle_submitted": false,
+  "private_input_accessed": false,
+  "model_loaded": false,
+  "inference_executed": false,
+  "metric_computed": false
+}

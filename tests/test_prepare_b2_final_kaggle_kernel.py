@@ -36,6 +36,15 @@ class PrepareB2FinalKaggleKernelTests(unittest.TestCase):
         self.assertNotIn("--bundle", wrapper)
         self.assertNotIn("EXPECTED_BUNDLE", wrapper)
         self.assertNotIn("--temperature", wrapper)
+        self.assertIn(
+            'Path("/kaggle/input").rglob("nahw_gec_test.jsonl")',
+            wrapper,
+        )
+        self.assertIn("if len(input_candidates) != 1:", wrapper)
+        self.assertNotIn(
+            '/ "musahhih-b1-final-private-8710263-r01"',
+            wrapper,
+        )
         self.assertLess(
             wrapper.index("scripts.check_b1_b2_restored_p100"),
             wrapper.index('Path("/kaggle/input")'),
