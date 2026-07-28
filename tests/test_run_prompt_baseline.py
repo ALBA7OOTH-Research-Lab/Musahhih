@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -76,6 +77,7 @@ class PromptBaselineRunTests(unittest.TestCase):
             float32="float32",
             manual_seed=lambda seed: calls.append(("manual_seed", seed)),
             ones=lambda *args, **kwargs: FakeCudaProbe(),
+            version=SimpleNamespace(cuda="12.4"),
             cuda=SimpleNamespace(
                 is_available=lambda: True,
                 is_bf16_supported=lambda: False,
@@ -86,11 +88,34 @@ class PromptBaselineRunTests(unittest.TestCase):
             ),
         )
         generator = GemmaGenerator("example/model", "pinned-revision", 32)
+        proven_versions = {
+            "torch": "2.6.0+cu124",
+            "torchvision": "0.21.0+cu124",
+            "numpy": "2.0.2",
+            "xformers": "0.0.29.post3",
+            "torchao": "0.16.0",
+            "transformers": "4.56.2",
+            "unsloth": "2026.7.3",
+            "unsloth_zoo": "2026.7.3",
+            "accelerate": "1.13.0",
+            "peft": "0.19.1",
+            "trl": "0.22.2",
+            "datasets": "4.3.0",
+            "bitsandbytes": "0.49.2",
+        }
         with (
             patch.dict(sys.modules, {"torch": fake_torch, "unsloth": fake_unsloth}),
             patch(
                 "scripts.run_prompt_baseline.importlib.metadata.version",
-                side_effect=lambda package: f"{package}-version",
+                side_effect=lambda package: proven_versions.get(
+                    package, f"{package}-version"
+                ),
+            ),
+            patch(
+                "scripts.bootstrap_b1_b2_p100_runtime.importlib.metadata.version",
+                side_effect=lambda package: proven_versions.get(
+                    package, f"{package}-version"
+                ),
             ),
         ):
             generator._load()
@@ -111,6 +136,7 @@ class PromptBaselineRunTests(unittest.TestCase):
         self.assertTrue(generator.metadata["load_in_4bit"])
         self.assertEqual(generator.metadata["temperature"], None)
         self.assertEqual(generator.metadata["seed"], 3407)
+        self.assertEqual(os.environ["UNSLOTH_COMPILE_DISABLE"], "1")
 
     def test_kernel_budget_stops_at_safe_boundary_and_rejects_future_start(self):
         now = 100_000.0
