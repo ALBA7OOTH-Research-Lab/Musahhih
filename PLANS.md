@@ -485,3 +485,18 @@ timeout-safe wrapper and fresh exact-commit GO.
 Issue #137 authorizes preparation only. It authorizes no private-input access,
 model loading, inference, metric, Kaggle submission, retry, continuation, or
 B2-P1 run.
+
+## Issue #139 — run one timeout-safe B1-P1 final segment (complete)
+
+- [x] Obtain the exact-commit owner GO.
+- [x] Generate and hash the write-once private kernel package.
+- [x] Submit exactly version 1 on the passing restored P100 runtime.
+- [x] Complete all 511 records before the 34,200-second safe stop.
+- [x] Verify exact input, bundle, prompt, model, revision, seed, and decoding.
+- [x] Reproduce record alignment, parser outputs, exact-match booleans, counts,
+  hashes, and staged paired statistics without printing corpus text.
+- [x] Keep predictions, prompts, raw responses, gold values, and logs private.
+- [x] Publish only the corpus-text-free aggregate audit.
+
+Issue #139's authorization is consumed. Do not rerun B1-P1 or tune from the
+result. B2-P1 remains unauthorized.

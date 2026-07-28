@@ -3,6 +3,11 @@
 Status updated: 2026-07-28. Issue #125 failed before model loading; another
 final execution remains unauthorized.
 
+Issue #139 later completed the single frozen B1-P1 511-record final run at
+17.42% exact match with zero empty outputs. See
+`results/b1_p1_final_evaluation_audit.md`. Its authorization is consumed; do
+not repeat or tune from the result. B2-P1 remains unauthorized.
+
 Issue #116 separates runtime discovery from dependency installation after the
 issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
 probe that imports only PyTorch, reads installed package metadata, and reports
