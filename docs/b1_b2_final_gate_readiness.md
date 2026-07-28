@@ -8,6 +8,12 @@ Issue #139 later completed the single frozen B1-P1 511-record final run at
 `results/b1_p1_final_evaluation_audit.md`. Its authorization is consumed; do
 not repeat or tune from the result. B2-P1 remains unauthorized.
 
+Issue #141 prepares a deterministic, write-once B2-P1 kernel generator using
+the same passing runtime and timeout-safe runner. It accesses only the frozen
+test input after the runtime gate and passes no demonstration bundle. See
+`results/b2_p1_timeout_safe_kernel_preparation_audit.md`. Preparation
+authorizes no Kaggle submission or inference.
+
 Issue #116 separates runtime discovery from dependency installation after the
 issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
 probe that imports only PyTorch, reads installed package metadata, and reports

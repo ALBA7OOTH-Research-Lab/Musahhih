@@ -500,3 +500,19 @@ B2-P1 run.
 
 Issue #139's authorization is consumed. Do not rerun B1-P1 or tune from the
 result. B2-P1 remains unauthorized.
+
+## Issue #141 — prepare timeout-safe B2-P1 final segment
+
+- [x] Reuse the runtime and timeout-safe runner that completed B1-P1.
+- [x] Generate a write-once private P100 package from an exact commit and GO.
+- [x] Keep private-input access after the restored-runtime gate.
+- [x] Address and hash only the frozen test input; pass no B1 bundle.
+- [x] Freeze B2 prompt, model, revision, seed, greedy decoding, and 32 tokens.
+- [x] Retain the 34,200-second safe stop and per-row durable persistence.
+- [x] Add synthetic/static tests without reading private corpus text.
+- [ ] Merge the preparation and record its exact executable commit.
+- [ ] Obtain a separate owner GO before any Kaggle submission.
+
+Issue #141 authorizes preparation only. It authorizes no private-input access,
+model loading, inference, metric, Kaggle submission, retry, continuation, or
+B1-P1 repeat.
