@@ -4,7 +4,8 @@
 
 Issue #127 repairs the two pre-inference defects exposed by issue #125. The
 exact implementation commit is
-`cb65e2f3143179d34034b661116220a011ffdddd`.
+`cb65e2f3143179d34034b661116220a011ffdddd`; PR #128 merged it at
+`84566e8a7b114c942047a3c14455b83e4cc35f7b`.
 
 This repair does not authorize Kaggle submission, model loading, private
 inference, training, metrics, B2-P1, or a B1-P1 retry.
