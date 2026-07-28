@@ -367,3 +367,26 @@ another development run, training run, final-test evaluation, safety-diagnostic
 rerun, F3, or XG; upload private artifacts publicly; or change a frozen
 research setting without a fresh scope-specific GO. The completed technical
 gate cannot change the selected checkpoint, prompt, or parser.
+
+## Issue #125 — execute one B1-P1 final segment (failed; audit complete)
+
+- [x] Obtain one exact-commit, scope-specific owner GO for B1-P1 only.
+- [x] Submit exactly one private Kaggle kernel version and preserve its first
+  terminal `ERROR` state without retry.
+- [x] Verify that repository, GPU-identity, dependency, and private-artifact
+  hash gates passed.
+- [x] Identify the terminal failure at approximately 114.95 seconds: the exact
+  511-row private input uses `id`, while `run_prompt_baseline` requires
+  `record_id`.
+- [x] Confirm that model loading, inference, predictions, metrics, and training
+  were never reached.
+- [x] Record the independent P100 blocker: PyTorch 2.10.0+cu128 does not
+  support `sm_60`, and the existing preflight executed no CUDA tensor
+  operation.
+- [x] Publish only corpus-text-free evidence and keep the private log ignored.
+- [ ] Under a new repair issue, implement and review exact private-input
+  consumer validation and an executable P100 CUDA preflight.
+
+Issue #125's authorization is consumed. Do not edit, resubmit, retry, or launch
+B2-P1. Any future B1-P1 attempt requires a reviewed exact repair commit and a
+fresh scope-specific owner GO.

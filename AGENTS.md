@@ -114,16 +114,27 @@ across all pinned-PyTorch install retries. The repaired GPU preflight, private
 input, model, inference, predictions, and metrics were never reached. See
 `results/b1_p1_repaired_attempt_failure_audit.md`. The authorization is
 consumed; do not edit the kernel, push another version, or retry.
+Issue #125's single authorized B1-P1 attempt on `thgh15` passed repository,
+GPU-identity, dependency, and private-artifact hash gates, then failed closed
+at approximately 114.95 seconds because all 511 frozen input rows used `id`
+while `run_prompt_baseline` required `record_id`. Model loading, inference,
+predictions, metrics, and training were never reached. The same log exposed an
+independent blocker: PyTorch 2.10.0+cu128 warned that the P100's `sm_60`
+capability was unsupported, while the preflight had performed no CUDA tensor
+operation. See `results/b1_p1_8710263_r03_failure_audit.md`. The authorization
+is consumed. Do not retry; a future attempt requires reviewed schema-contract
+and executable-CUDA preflight repairs plus a fresh exact-commit owner GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
-Tesla P100, CUDA 12.8, and working preinstalled PyTorch 2.10.0+cu128. Unsloth
-and bitsandbytes were absent, so the runtime is not yet ready for the frozen
-B1/B2 backend. No datasets or models were attached; no repository checkout,
-package installation, private-input access, model loading, inference, or metric
+Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
+did not execute a CUDA tensor operation. Issue #125 later established that this
+build does not support the P100's `sm_60` capability. Unsloth and bitsandbytes
+were absent, so the runtime was not ready for the frozen B1/B2 backend. No
+datasets or models were attached; no repository checkout, package
+installation, private-input access, model loading, inference, or metric
 occurred. See `results/b1_b2_kaggle_runtime_probe_audit.md`. The probe
-authorization is consumed. Preserve the working PyTorch stack; any
-dependency-only smoke and any later B1 attempt require separate fresh,
-scope-specific owner GOs.
+authorization is consumed. Any dependency repair and any later B1 attempt
+require separate fresh, scope-specific owner GOs.
 Issue #119's single authorized dependency/import smoke then preserved the
 PyTorch/CUDA/P100 base and successfully imported pinned Unsloth 2026.7.2 and
 bitsandbytes 0.49.2, but reported `ready: false` because global `pip check`
@@ -136,7 +147,9 @@ complaints as unrelated preinstalled Kaggle-image conflicts; none involves the
 B1/B2 inference package layer. Installation and Unsloth/bitsandbytes imports
 passed while PyTorch/CUDA/P100 remained unchanged. See
 `results/b1_b2_pip_check_diagnostic_audit.md`. The dependency gate is cleared,
-but the diagnostic authorization is consumed and does not authorize B1.
+but only at package-resolution/import level; issue #125 later proved the
+PyTorch build cannot execute on the P100. The diagnostic authorization is
+consumed and does not authorize B1.
 
 ## Non-negotiable research rules
 

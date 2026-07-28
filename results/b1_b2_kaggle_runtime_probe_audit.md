@@ -74,3 +74,12 @@ Before another B1-P1 attempt, implement and review a dependency-only bootstrap,
 then validate it with a no-private, no-model import smoke under a fresh
 single-use GO. The final B1-P1 segment requires a separate later GO. This
 probe's authorization is consumed.
+
+## Retrospective correction
+
+Issue #125 later showed that PyTorch 2.10.0+cu128 warned that its compiled CUDA
+architectures do not include the P100's `sm_60`. This probe established import,
+CUDA visibility, device count, and identity only; it did not execute a CUDA
+tensor operation. Its original statement that the stack was usable was
+therefore too strong. The probe proved discovery, not executable P100
+compatibility.

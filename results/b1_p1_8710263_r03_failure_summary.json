@@ -1,0 +1,52 @@
+{
+  "authorization_consumed": true,
+  "failure": {
+    "elapsed_seconds_approx": 114.95,
+    "error_type": "RunSafetyError",
+    "stage": "private_input_consumer_schema",
+    "summary": "all 511 frozen input rows use id; run_prompt_baseline requires record_id"
+  },
+  "gates": {
+    "dependency_gate": true,
+    "gpu_identity_gate": true,
+    "private_bundle_hash_gate": true,
+    "private_input_hash_gate": true,
+    "repository_gate": true
+  },
+  "independent_blocker": {
+    "installed_torch": "2.10.0+cu128",
+    "p100_cuda_capability": "sm_60",
+    "preflight_executed_cuda_operation": false,
+    "torch_supported_cuda_capabilities": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ]
+  },
+  "issue": 125,
+  "kernel": {
+    "account": "thgh15",
+    "slug": "musahhih-b1-final-8710263-r03",
+    "terminal_state": "ERROR",
+    "version": 1
+  },
+  "private_artifacts": {
+    "bundle_sha256": "760674f0d6cc85c48b2be18d175b87e2025cd3d01fde31a6e25afaa08f9fc11a",
+    "input_rows": 511,
+    "input_sha256": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b",
+    "log_sha256": "e8662c52dd615e196a8538592c93e755d85f3a0d10e7075de97e4f4ccd264540"
+  },
+  "repository_commit": "87102633e0f1b76a2ee4d83a3e29e20de0da9137",
+  "research_execution": {
+    "inference_executed": false,
+    "metric_computed": false,
+    "model_loaded": false,
+    "predictions_created": false,
+    "training_executed": false
+  },
+  "status": "schema_failure_before_model_loading"
+}

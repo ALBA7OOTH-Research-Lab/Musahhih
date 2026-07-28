@@ -1,7 +1,7 @@
 # B1-P1/B2-P1 final-gate readiness review
 
-Status updated: 2026-07-27. Network-safe runtime probe complete; final
-execution remains unauthorized.
+Status updated: 2026-07-28. Issue #125 failed before model loading; another
+final execution remains unauthorized.
 
 Issue #116 separates runtime discovery from dependency installation after the
 issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
@@ -15,13 +15,15 @@ naming that exact reviewed commit, and a later B1-P1 final segment needs its
 own separate GO after the probe is audited.
 
 That single probe subsequently completed on phone-verified account `thgh15`.
-It confirmed one Tesla P100, CUDA 12.8, and working preinstalled PyTorch
-2.10.0+cu128. Unsloth and bitsandbytes were absent, so the environment is not
-yet ready for the frozen inference backend. See
+It confirmed one Tesla P100, CUDA 12.8, and importable preinstalled PyTorch
+2.10.0+cu128 at device-discovery level, but it did not execute a CUDA
+tensor operation. Issue #125 later established that this build does not support
+the P100's `sm_60` capability. Unsloth and bitsandbytes were absent, so the
+environment was not ready for the frozen inference backend. See
 `results/b1_b2_kaggle_runtime_probe_audit.md`. The probe accessed no private
 input, loaded no model, and attempted no network access. Its authorization is
-consumed. The next implementation must preserve the working PyTorch stack and
-validate only the missing inference layer under a fresh no-private GO before a
+consumed. A future implementation must establish a P100-compatible PyTorch
+stack and execute a CUDA tensor operation under a fresh no-private GO before a
 separately authorized B1-P1 segment.
 
 Issue #119 implements the resulting dependency-only smoke. It fails closed
@@ -70,6 +72,17 @@ not resolve `download.pytorch.org` during dependency installation. The repaired
 GPU preflight and all research stages were never reached. Its authorization is
 consumed; this does not authorize a retry.
 
+Issue #125 subsequently authorized one B1-P1 attempt on account `thgh15` at
+commit `87102633e0f1b76a2ee4d83a3e29e20de0da9137`. Repository,
+GPU-identity, dependency, and private-artifact hash gates passed. The attempt
+then failed at approximately 114.95 seconds because the exact private input
+used the prepared-Nahw `id` field while `run_prompt_baseline` requires
+`record_id`. The model was not loaded and no inference, prediction, or metric
+occurred. The log also showed that PyTorch 2.10.0+cu128 does not support the
+P100's `sm_60` capability; the current discovery-only preflight did not detect
+that executable incompatibility. See
+`results/b1_p1_8710263_r03_failure_audit.md`. This authorization is consumed.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix
@@ -95,6 +108,9 @@ single-use owner GO.
 - The frozen prepared Nahw-Passage test input is locally available under
   ignored storage with SHA-256
   `acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b`.
+- That artifact is not consumer-ready for `run_prompt_baseline`: it uses `id`
+  rather than the required `record_id`. Hash validation alone did not test this
+  schema contract.
 - Prompt assembly, parsing, canonical run paths, non-overwrite behavior, and
   disabled final-test gating have unit coverage.
 - Neither B1-P1 nor B2-P1 has accessed Nahw-Passage.
@@ -122,10 +138,12 @@ was read or printed during this readiness review.
 10. first-terminal-state preservation with no automatic retry; and
 11. private outputs under ignored paths only.
 
-Synthetic-fixture tests cover interruption, identity and hash mismatch, malformed
-schemas, reordered records, score mismatch, unexpected existing directories,
-and successful multi-segment completion without reading Nahw-Passage or loading
-a model.
+Synthetic-fixture tests cover interruption, identity and hash mismatch,
+malformed schemas, reordered records, score mismatch, unexpected existing
+directories, and successful multi-segment completion without reading
+Nahw-Passage or loading a model. They did not validate the exact frozen private
+input against the consumer schema or execute a CUDA tensor operation on the
+selected runtime; issue #125 proved both omissions are blocking.
 
 ## Proposed execution shape
 
