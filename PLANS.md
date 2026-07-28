@@ -406,7 +406,8 @@ fresh scope-specific owner GO.
 - [x] Add focused success/failure and privacy tests.
 - [x] Complete compilation, focused/full tests, exact private-artifact
   validation, diff, JSON, and credential-pattern checks.
-- [ ] Merge the repair and record the merge commit.
+- [x] Merge the repair through PR #128 at
+  `84566e8a7b114c942047a3c14455b83e4cc35f7b`.
 - [ ] Under a separate fresh GO, run only the repaired no-input/no-model P100
   preflight smoke.
 

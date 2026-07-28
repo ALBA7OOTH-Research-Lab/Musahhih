@@ -133,7 +133,7 @@ now requires a real CUDA tensor operation and synchronization before any
 private-input access. See `results/b1_b2_preflight_repair_audit.md`. No Kaggle
 run or model load occurred. Actual P100 execution remains unvalidated; the
 next permissible run is a separately authorized no-input/no-model preflight
-smoke after merge, not B1 inference.
+smoke after merge `84566e8a7b114c942047a3c14455b83e4cc35f7b`, not B1 inference.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
