@@ -153,6 +153,15 @@ and the executable CUDA-operation guard. See
 subtests pass. No Kaggle or model execution occurred. After merge, only a
 fresh-GO no-input/no-model restored-runtime smoke is eligible; B1/B2 inference
 remains unauthorized.
+Issue #135's single authorized restored-runtime smoke subsequently completed
+in approximately 268 seconds. It restored the exact PyTorch 2.6.0+cu124/CUDA
+12.4 stack, passed the synchronized P100 CUDA operation, and import-checked
+Unsloth/bitsandbytes with compilation disabled. See
+`results/b1_b2_restored_p100_smoke_audit.md`. Zero datasets/models were
+attached and no private input, model load, inference, training, prediction, or
+metric occurred. The authorization is consumed. B1/B2 evaluation remains
+unauthorized and requires a fresh exact-commit GO with timeout-safe per-record
+persistence.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

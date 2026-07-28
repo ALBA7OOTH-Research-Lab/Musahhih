@@ -1,0 +1,48 @@
+{
+  "authorization_consumed": true,
+  "elapsed_seconds": 268.002272821,
+  "exact_commit": "15ce99dc3b1d84ae6de418be1ea1cbcf0eb82644",
+  "issue": 135,
+  "kernel": {
+    "account": "thgh15",
+    "slug": "musahhih-b1-b2-restored-p100-15ce99d-r01",
+    "terminal_state": "COMPLETE",
+    "version": 1
+  },
+  "private_artifacts": {
+    "log_sha256": "cb1785b833eb0a7f8186ae591f712b9dcc7b9d714783bdfc73071718bb0ec3d6",
+    "wrapper_sha256": "ba902928afbd838c1041fe43b44446eaedcf5ee3919081043e373fca21d39005"
+  },
+  "research_execution": {
+    "dataset_attached": false,
+    "inference_executed": false,
+    "metric_computed": false,
+    "model_attached": false,
+    "model_loaded": false,
+    "predictions_created": false,
+    "private_input_accessed": false,
+    "training_executed": false
+  },
+  "runtime": {
+    "accelerate": "1.13.0",
+    "bitsandbytes": "0.49.2",
+    "cuda": "12.4",
+    "cuda_operation_passed": true,
+    "datasets": "4.3.0",
+    "device_name": "Tesla P100-PCIE-16GB",
+    "inference_imports_passed": true,
+    "numpy": "2.0.2",
+    "peft": "0.19.1",
+    "torch": "2.6.0+cu124",
+    "torchao": "0.16.0",
+    "torchvision": "0.21.0+cu124",
+    "transformers": "4.56.2",
+    "triton": "3.2.0",
+    "trl": "0.22.2",
+    "unsloth": "2026.7.3",
+    "unsloth_compile_disabled": true,
+    "unsloth_zoo": "2026.7.3",
+    "xformers": "0.0.29.post3"
+  },
+  "status": "restored_p100_runtime_passed"
+}
