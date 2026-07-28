@@ -134,6 +134,16 @@ private-input access. See `results/b1_b2_preflight_repair_audit.md`. No Kaggle
 run or model load occurred. Actual P100 execution remains unvalidated; the
 next permissible run is a separately authorized no-input/no-model preflight
 smoke after merge `84566e8a7b114c942047a3c14455b83e4cc35f7b`, not B1 inference.
+Issue #130's single authorized no-input/no-model P100 smoke then confirmed the
+repaired guard fails closed correctly. The exact commit checkout passed, but
+PyTorch could not execute on the P100 because its compiled architectures begin
+at `sm_70` while the device is `sm_60`. The aggregate error occurred at
+approximately 8.58 seconds. No dataset/model was attached and no private input,
+model load, inference, training, prediction, or metric occurred. See
+`results/b1_b2_p100_operation_smoke_audit.md`. The authorization is consumed;
+do not retry. A future path requires a reviewed P100-compatible runtime
+strategy or accelerator change, another no-input executable smoke, and fresh
+scope-specific GOs.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

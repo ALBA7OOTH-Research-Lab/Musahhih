@@ -93,6 +93,17 @@ synthetic tests only; a real P100 smoke remains required under a fresh,
 no-input/no-model GO after merge. See
 `results/b1_b2_preflight_repair_audit.md`.
 
+Issue #130 then authorized exactly one no-input/no-model P100 operation smoke.
+The exact commit checkout passed, and the repaired guard rejected the runtime
+at approximately 8.58 seconds because installed PyTorch supports CUDA
+architectures beginning at `sm_70` while the P100 is `sm_60`. No dataset or
+model was attached and no private input, model loading, inference, training,
+prediction, or metric occurred. See
+`results/b1_b2_p100_operation_smoke_audit.md`. The authorization is consumed.
+The current P100 runtime is not execution-ready; another B1 attempt is
+ineligible until a reviewed compatible-runtime or accelerator repair passes a
+separately authorized no-input executable smoke.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix

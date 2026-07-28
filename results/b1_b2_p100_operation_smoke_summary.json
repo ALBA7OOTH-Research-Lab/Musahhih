@@ -1,0 +1,46 @@
+{
+  "authorization_consumed": true,
+  "executable_commit": "cb65e2f3143179d34034b661116220a011ffdddd",
+  "failure": {
+    "aggregate_error_elapsed_seconds_approx": 8.58,
+    "error": "B1/B2 final execution requires an executable P100 CUDA operation",
+    "stage": "cuda_operation",
+    "wrapper_terminal_elapsed_seconds_approx": 10.61
+  },
+  "issue": 130,
+  "kernel": {
+    "account": "thgh15",
+    "slug": "musahhih-b1-b2-p100-operation-cb65e2f-r01",
+    "terminal_state": "ERROR",
+    "version": 1
+  },
+  "private_artifacts": {
+    "log_sha256": "034e0bb7d4dac978bf064fb01fe65eb547be0319d7b5a6cf13abefe1ba960bbb",
+    "wrapper_sha256": "11cf4b2b706170488231692576c7bfc819d8df83bfc0d1a661f40a3065debfd6"
+  },
+  "research_execution": {
+    "dataset_attached": false,
+    "inference_executed": false,
+    "metric_computed": false,
+    "model_attached": false,
+    "model_loaded": false,
+    "predictions_created": false,
+    "private_input_accessed": false,
+    "training_executed": false
+  },
+  "runtime": {
+    "cuda_capability": "sm_60",
+    "cuda_operation_passed": false,
+    "device_name": "Tesla P100-PCIE-16GB",
+    "torch_supported_capabilities": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ]
+  },
+  "status": "failed_closed_incompatible_p100_pytorch"
+}
