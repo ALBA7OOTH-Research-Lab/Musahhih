@@ -14,6 +14,14 @@ test input after the runtime gate and passes no demonstration bundle. See
 `results/b2_p1_timeout_safe_kernel_preparation_audit.md`. Preparation
 authorizes no Kaggle submission or inference.
 
+Issue #143's single authorized B2-P1 attempt passed exact checkout and the
+restored P100 runtime, then failed closed at approximately 259.94 seconds
+because its fixed Kaggle input-mount path did not exist. No private corpus file
+was opened, and no model load, inference, prediction, or metric occurred. See
+`results/b2_p1_2767ca6_r01_failure_audit.md`. The authorization is consumed;
+do not retry. A future attempt requires a reviewed mount-discovery repair and
+a fresh exact-commit GO.
+
 Issue #116 separates runtime discovery from dependency installation after the
 issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
 probe that imports only PyTorch, reads installed package metadata, and reports

@@ -516,3 +516,17 @@ result. B2-P1 remains unauthorized.
 Issue #141 authorizes preparation only. It authorizes no private-input access,
 model loading, inference, metric, Kaggle submission, retry, continuation, or
 B1-P1 repeat.
+
+## Issue #143 — run one timeout-safe B2-P1 final segment (failed closed)
+
+- [x] Obtain the exact-commit owner GO.
+- [x] Generate and hash the write-once private kernel package.
+- [x] Submit exactly version 1.
+- [x] Pass exact checkout and the restored P100 runtime gate.
+- [x] Preserve terminal `ERROR` when the fixed input-mount path did not exist.
+- [x] Confirm no corpus file open, model load, inference, prediction, or metric.
+- [x] Publish only aggregate non-corpus failure evidence.
+- [x] Do not retry or submit version 2.
+
+Issue #143's authorization is consumed. A future B2 attempt requires a reviewed
+mount-discovery repair and a fresh exact-commit owner GO.
