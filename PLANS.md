@@ -390,3 +390,25 @@ gate cannot change the selected checkpoint, prompt, or parser.
 Issue #125's authorization is consumed. Do not edit, resubmit, retry, or launch
 B2-P1. Any future B1-P1 attempt requires a reviewed exact repair commit and a
 fresh scope-specific owner GO.
+
+## Issue #127 — repair B1/B2 input and executable-GPU preflights
+
+- [x] Register a repair-only issue and branch without authorizing Kaggle or
+  inference.
+- [x] Accept the frozen prepared-Nahw `id` deterministically while retaining
+  canonical `record_id` support and rejecting conflicting aliases.
+- [x] Add a corpus-text-free validator that requires the exact frozen input
+  hash before loading its consumer schema.
+- [x] Validate all 511 ignored private rows and unique resolved identities
+  without changing the input bytes or printing corpus text.
+- [x] Require a real CUDA tensor operation, reduction, result check, and
+  synchronization in the P100 preflight before private-input access.
+- [x] Add focused success/failure and privacy tests.
+- [x] Complete compilation, focused/full tests, exact private-artifact
+  validation, diff, JSON, and credential-pattern checks.
+- [ ] Merge the repair and record the merge commit.
+- [ ] Under a separate fresh GO, run only the repaired no-input/no-model P100
+  preflight smoke.
+
+Issue #127 authorizes no Kaggle submission or research execution. Even a later
+passing P100 smoke would not authorize B1-P1 or B2-P1 inference.

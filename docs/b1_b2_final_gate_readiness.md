@@ -83,6 +83,16 @@ P100's `sm_60` capability; the current discovery-only preflight did not detect
 that executable incompatibility. See
 `results/b1_p1_8710263_r03_failure_audit.md`. This authorization is consumed.
 
+Issue #127 implements the resulting repairs at exact code commit
+`cb65e2f3143179d34034b661116220a011ffdddd`. The exact frozen 511-row
+private artifact now passes the consumer contract through a deterministic
+`id`-to-record-identity alias without changing its bytes. Conflicting aliases
+fail closed. The P100 guard now executes and synchronizes a CUDA tensor
+operation before private-input access. This was validated locally and with
+synthetic tests only; a real P100 smoke remains required under a fresh,
+no-input/no-model GO after merge. See
+`results/b1_b2_preflight_repair_audit.md`.
+
 ## Decision
 
 Issue #107 implements the required timeout-safe persistence and exact-prefix
