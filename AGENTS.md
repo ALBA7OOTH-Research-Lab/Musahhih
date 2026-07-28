@@ -187,6 +187,14 @@ demonstration bundle. See
 authorize Kaggle submission, private-input access, model loading, inference,
 metrics, retry, or continuation. A real B2-P1 segment requires a fresh owner
 GO naming the exact merged commit. B1-P1 must not be repeated.
+Issue #143's single authorized B2-P1 attempt passed exact checkout and the
+restored P100 runtime, then failed closed at approximately 259.94 seconds
+because its fixed Kaggle input-mount path did not exist. No private corpus file
+was opened or hashed, and no model load, inference, training, prediction, or
+metric occurred. See `results/b2_p1_2767ca6_r01_failure_audit.md`. The
+authorization is consumed; do not retry or submit version 2. A future B2
+attempt requires a reviewed corpus-text-free mount-discovery repair and a
+fresh exact-commit owner GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

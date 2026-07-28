@@ -1,0 +1,35 @@
+{
+  "issue": 143,
+  "status": "failed_closed",
+  "kernel": {
+    "account": "thgh15",
+    "slug": "musahhih-b2-final-2767ca6-r01",
+    "version": 1,
+    "terminal_state": "ERROR"
+  },
+  "exact_commit": "2767ca6e7eb57c0cbea90bc70d3192591757c3d7",
+  "failure": {
+    "class": "exact_frozen_input_path_not_resolved",
+    "failure_time_seconds": 259.944074795,
+    "final_log_time_seconds": 263.59132967,
+    "repository_gate_passed": true,
+    "restored_p100_runtime_passed": true,
+    "private_input_gate_passed": false
+  },
+  "research_execution": {
+    "private_input_accessed": false,
+    "model_loaded": false,
+    "inference_executed": false,
+    "training_executed": false,
+    "predictions_created": false,
+    "metric_computed": false,
+    "b1_rerun": false
+  },
+  "private_artifacts": {
+    "execution_log_sha256": "2b1fe13c4365f6ed7841e5e49370c17d29f74d29f6376696a1b11b61ddc400dc",
+    "wrapper_sha256": "0f1b29141b2ea660a2d08860675284a8074cca5f5f079207fe11c9832d570574",
+    "metadata_sha256": "d83b23fc267200bac2148074fb5b234603c4052a12c9e6e67e31ef4776c2637a"
+  },
+  "authorization_consumed": true,
+  "retry_submitted": false
+}
