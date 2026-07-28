@@ -1,4 +1,4 @@
-"""Check the frozen B1/B2 P100 runtime before any private-input access."""
+"""Execute-check the frozen B1/B2 P100 runtime before private-input access."""
 
 from __future__ import annotations
 

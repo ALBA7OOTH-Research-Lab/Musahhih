@@ -124,6 +124,16 @@ capability was unsupported, while the preflight had performed no CUDA tensor
 operation. See `results/b1_p1_8710263_r03_failure_audit.md`. The authorization
 is consumed. Do not retry; a future attempt requires reviewed schema-contract
 and executable-CUDA preflight repairs plus a fresh exact-commit owner GO.
+Issue #127 implements both repairs at exact code commit
+`cb65e2f3143179d34034b661116220a011ffdddd`. The prompt runner now
+deterministically accepts the frozen prepared-Nahw `id` alias, rejects
+conflicting aliases, and the exact ignored 511-row artifact passes a
+corpus-text-free contract check without changing its bytes. The P100 preflight
+now requires a real CUDA tensor operation and synchronization before any
+private-input access. See `results/b1_b2_preflight_repair_audit.md`. No Kaggle
+run or model load occurred. Actual P100 execution remains unvalidated; the
+next permissible run is a separately authorized no-input/no-model preflight
+smoke after merge, not B1 inference.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
