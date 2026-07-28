@@ -27,6 +27,7 @@ class B1B2RestoredP100PreflightTests(unittest.TestCase):
             ],
         )
         self.assertTrue(all(call[1]["check"] for call in calls))
+        self.assertEqual([call[1]["timeout"] for call in calls], [600, 180])
         self.assertTrue(
             all(
                 call[1]["env"]["UNSLOTH_COMPILE_DISABLE"] == "1"
@@ -35,6 +36,7 @@ class B1B2RestoredP100PreflightTests(unittest.TestCase):
         )
         self.assertTrue(report["passed"])
         self.assertTrue(report["fresh_processes"])
+        self.assertEqual(report["maximum_subprocess_seconds"], 780)
         self.assertFalse(report["private_input_accessed"])
         self.assertFalse(report["model_loaded"])
 

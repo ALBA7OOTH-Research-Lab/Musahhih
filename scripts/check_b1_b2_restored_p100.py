@@ -17,15 +17,27 @@ def run_restored_preflight(
     environment = dict(os.environ if base_environment is None else base_environment)
     environment["UNSLOTH_COMPILE_DISABLE"] = "1"
     commands = (
-        [executable, "-m", "scripts.bootstrap_b1_b2_p100_runtime"],
-        [executable, "-m", "scripts.check_b1_b2_gpu_preflight"],
+        (
+            [executable, "-m", "scripts.bootstrap_b1_b2_p100_runtime"],
+            600,
+        ),
+        (
+            [executable, "-m", "scripts.check_b1_b2_gpu_preflight"],
+            180,
+        ),
     )
-    for command in commands:
-        run_command(command, check=True, env=environment)
+    for command, timeout_seconds in commands:
+        run_command(
+            command,
+            check=True,
+            env=environment,
+            timeout=timeout_seconds,
+        )
     return {
         "stage": "b1_b2_restored_p100_preflight",
         "passed": True,
         "fresh_processes": True,
+        "maximum_subprocess_seconds": 780,
         "unsloth_compile_disabled": True,
         "private_input_accessed": False,
         "model_loaded": False,

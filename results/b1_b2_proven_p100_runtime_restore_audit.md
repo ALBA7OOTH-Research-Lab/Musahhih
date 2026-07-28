@@ -50,6 +50,10 @@ report. It neither imports a model nor accesses private input.
    `UNSLOTH_COMPILE_DISABLE=1`; and
 6. return aggregate evidence before any private-input access or model loading.
 
+The bootstrap subprocess has a hard 600-second timeout and the fresh-process
+validation has a hard 180-second timeout. Thus a network or package failure
+cannot leave this engineering smoke consuming an open-ended GPU session.
+
 `GemmaGenerator` independently enforces the restored package identities and
 sets the same Unsloth compilation guard before importing the backend. This
 prevents a wrapper from bypassing the restored-runtime contract.

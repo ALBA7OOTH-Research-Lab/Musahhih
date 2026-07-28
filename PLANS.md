@@ -445,6 +445,8 @@ smoke.
 - [x] Enforce the same runtime contract again inside `GemmaGenerator`.
 - [x] Pass compilation, focused tests, and the full test suite without Kaggle
   or model execution.
+- [x] Cap restoration at 600 seconds and fresh-process validation at 180
+  seconds so a smoke cannot consume an open-ended GPU session.
 - [ ] Merge the reviewed repair and record its merge commit.
 - [ ] Under a separate fresh GO, run one no-input/no-model restored-runtime
   smoke.

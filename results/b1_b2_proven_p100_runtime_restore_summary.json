@@ -29,6 +29,7 @@
     "conditional_install": true,
     "cuda_operation_required": true,
     "fresh_process_validation": true,
+    "maximum_subprocess_seconds": 780,
     "model_loaded": false,
     "private_input_accessed": false,
     "unsloth_compile_disabled": true
