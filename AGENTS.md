@@ -179,6 +179,14 @@ F2-P1-minus-B1 interval included zero. Private predictions, prompts, raw
 responses, gold values, and logs remain ignored. The authorization is
 consumed; do not repeat B1-P1 or tune from its result. B2-P1 remains
 unauthorized.
+Issue #141 prepares a deterministic, write-once private B2-P1 511-record
+kernel package using the same passing P100 runtime and timeout-safe runner. It
+accesses only the frozen test input after the runtime gate and passes no
+demonstration bundle. See
+`results/b2_p1_timeout_safe_kernel_preparation_audit.md`. Preparation does not
+authorize Kaggle submission, private-input access, model loading, inference,
+metrics, retry, or continuation. A real B2-P1 segment requires a fresh owner
+GO naming the exact merged commit. B1-P1 must not be repeated.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
