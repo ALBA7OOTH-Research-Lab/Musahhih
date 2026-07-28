@@ -22,6 +22,11 @@ was opened, and no model load, inference, prediction, or metric occurred. See
 do not retry. A future attempt requires a reviewed mount-discovery repair and
 a fresh exact-commit GO.
 
+Issue #145 replaces the fixed path with recursive discovery of exactly one
+`nahw_gec_test.jsonl` followed by the frozen hash gate. It neither opens nor
+passes the B1 bundle. See `results/b2_p1_mount_discovery_repair_audit.md`.
+The repair authorizes no Kaggle run.
+
 Issue #116 separates runtime discovery from dependency installation after the
 issue #114 DNS failure. `scripts/check_b1_b2_kaggle_runtime.py` is a standalone
 probe that imports only PyTorch, reads installed package metadata, and reports

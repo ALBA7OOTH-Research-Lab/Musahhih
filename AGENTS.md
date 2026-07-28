@@ -195,6 +195,11 @@ metric occurred. See `results/b2_p1_2767ca6_r01_failure_audit.md`. The
 authorization is consumed; do not retry or submit version 2. A future B2
 attempt requires a reviewed corpus-text-free mount-discovery repair and a
 fresh exact-commit owner GO.
+Issue #145 replaces the failed fixed mount path with recursive discovery of
+exactly one `nahw_gec_test.jsonl` followed by the frozen SHA-256 gate. The B1
+bundle is neither opened nor passed. See
+`results/b2_p1_mount_discovery_repair_audit.md`. No Kaggle run or private
+corpus access occurred; a fresh exact-commit owner GO remains required.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

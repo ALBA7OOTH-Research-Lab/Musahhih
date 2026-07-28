@@ -55,7 +55,6 @@ def build_wrapper(
             "approval reference must be a Musahhih issue-comment URL"
         )
     _validate_source(dataset_source, label="dataset source")
-    dataset_mount = dataset_source.split("/", 1)[1]
     return f'''import time
 
 KERNEL_START_EPOCH_SECONDS = time.time()
@@ -125,15 +124,15 @@ run(
     timeout=800,
 )
 
-# Access only the frozen test input after the restored runtime passes. B2 uses
-# no demonstration bundle, even though the attached private dataset also
-# contains the separately frozen B1 bundle.
-input_path = (
-    Path("/kaggle/input")
-    / "{dataset_mount}"
-    / "{PRIVATE_INPUT_FILENAME}"
+# Discover only the frozen test filename after the restored runtime passes.
+# B2 never opens or passes the separately attached B1 demonstration bundle.
+input_candidates = list(
+    Path("/kaggle/input").rglob("{PRIVATE_INPUT_FILENAME}")
 )
-if not input_path.is_file() or sha256_file(input_path) != EXPECTED_INPUT_SHA256:
+if len(input_candidates) != 1:
+    raise RuntimeError("expected exactly one frozen final input candidate")
+input_path = input_candidates[0]
+if sha256_file(input_path) != EXPECTED_INPUT_SHA256:
     raise RuntimeError("exact frozen final input was not attached")
 print({{"stage": "private_input_gate", "input_hash_match": True, "passed": True}})
 

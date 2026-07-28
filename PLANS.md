@@ -530,3 +530,13 @@ B1-P1 repeat.
 
 Issue #143's authorization is consumed. A future B2 attempt requires a reviewed
 mount-discovery repair and a fresh exact-commit owner GO.
+
+## Issue #145 — repair B2 mount discovery
+
+- [x] Remove the fixed Kaggle mount slug.
+- [x] Recursively locate only `nahw_gec_test.jsonl`.
+- [x] Require exactly one candidate and the frozen SHA-256.
+- [x] Keep the B1 bundle unopened and unpassed.
+- [x] Preserve all runtime, protocol, and timeout safeguards.
+- [x] Validate locally without Kaggle or private corpus access.
+- [ ] Merge and obtain a fresh exact-commit GO before another B2 attempt.
