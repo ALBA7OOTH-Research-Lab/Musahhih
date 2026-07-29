@@ -1,5 +1,24 @@
 # Active implementation plan
 
+## Issue #149 — prepare the MRL 2026 anonymous manuscript
+
+- [x] Register and claim a dedicated manuscript issue and branch.
+- [x] Add the official ACL/EMNLP paper template and reproducible build entry
+  point.
+- [x] Draft the anonymous archival paper from reviewed corpus-text-free
+  evidence.
+- [x] Verify every citation and numeric claim against a primary source or
+  accepted repository audit.
+- [x] Generate publication tables and figures from consolidated aggregate
+  results.
+- [x] Compile and audit the review PDF for page limits, anonymity, private-data
+  boundaries, and artifact-release language.
+- [ ] Complete repository checks and open the manuscript PR for review.
+
+Issue #149 authorizes manuscript preparation only. It authorizes no training,
+inference, test access, diagnostic execution, checkpoint selection,
+prompt/parser change, adapter release, or publication of private artifacts.
+
 ## Issue #122 — classify the B1/B2 global package conflict
 
 - [x] Register a diagnostic-repair issue and branch.

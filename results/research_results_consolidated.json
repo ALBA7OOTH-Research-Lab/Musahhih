@@ -43,11 +43,15 @@
       },
       "B1-P1": {
         "training": "none; frozen five-shot prompting",
-        "result_status": "final_not_executed"
+        "correct": 89,
+        "accuracy": 0.17416829745596868,
+        "result_status": "accepted"
       },
       "B2-P1": {
         "training": "none; frozen expert-style prompting",
-        "result_status": "final_not_executed"
+        "correct": 108,
+        "accuracy": 0.21135029354207435,
+        "result_status": "accepted"
       }
     },
     "comparisons": {
@@ -104,6 +108,33 @@
         ],
         "mcnemar_two_sided_exact_p_value": 0.09656519729770464,
         "interpretation": "insufficient evidence of a difference"
+      },
+      "secondary_b2_minus_b0": {
+        "difference": 0.043052837573385516,
+        "paired_bootstrap_95_percentile_ci": [
+          0.019569471624266144,
+          0.0684931506849315
+        ],
+        "mcnemar_two_sided_exact_p_value": 0.0009406740282429382,
+        "interpretation": "supports expert-style prompting over the accepted untouched run"
+      },
+      "secondary_f1_minus_b2": {
+        "difference": 0.07240704500978473,
+        "paired_bootstrap_95_percentile_ci": [
+          0.033268101761252444,
+          0.1095890410958904
+        ],
+        "mcnemar_two_sided_exact_p_value": 0.00029596019615458444,
+        "interpretation": "supports natural-only over expert-style prompting in this staged comparison"
+      },
+      "secondary_f3_minus_b2": {
+        "difference": 0.10567514677103718,
+        "paired_bootstrap_95_percentile_ci": [
+          0.06653620352250489,
+          0.14481409001956946
+        ],
+        "mcnemar_two_sided_exact_p_value": 2.519412514630621e-07,
+        "interpretation": "supports mixed over expert-style prompting in this staged comparison"
       }
     }
   },
@@ -153,11 +184,11 @@
     }
   },
   "unresolved_research_components": {
-    "b1_b2_nahw_final": "timeout-safe implementation prepared but not executed; requires merge, exact-commit review, and fresh per-segment authorization",
+    "b1_b2_nahw_final": "complete; accepted frozen results must not be rerun or tuned",
     "f2_f3_safety_diagnostics": "proposed only; requires protocol review, implementation, merge, and fresh authorization",
     "qualified_linguistic_error_analysis": "blocked on a qualified Arabic linguist and an approved private-review procedure",
     "adapter_release": "blocked on software, base-model, dataset-license, and institutional review",
-    "manuscript": "not yet drafted"
+    "manuscript": "anonymous ACL-format draft prepared; authorship, venue review, and final submission package remain pending"
   },
   "safeguards": {
     "contains_corpus_text": false,

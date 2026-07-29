@@ -31,7 +31,7 @@ This distinction must remain visible in project status and any paper.
 | QALB official test performance | Not executed; optional | `docs/research_plan.md` | No QALB test claim is allowed. | License and scope decision plus a separately frozen protocol and authorization. |
 | Reproducible code release | Partially complete | Public repository and passing tests | The current code and aggregate evidence are inspectable. | Add an explicit repository software license before representing the code as openly licensed. |
 | Adapter release | Blocked | Private adapter hashes only | Reproducible artifact identity can be reported by hash. | Dataset/base-model/license and institutional review; F1/F3 include QALB-derived training. |
-| Paper | Not started | This matrix and consolidated summary | A focused paper can be drafted around the completed core comparison. | Manuscript, tables, figures, references, authorship, and release decisions. |
+| Paper | Anonymous draft in progress | `paper/main.tex` and this matrix | A focused MRL submission can center on the completed core comparison. | Author review, bibliography expansion, final figures, authorship, release statement, and submission. |
 
 ## Hypothesis status
 

@@ -28,3 +28,8 @@ data/processed/
 .worktrees/
 .DS_Store
 Thumbs.db
+
+# Generated manuscript build and visual-QA intermediates
+paper/build/
+tmp/
+output/pdf/

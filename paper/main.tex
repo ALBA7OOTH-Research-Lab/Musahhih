@@ -1,0 +1,406 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[review]{acl}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{url}
+
+\title{Natural, Synthetic, or Mixed Supervision for Open-Weight Arabic
+Grammatical Error Correction}
+
+\author{Anonymous ACL submission}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Modern Standard Arabic grammatical error correction (GEC) remains
+underexplored for open-weight instruction models, and prior work does not
+isolate supervision source while holding model, task, and training size fixed.
+We fine-tune Gemma 3 4B with QLoRA on three 2,000-record views: natural
+QALB supervision, a deterministic highlighted-token view of the released
+synthetic Tibyan corpus, and a fixed 50:50 mixture.  We freeze data
+composition, checkpoint selection, prompting, parsing, and evaluation before
+accessing the 511-record Nahw-Passage test set.  Mixed supervision obtains
+31.70\% exact correction accuracy, compared with 20.55\% for synthetic-only
+supervision.  The preregistered paired difference is 11.15 percentage points
+(95\% paired-bootstrap interval: 7.05--15.26; exact McNemar
+$p=2.15\times10^{-7}$).  Natural-only supervision reaches 28.38\%; the
+observed 3.33-point mixed advantage over natural-only is not established by
+the frozen interval.  Natural-only and mixed fine-tuning also outperform
+zero-shot, five-shot, and expert-style prompt baselines in staged
+comparisons.  These results show that, at fixed record count, supervision
+composition materially affects open-weight Arabic GEC, while also exposing
+limits from strict single-reference scoring, one model, and absent expert
+error analysis.
+\end{abstract}
+
+\section{Introduction}
+
+Grammatical error correction requires a model to produce a valid correction,
+not merely recognize a grammatical rule.  This distinction is consequential
+for Modern Standard Arabic (MSA), whose rich morphology and agreement systems
+create substantial correction ambiguity.  Arabic GEC research has benefited
+from the QALB shared tasks \citep{mohit-etal-2014-first,
+rozovskaya-etal-2015-second}, specialized sequence-to-sequence systems
+\citep{nagoudi-etal-2022-arat5,alhafni-etal-2023-advancements}, and recent
+prompting and instruction-tuning studies \citep{kwon-etal-2023-beyond}.
+Nevertheless, the effect of \emph{supervision source} is difficult to isolate
+when model families, corpus sizes, tasks, and evaluation protocols vary
+together.
+
+Nahw provides a recent benchmark spanning Arabic grammar understanding, error
+detection, correction, and explanation \citep{mubarak-etal-2026-nahw}.  Its
+fine-tuning study focuses on grammar understanding, leaving direct
+fine-tuning for its practical correction task open.  We address that gap with
+a controlled extension to highlighted-token correction.  Using one immutable
+Gemma 3 4B revision \citep{gemma-team-2025-gemma3}, we compare equal-size
+natural-only, synthetic-only, and mixed training views while holding the
+training and evaluation interfaces fixed.
+
+Our primary question is whether a fixed natural--synthetic mixture improves
+over size-matched synthetic-only supervision.  We preregister this comparison
+before either adapter accesses Nahw-Passage, retain row-level outputs
+privately, and reproduce the paired statistics from aligned predictions.  We
+also report earlier natural-only and untouched-model results and later
+prompt-only baselines as explicitly staged comparisons rather than presenting
+all six systems as one simultaneous experiment.
+
+Our contributions are:
+\begin{itemize}
+    \item a controlled GEC fine-tuning extension of Nahw using an open-weight
+    instruction model;
+    \item an equal-record comparison of natural, released-synthetic, and fixed
+    mixed supervision with deterministic data selection and overlap controls;
+    \item a frozen 511-record paired evaluation showing a large mixed-over-
+    synthetic-only advantage; and
+    \item an auditable, privacy-conscious protocol that records exact model,
+    data, checkpoint, decoding, and artifact identities without publishing
+    restricted corpus text or model responses.
+\end{itemize}
+
+\section{Related Work}
+
+\paragraph{Arabic GEC.}
+The QALB 2014 and 2015 shared tasks established standard Arabic text
+correction datasets and evaluation procedures
+\citep{mohit-etal-2014-first,rozovskaya-etal-2015-second}.  Later work improved
+Arabic grammatical error detection and correction through pretrained Arabic
+models, morphology-aware components, and multitask learning
+\citep{alhafni-etal-2023-advancements}.  AraT5 demonstrated the utility of
+Arabic-focused text-to-text pretraining for generation tasks, including GEC
+\citep{nagoudi-etal-2022-arat5}.
+
+\citet{kwon-etal-2023-beyond} compare prompted instruction-following models
+with fully fine-tuned Arabic GEC systems and explore synthetic augmentation.
+Their results motivate both prompt-only baselines and synthetic supervision.
+However, their systems differ in architecture, training scale, and data
+source, so they do not provide a matched causal contrast between natural,
+synthetic, and mixed data.
+
+\paragraph{Arabic grammar benchmarks and synthetic data.}
+Nahw evaluates grammar understanding, detection, correction, and explanation
+and finds substantial weaknesses across current models
+\citep{mubarak-etal-2026-nahw}.  The 511-error Nahw-Passage component supports
+highlighted-token correction, which is narrower than full-sentence QALB
+correction but permits tightly aligned paired evaluation.
+
+Tibyan is a released synthetic Arabic GEC corpus created with
+ChatGPT-assisted generation and iterative linguistic review
+\citep{alrehili-alhothali-2024-tibyan}.  Its release contains sentence pairs
+but no official split, stable identifiers, or record-level error labels.
+ARETA provides automatic Arabic error categories
+\citep{belkebir-habash-2021-automatic}, but automatic labels are not expert
+gold.  We therefore derive a deterministic highlighted-token view without
+assigning linguistic error types.
+
+\section{Data and Experimental Controls}
+
+\subsection{Task and final evaluation}
+
+Each example supplies an MSA passage and one highlighted erroneous token.  The
+model must return only the corrected token.  We use all 511 ordered
+Nahw-Passage correction records as a test-only set.  The primary metric is
+exact match after stripping outer whitespace from the gold token; we apply no
+Arabic-letter, hamza, diacritic, or spelling normalization.  The metric
+therefore does not credit plausible alternatives that differ from the single
+reference.
+
+Nahw-Passage is never used for training, prompt selection, checkpoint
+selection, or development generation.  The frozen prepared input has SHA-256
+\texttt{acb3cfd2\ldots10279b}; all evaluated systems use the same ordered
+records.
+
+\subsection{Natural supervision}
+
+The natural view is derived from QALB 2014 L1 training data
+\citep{mohit-etal-2014-first}.  We retain annotator-0 actions that replace
+exactly one source token with one nonempty correction token, require the
+erroneous token to occur once, and retain at most one eligible action per
+document.  A content-neutral SHA-256 ordering with seed 3407 selects 2,000
+records.  QALB development and test records are excluded.  We use a separately
+selected 975-record QALB 2014 L1 development view only for assistant-token
+loss and technical validation.  QALB test is not used for training,
+development, prompting, or evaluation.
+
+\subsection{Synthetic and mixed supervision}
+
+Tibyan releases 6,192 erroneous--corrected sentence pairs under CC BY 4.0
+\citep{alrehili-alhothali-2024-tibyan}.  Because a strict whole-pair
+single-substitution filter retains only three pairs, we compute minimum-edit
+alignments and retain a substitution only when it is forced across every
+optimal alignment.  We require one occurrence of the erroneous token, create
+connected groups for repeated exact sides, and retain at most one seeded
+representative per group.  This yields 6,165 candidate pairs in 6,156 groups.
+
+Tibyan has no official train/development split.  We assign groups to an
+80:20 project split by seeded SHA-256 buckets.  Before splitting, exact
+UTF-8 hashes of both sides are compared with all registered QALB splits and
+with Nahw fields; any matching group would be excluded.  This check finds no
+exact full-side overlap, although it cannot detect paraphrases or pretraining
+contamination.
+
+The synthetic arm (\textbf{F2}) takes the first 2,000 eligible project-training
+representatives under a fixed hash order.  The mixed arm (\textbf{F3}) combines
+the first 1,000 records in the frozen natural order with the first 1,000 in the
+frozen synthetic order.  Thus both halves are nested subsets of their
+single-source arms rather than new samples.  The natural arm (\textbf{F1}),
+F2, and F3 each contain exactly 2,000 records.
+
+\section{Systems and Training}
+
+\subsection{Prompt-only baselines}
+
+All baselines use the untouched 4-bit Gemma 3 4B instruction model at immutable
+revision \texttt{316726ca\ldots{}d1fe}.  \textbf{B0} gives a concise Arabic
+instruction to correct the highlighted token and return only that token.
+\textbf{B1} prepends five QALB-training demonstrations selected by a
+content-neutral hash rule.  \textbf{B2} uses no demonstrations and gives a
+compact expert-style role and procedure.  ``Expert-style'' names the prompting
+strategy; neither the prompt nor its outputs received expert validation.
+
+\subsection{QLoRA fine-tuning}
+
+We train fresh unmerged adapters with QLoRA
+\citep{dettmers-etal-2023-qlora}.  The 4-bit base, processor, Arabic task
+instruction, response-only objective, and maximum formatted length of 1,024
+tokens are shared.  LoRA uses rank 16, alpha 32, zero dropout, no bias, and the
+query, key, value, output, gate, up, and down projections.  The adapters contain
+32,788,480 trainable parameters over a 4.33-billion-parameter base.
+
+Every arm trains for two epochs and 250 optimizer steps with per-device batch
+size 1, gradient accumulation 16, AdamW 8-bit, learning rate
+$2\times10^{-4}$, a linear schedule, 3\% warmup, weight decay 0.01, and seed
+3407.  Packing is disabled.  Training runs on free Kaggle Tesla P100 GPUs.
+The actual numbers of tokens differ across arms; record-count matching is not
+token-budget matching.
+
+We evaluate checkpoints after each epoch on the same frozen 975-record natural
+development view.  The rule chooses the lowest mean assistant-token
+cross-entropy, breaking differences within $10^{-6}$ in favor of epoch 1.  It
+selects epoch 2 for F1, epoch 1 for F2, and epoch 2 for F3.  Neither Nahw nor
+generation-based development accuracy influences selection.
+
+\section{Evaluation and Statistical Analysis}
+
+All systems use greedy decoding, no temperature argument, at most 32 new
+tokens, and seed 3407.  We retain raw responses before applying a conservative
+parser.  Empty outputs, parsing failures, and suspicious multi-token outputs
+are recorded rather than repaired.
+
+For the preregistered F3--F2 comparison, we report the accuracy difference,
+an exact two-sided McNemar test, and a deterministic 10,000-sample paired
+bootstrap percentile interval with seed 3407.  Both systems are aligned by
+the 511 frozen record identifiers.  Comparisons involving B0, B1, B2, or F1
+were executed or consolidated at different stages and are secondary.  Their
+intervals and tests are descriptive and are not treated as a simultaneous
+preregistered six-arm family.
+
+\section{Results}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+System & Setting & Correct & Accuracy \\
+\midrule
+B0 & zero-shot & 86 & 16.83 \\
+B1 & five-shot & 89 & 17.42 \\
+B2 & expert-style & 108 & 21.14 \\
+\midrule
+F1 & natural-only & 145 & 28.38 \\
+F2 & synthetic-only & 105 & 20.55 \\
+F3 & 50:50 mixed & \textbf{162} & \textbf{31.70} \\
+\bottomrule
+\end{tabular}
+\caption{Exact highlighted-token correction on 511 Nahw-Passage records.
+Accuracy is percentage. Prompt baselines are untouched; F1--F3 are
+equal-record QLoRA arms.}
+\label{tab:main-results}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/system_accuracy.pdf}
+\caption{Final exact correction accuracy.  Bar patterns distinguish protocols,
+not uncertainty. Confirmatory uncertainty is reported for the paired
+F3--F2 difference rather than as independent binomial error bars.}
+\label{fig:accuracy}
+\end{figure*}
+
+Table~\ref{tab:main-results} and Figure~\ref{fig:accuracy} show the final
+results.  F3 obtains 162/511 exact matches (31.70\%), compared with 105/511
+(20.55\%) for F2.  F3 corrects 89 records missed by F2, whereas F2 corrects 32
+missed by F3.  The primary paired difference is 11.15 points, with a 95\%
+interval of 7.05--15.26 points and exact McNemar
+$p=2.15\times10^{-7}$.  This supports mixed supervision over
+synthetic-only supervision under the frozen protocol.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Comparison & Difference & 95\% interval \\
+\midrule
+F3 $-$ F2 & +11.15 & [7.05, 15.26] \\
+F1 $-$ F2 & +7.83 & [3.13, 12.52] \\
+F3 $-$ F1 & +3.33 & [$-0.39$, 7.05] \\
+F3 $-$ B2 & +10.57 & [6.65, 14.48] \\
+F1 $-$ B2 & +7.24 & [3.33, 10.96] \\
+\bottomrule
+\end{tabular}
+\caption{Paired accuracy differences in percentage points. Only F3--F2 is the
+preregistered primary comparison; the remaining rows are staged secondary
+comparisons.}
+\label{tab:paired}
+\end{table}
+
+F1 reaches 28.38\%, while F2 reaches 20.55\%.  In the staged comparison, F1
+exceeds F2 by 7.83 points (interval 3.13--12.52).  F3 is 3.33 points above F1,
+but its interval ($-0.39$ to 7.05) includes zero; we therefore do not claim
+that mixed supervision is better than natural-only supervision.
+
+Prompt engineering helps the untouched model modestly: B2 exceeds B0 by 4.31
+points (interval 1.96--6.85), while B1 and B0 are not distinguishable under the
+paired analysis.  F1 and F3 exceed B2 in staged comparisons.  F2 and B2 differ
+by only $-0.59$ points, with an interval spanning zero.  All arms produce 511
+aligned parsed predictions with no empty output or parsing failure.  Suspicious
+or multi-token outputs number 2 for F1, 20 for F2, 2 for F3, and 6 for B2;
+they are retained unchanged when scoring.
+
+\section{Safety Diagnostics}
+
+Before the F1 diagnostic was run, we froze two matched checks comparing B0
+with F1.  First, on 154 corrected QALB-2015 L2 development sentences, each
+record designates one Arabic-script token already present in the corrected
+target.  F1 leaves the designated token unchanged in 78/154 cases (50.65\%),
+compared with 43/154 (27.92\%) for B0.  The paired difference is 22.73 points
+(95\% interval 12.34--33.12).  This indicates less overcorrection on this
+selected development diagnostic, not on arbitrary correct Arabic.
+
+Second, we evaluate a balanced 1,000-question subset spanning all 40
+ArabicMMLU tasks \citep{koto-etal-2024-arabicmmlu}.  B0 scores 53.7\% and F1
+53.1\%; the $-0.6$-point difference has a stratified paired-bootstrap interval
+of $-3.2$ to $+1.9$ points.  The diagnostic does not establish non-inferiority
+or general capability retention.  Corresponding F2/F3 diagnostics were not
+executed, so no safety comparison among supervision compositions is claimed.
+
+\section{Discussion}
+
+The primary result shows that synthetic examples are not interchangeable with
+natural supervision at fixed record count.  The mixed arm's gain over F2 is
+consistent with natural examples grounding the task interface or correction
+distribution while synthetic examples contribute complementary coverage.
+However, the experiment does not identify which mechanism is responsible:
+record lengths, token counts, domain, error distribution, and correction
+quality all differ between QALB and Tibyan.
+
+The staged F1--F2 result also favors natural supervision, while the F3--F1
+interval includes zero.  The appropriate conclusion is therefore not that
+mixing is universally optimal.  Rather, mixing substantially repairs the
+deficit of the synthetic-only view and reaches performance statistically
+compatible with the natural-only arm under this test.  Additional models,
+sizes, languages, and independently licensed test sets are required to
+separate a general mixture effect from a dataset-specific interaction.
+
+The prompt baselines sharpen this interpretation.  A more explicit
+expert-style instruction improves the untouched model, but F1 and F3 retain
+large staged advantages over it.  Conversely, F2 is statistically compatible
+with B2.  Fine-tuning is therefore not sufficient by itself; supervision
+source remains consequential.
+
+\section{Reproducibility and Artifact Boundaries}
+
+We record the immutable base revision, selected-checkpoint identities, data
+selection hashes, exact prompt and parser versions, decoding configuration,
+package versions, hardware, private prediction hashes, and statistical seed.
+Every final aggregate is independently recomputed from aligned private
+predictions.  Timeout-safe evaluation persists each row and resumes only after
+verifying the exact prefix, avoiding regeneration of completed predictions.
+
+Code, protocols, corpus-free summaries, aggregate statistics, and hashes are
+eligible for an anonymized review package.  QALB-derived records, Nahw text,
+record-level predictions, raw model responses, logs, checkpoints, and adapters
+are not redistributed.  This boundary limits independent end-to-end
+replication but respects current dataset and artifact restrictions.  The
+upstream Tibyan release remains available under its own license.
+
+\section{Limitations}
+
+Our evidence is limited to one 4B model, one seed per trainable arm, one
+equal-record training size, and one principal test set.  Record matching does
+not equalize tokens, domains, or error categories.  We do not run the official
+QALB test, so our highlighted-token accuracy is not comparable to full-sentence
+M2 scores in prior work.
+
+Exact single-reference matching is intentionally strict.  A linguistically
+valid alternative receives no credit unless it equals the supplied token.
+No qualified linguist reviewed the private predictions, so we provide no
+error-type or expert-quality claims.  ARETA-derived aggregate evidence in the
+source literature does not substitute for expert labels on our outputs.
+
+The F1, F2/F3, and prompt-baseline evaluations were frozen and executed at
+different stages.  Hardware also differed for some historical comparisons:
+the accepted B0 run used a T4, whereas fine-tuned and later prompt runs used
+P100 GPUs.  Greedy decoding reduces but does not eliminate possible
+hardware-specific variation.  Only F3--F2 is a simultaneously executed,
+preregistered primary comparison.
+
+Our exact-hash overlap checks do not detect paraphrases, shared upstream
+sources, or unknown pretraining contamination.  F2/F3 capability and
+overcorrection diagnostics remain absent.  Finally, restricted artifacts
+prevent public release of the full training and prediction package.
+
+\section{Ethical Considerations}
+
+The work concerns text correction and does not involve participant recruitment
+or new human annotation.  We preserve official dataset roles, keep
+Nahw-Passage test-only, and do not use QALB test for modeling or evaluation.
+QALB-derived material is kept private under its research conditions; Tibyan
+attribution and CC BY 4.0 terms are preserved; ArabicMMLU questions remain
+private under CC BY-NC 4.0.
+
+Automated correction can encode prescriptive language norms and should not be
+used to stigmatize dialectal Arabic or writers.  Our task and claims concern
+MSA highlighted-token correction only.  ``Expert-style'' refers solely to a
+prompt design, and we make no claim of expert linguistic validation.  Adapters
+trained on restricted natural data remain private pending legal,
+institutional, and model-license review.
+
+\section{Conclusion}
+
+In a frozen equal-record comparison, a 50:50 natural--synthetic mixture
+substantially outperforms synthetic-only supervision for Gemma 3 4B Arabic
+highlighted-token GEC.  Natural-only supervision also exceeds
+synthetic-only supervision in a staged comparison, while mixed supervision is
+not established as better than natural-only.  Together with prompt baselines,
+the results indicate that data composition---not fine-tuning alone---is a
+central experimental variable for open-weight Arabic GEC.
+
+\bibliography{references}
+
+\end{document}

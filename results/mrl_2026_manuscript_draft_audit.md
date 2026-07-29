@@ -1,0 +1,97 @@
+# MRL 2026 manuscript-draft audit
+
+Date reviewed: 2026-07-29
+
+## Outcome
+
+Issue #149 produced the first anonymous ACL-format manuscript draft for the
+6th Multilingual Representation Learning Workshop at EMNLP 2026:
+
+- source: `paper/main.tex`;
+- bibliography: `paper/references.bib`;
+- corpus-text-free figure source:
+  `scripts/generate_paper_figures.py`; and
+- generated review PDF:
+  `output/pdf/musahhih-mrl-2026-anonymous-draft.pdf` (ignored, local).
+
+This is an author-review draft, not a submitted or accepted paper. It contains
+no author names, affiliations, acknowledgements, identifying repository links,
+private corpus text, record-level predictions, model responses, private logs,
+checkpoints, adapters, or credentials.
+
+## Format checks
+
+- Official ACL style files were pinned from `acl-org/acl-style-files` commit
+  `d5adc823ff0f80f98c80405ca0ab66c68e684409`.
+- Two behavior-neutral trailing spaces were removed from the upstream
+  bibliography style for repository diff hygiene.
+- Review mode produces A4, two-column output with line numbers.
+- The abstract contains 180 words, below the 200-word limit.
+- The compiled PDF contains six pages; references begin on page six.
+- No overfull box, undefined control sequence, unresolved citation, unresolved
+  reference, or LaTeX error appears in the final build log.
+- PDF metadata contains no author or lab identity.
+- All six pages were rendered to PNG and visually checked for clipped text,
+  overlap, broken tables, unreadable labels, missing glyphs, and float-layout
+  defects.
+
+The draft remains below the MRL long-paper limit of eight content pages plus
+references. The final workshop template and submission form must be rechecked
+before upload because venue instructions may change.
+
+## Evidence and claim checks
+
+The manuscript's empirical values are traceable to:
+
+- `results/b0_full_baseline_audit.md`;
+- `results/b1_p1_final_evaluation_audit.md`;
+- `results/b2_p1_final_evaluation_audit.md`;
+- `results/f1_p1_final_evaluation_audit.md`;
+- `results/f2_f3_final_evaluation_audit.md`;
+- `results/f1_safety_diagnostics_audit.md`; and
+- the F1/F2/F3 corpus-text-free training summaries.
+
+The manuscript presents F3-P1 minus F2-P1 as the sole preregistered primary
+contrast. It labels comparisons involving B0, B1, B2, or F1 as staged, does
+not claim F3-P1 superiority over F1-P1, does not claim general capability
+retention, and does not claim expert linguistic validation or state of the
+art.
+
+`results/research_results_consolidated.json` was updated to include the
+accepted B1-P1 and B2-P1 final results and the reviewed staged comparisons used
+by the manuscript figure.
+
+## Citation checks
+
+Every current bibliography entry was verified against a primary source:
+
+- ACL Anthology records and DOIs for Nahw, Beyond English, the Arabic GED/GEC
+  investigation, both QALB shared tasks, ARETA, ArabicMMLU, and AraT5;
+- the official NeurIPS proceedings record and DOI for QLoRA; and
+- official arXiv records and DataCite DOIs for Tibyan and Gemma 3.
+
+No SciSpace-suggested or model-invented citation was accepted. Bibliography
+expansion remains an author-review task; all additions require the same
+primary-source verification.
+
+## Validation
+
+- `python -m unittest discover -s tests -p 'test_*.py'`: 243 tests passed.
+- `python -m compileall scripts`: passed.
+- JSON parse of `results/research_results_consolidated.json`: passed.
+- `git diff --check`: passed.
+- Manuscript identifier/credential scan: no match.
+- Final LaTeX compilation with Tectonic: passed.
+
+## Remaining work before submission
+
+- author and affiliation decisions;
+- substantive author review of framing and interpretation;
+- related-work expansion where it materially sharpens the contribution;
+- final artifact-availability wording and anonymous supplementary package;
+- final ACL policy and MRL OpenReview form review;
+- camera-ready AI-assistance disclosure if the paper is accepted; and
+- final proofreading by every listed author.
+
+No additional training, inference, or benchmark access is required for this
+manuscript draft.
