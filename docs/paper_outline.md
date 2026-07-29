@@ -28,8 +28,8 @@ establish an advantage over natural-only supervision in the staged comparison.
 4. Does the natural-data adapter affect overcorrection or selected general
    Arabic multiple-choice capability?
 
-The current evidence includes the frozen B1-P1 five-shot baseline but not the
-B2-P1 expert-style prompt baseline.
+The current evidence includes both frozen B1-P1 five-shot and B2-P1
+expert-style prompt baselines.
 
 ## Contributions
 
@@ -68,13 +68,13 @@ Do not claim publicly released adapters until the release audit is resolved.
 | --- | --- | ---: | ---: |
 | B0-P1 | None, zero-shot | 86 | 16.83% |
 | B1-P1 | None, frozen five-shot | 89 | 17.42% |
+| B2-P1 | None, frozen expert-style | 108 | 21.14% |
 | F1-P1 | Natural-only | 145 | 28.38% |
 | F2-P1 | Synthetic-only | 105 | 20.55% |
 | F3-P1 | 50:50 natural/synthetic | 162 | 31.70% |
 
-B2-P1 must not appear in this table with its 25-record QALB development value.
-That value is a technical development-gate diagnostic, not a Nahw-Passage
-final result.
+The earlier 25-record QALB development values remain technical gate
+diagnostics and must not replace these Nahw-Passage final results.
 
 ## Paired-comparison table
 
@@ -90,6 +90,11 @@ final result.
 | F1-P1 − B1-P1 | +10.96 points | +7.24 to +14.68 | `1.59e-08` | Staged secondary comparison |
 | F2-P1 − B1-P1 | +3.13 points | −1.17 to +7.44 | `0.181` | Difference not established |
 | F3-P1 − B1-P1 | +14.29 points | +10.18 to +18.40 | `6.97e-11` | Staged secondary comparison |
+| B2-P1 − B0-P1 | +4.31 points | +1.96 to +6.85 | `0.000941` | Staged secondary comparison |
+| B2-P1 − B1-P1 | +3.72 points | +0.78 to +6.65 | `0.0183` | Staged secondary comparison |
+| F1-P1 − B2-P1 | +7.24 points | +3.33 to +10.96 | `0.000296` | Staged secondary comparison |
+| F2-P1 − B2-P1 | −0.59 points | −5.09 to +3.91 | `0.862` | Difference not established |
+| F3-P1 − B2-P1 | +10.57 points | +6.65 to +14.48 | `2.52e-07` | Staged secondary comparison |
 
 ## Recommended section structure
 

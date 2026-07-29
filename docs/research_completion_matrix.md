@@ -6,7 +6,7 @@ Status reviewed: 2026-07-28
 
 The controlled natural-only, synthetic-only, and fixed mixed-data GEC
 comparison is complete. The original broader research plan is partially
-complete because the B2-P1 prompt baseline lacks a final result, safety
+complete because safety
 diagnostics cover F1-P1 but not F2-P1/F3-P1, qualified linguistic error
 analysis has not occurred, release clearance is unresolved, and the manuscript
 has not been written.
@@ -23,7 +23,7 @@ This distinction must remain visible in project status and any paper.
 | Natural-only versus synthetic-only | Complete, staged secondary comparison | `results/f2_f3_final_evaluation_audit.md` | F1-P1 exceeded F2-P1 by 7.83 points in the observed runs. | Disclose that F1 results predated the F2/F3 companion freeze. |
 | Mixed versus natural-only | Complete, staged secondary comparison | `results/f2_f3_final_evaluation_audit.md` | F3-P1 was 3.33 points higher, but the interval included zero; no difference is established. | Do not describe F3 as proven superior to F1. |
 | Fine-tuning versus five-shot B1-P1 | Complete, staged comparisons | `results/b1_p1_final_evaluation_audit.md` | B1-P1 achieved 89/511. F1-P1 and F3-P1 exceeded B1-P1; no difference was established for F2-P1 versus B1-P1. | Do not rerun or tune from B1-P1. Disclose staged timing. |
-| Fine-tuning versus expert-style B2-P1 | Repaired, not executed | `results/b2_p1_2767ca6_r01_failure_audit.md`; `results/b2_p1_mount_discovery_repair_audit.md` | No B2 final result exists. The failed fixed mount path is replaced by unique filename discovery plus the frozen hash gate. | Merge the repair, then obtain a fresh exact-commit GO. |
+| Fine-tuning versus expert-style B2-P1 | Complete, staged comparisons | `results/b2_p1_final_evaluation_audit.md` | B2-P1 achieved 108/511. F1-P1 and F3-P1 exceeded B2-P1; no difference was established for F2-P1 versus B2-P1. | Do not rerun or tune from B2-P1. |
 | F1-P1 overcorrection | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | F1-P1 preserved already-correct selected tokens more often than B0. | Do not generalize to all correct Arabic text. |
 | F1-P1 general Arabic capability retention | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | No measured ArabicMMLU difference was established; the interval was −3.2 to +1.9 points. | This is not a formal non-inferiority result. |
 | F2-P1/F3-P1 overcorrection and capability retention | Not executed | Proposed issue-#104 protocol | No claim is currently allowed. | Review, freeze, implement, merge, and separately authorize a matched diagnostic. |
@@ -37,9 +37,9 @@ This distinction must remain visible in project status and any paper.
 
 ### H1: fine-tuning outperforms zero-shot and few-shot prompting
 
-Partially supported. F1-P1 and F3-P1 exceeded both the accepted zero-shot B0
-run and the frozen five-shot B1-P1 run. F2-P1 was not established as different
-from either B0 or B1-P1. The final B2-P1 expert-style baseline does not exist.
+Partially supported. F1-P1 and F3-P1 exceeded B0-P1, B1-P1, and B2-P1.
+F2-P1 was not established as different from B0-P1, B1-P1, or B2-P1.
+B2-P1 exceeded B0-P1 and B1-P1.
 
 ### H2: natural data is more sample-efficient than synthetic data
 
@@ -67,12 +67,12 @@ comparison if it:
 - presents F3-P1 versus F2-P1 as the primary preregistered result;
 - presents B0/F1 comparisons as staged secondary evidence;
 - does not claim superiority of F3-P1 over F1-P1;
-- presents B1-P1 comparisons as staged and does not claim a B2-P1 result;
+- presents B1-P1 and B2-P1 comparisons as staged;
 - does not claim F2-P1/F3-P1 capability retention;
 - reports exact-match limitations and the absence of independent linguistic
   validation; and
 - keeps private/restricted artifacts out of the public paper package.
 
-Completing B2-P1 and F2-P1/F3-P1 safety diagnostics would strengthen the
+Completing F2-P1/F3-P1 safety diagnostics would strengthen the
 paper, but each is a new optional execution decision rather than a requirement
 to accept the already completed core result.

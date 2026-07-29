@@ -1,0 +1,64 @@
+{
+  "protocol_id": "B2-P1",
+  "recorded_date": "2026-07-29",
+  "run_status": "complete",
+  "execution": {
+    "kernel": "thgh15/musahhih-b2-final-8a13d56-r02",
+    "kernel_version": 1,
+    "repository_commit": "8a13d56b1a38bdad20e264ae358cf842c41d0909",
+    "elapsed_seconds": 22153,
+    "gpu": "Tesla P100-PCIE-16GB"
+  },
+  "metrics": {
+    "number_of_records": 511,
+    "number_correct": 108,
+    "exact_match_accuracy": 0.21135029354207435,
+    "invalid_or_empty_count": 0,
+    "suspicious_output_count": 6,
+    "multi_token_count": 6
+  },
+  "comparisons": {
+    "b2_minus_b0": {
+      "difference": 0.043052837573385516,
+      "ci95": [0.019569471624266144, 0.0684931506849315],
+      "mcnemar_p": 0.0009406740282429382
+    },
+    "b2_minus_b1": {
+      "difference": 0.03718199608610567,
+      "ci95": [0.007827788649706457, 0.06653620352250489],
+      "mcnemar_p": 0.018337087779101986
+    },
+    "f1_minus_b2": {
+      "difference": 0.07240704500978473,
+      "ci95": [0.033268101761252444, 0.1095890410958904],
+      "mcnemar_p": 0.00029596019615458444
+    },
+    "f2_minus_b2": {
+      "difference": -0.005870841487279843,
+      "ci95": [-0.050880626223091974, 0.03913894324853229],
+      "mcnemar_p": 0.8624034912671916
+    },
+    "f3_minus_b2": {
+      "difference": 0.10567514677103718,
+      "ci95": [0.06653620352250489, 0.14481409001956946],
+      "mcnemar_p": 2.519412514630621e-07
+    },
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 3407
+  },
+  "artifacts": {
+    "input_sha256": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b",
+    "aggregate_prompt_sha256": "2647715e2a11f4a9121c80cb9fe1b296ffc76c17f4242338e3779cc8bf9b8d7c",
+    "private_predictions_sha256": "72990dd12b00b6db70e56737abac95c9c0367b3bedc0dd745cf1751fa9a5f115",
+    "private_summary_sha256": "e6d47715dc02dc8b30a09e040dd39057c5aede4102775a191c0301def237f672",
+    "private_progress_sha256": "61f2b1c960749b0b37005c6a5f0316446cf2c9c993329b186fb36468325a4a49"
+  },
+  "audit": {
+    "ordered_alignment": true,
+    "prompt_rerender_valid": true,
+    "exact_match_consistency_valid": true,
+    "bundle_used": false,
+    "contains_corpus_text": false,
+    "authorization_consumed": true
+  }
+}

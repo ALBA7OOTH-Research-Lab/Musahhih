@@ -200,6 +200,13 @@ exactly one `nahw_gec_test.jsonl` followed by the frozen SHA-256 gate. The B1
 bundle is neither opened nor passed. See
 `results/b2_p1_mount_discovery_repair_audit.md`. No Kaggle run or private
 corpus access occurred; a fresh exact-commit owner GO remains required.
+Issue #147's single authorized repaired B2-P1 run completed all 511 frozen
+Nahw-Passage records. B2-P1 achieved 108/511 exact matches (21.14%) with zero
+empty outputs and no demonstration bundle. See
+`results/b2_p1_final_evaluation_audit.md`. B2-P1 exceeded B0-P1 and B1-P1;
+F1-P1 and F3-P1 exceeded B2-P1; F2-P1 was not established as different from
+B2-P1. Private record-level artifacts remain ignored. The authorization is
+consumed; do not rerun or tune from B2-P1.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

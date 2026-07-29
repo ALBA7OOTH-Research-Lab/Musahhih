@@ -540,3 +540,12 @@ mount-discovery repair and a fresh exact-commit owner GO.
 - [x] Preserve all runtime, protocol, and timeout safeguards.
 - [x] Validate locally without Kaggle or private corpus access.
 - [ ] Merge and obtain a fresh exact-commit GO before another B2 attempt.
+
+## Issue #147 — run repaired B2-P1 final segment (complete)
+
+- [x] Complete 511/511 with no bundle and zero empty outputs.
+- [x] Reproduce alignment, hashes, counts, and staged paired statistics.
+- [x] Keep all record-level artifacts private.
+- [x] Publish only corpus-text-free evidence.
+
+Issue #147's authorization is consumed. Do not rerun or tune from B2-P1.

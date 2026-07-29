@@ -205,8 +205,14 @@ matches (17.42%). The paired B0-minus-B1 interval included zero. F1-P1 and
 F3-P1 exceeded B1-P1 in staged comparisons, while the F2-P1-minus-B1-P1
 interval included zero. See
 [`../results/b1_p1_final_evaluation_audit.md`](../results/b1_p1_final_evaluation_audit.md).
-The authorization is consumed; do not repeat or tune from this result. B2-P1
-remains unevaluated.
+The authorization is consumed; do not repeat or tune from this result.
+
+One separately authorized repaired B2-P1 expert-style run then completed all
+511 records and achieved 108/511 exact matches (21.14%). B2-P1 exceeded B0-P1
+and B1-P1; F1-P1 and F3-P1 exceeded B2-P1; F2-P1 was not established as
+different from B2-P1. See
+[`../results/b2_p1_final_evaluation_audit.md`](../results/b2_p1_final_evaluation_audit.md).
+The authorization is consumed; do not repeat or tune from this result.
 
 ## Phase E — Paper contribution
 
