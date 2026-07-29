@@ -13,7 +13,7 @@
   results.
 - [x] Compile and audit the review PDF for page limits, anonymity, private-data
   boundaries, and artifact-release language.
-- [ ] Complete repository checks and open the manuscript PR for review.
+- [x] Complete repository checks and open draft PR #150 for manuscript review.
 
 Issue #149 authorizes manuscript preparation only. It authorizes no training,
 inference, test access, diagnostic execution, checkpoint selection,
