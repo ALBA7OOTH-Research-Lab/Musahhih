@@ -30,7 +30,7 @@ supervision.  The preregistered paired difference is 11.15 percentage points
 $p=2.15\times10^{-7}$).  Natural-only supervision reaches 28.38\%; the
 observed 3.33-point mixed advantage over natural-only is not established by
 the frozen interval.  Natural-only and mixed fine-tuning also outperform
-zero-shot, five-shot, and expert-style prompt baselines in staged
+five-shot and expert-style prompt baselines in staged
 comparisons.  These results show that, at fixed record count, supervision
 composition materially affects open-weight Arabic GEC, while also exposing
 limits from strict single-reference scoring, one model, and absent expert
@@ -64,9 +64,9 @@ Our primary question is whether a fixed natural--synthetic mixture improves
 over size-matched synthetic-only supervision.  We preregister this comparison
 before either adapter accesses Nahw-Passage, retain row-level outputs
 privately, and reproduce the paired statistics from aligned predictions.  We
-also report earlier natural-only and untouched-model results and later
-prompt-only baselines as explicitly staged comparisons rather than presenting
-all six systems as one simultaneous experiment.
+also report the earlier natural-only result and later prompt-only baselines as
+explicitly staged comparisons rather than presenting all five systems as one
+simultaneous experiment.
 
 Our contributions are:
 \begin{itemize}
@@ -173,10 +173,9 @@ F2, and F3 each contain exactly 2,000 records.
 
 \subsection{Prompt-only baselines}
 
-All baselines use the untouched 4-bit Gemma 3 4B instruction model at immutable
-revision \texttt{316726ca\ldots{}d1fe}.  \textbf{B0} gives a concise Arabic
-instruction to correct the highlighted token and return only that token.
-\textbf{B1} prepends five QALB-training demonstrations selected by a
+Both baselines use the untouched 4-bit Gemma 3 4B instruction model at
+immutable revision \texttt{316726ca\ldots{}d1fe} and were evaluated on P100
+GPUs.  \textbf{B1} prepends five QALB-training demonstrations selected by a
 content-neutral hash rule.  \textbf{B2} uses no demonstrations and gives a
 compact expert-style role and procedure.  ``Expert-style'' names the prompting
 strategy; neither the prompt nor its outputs received expert validation.
@@ -218,10 +217,10 @@ For the preregistered F3--F2 comparison, we report the accuracy difference,
 an exact two-sided McNemar test, and a deterministic 10,000-sample paired
 bootstrap percentile interval with seed 3407.  Both systems are aligned by
 the 511 frozen record identifiers.  The interval is conditional on the single
-training seed and excludes retraining variance.  Comparisons involving B0,
-B1, B2, or F1 were executed or consolidated at different stages and are
-secondary.  Their intervals and tests are descriptive and are not treated as
-a simultaneous preregistered six-arm family.
+training seed and excludes retraining variance.  Comparisons involving B1, B2,
+or F1 were executed or consolidated at different stages and are secondary.
+Their intervals and tests are descriptive and are not treated as a
+simultaneous preregistered five-arm family.
 
 \section{Results}
 
@@ -232,7 +231,6 @@ a simultaneous preregistered six-arm family.
 \toprule
 System & Setting & Correct & Accuracy \\
 \midrule
-B0 & zero-shot & 86 & 16.83 \\
 B1 & five-shot & 89 & 17.42 \\
 B2 & expert-style & 108 & 21.14 \\
 \midrule
@@ -243,7 +241,7 @@ F3 & 50:50 mixed & \textbf{162} & \textbf{31.70} \\
 \end{tabular}
 \caption{Exact highlighted-token correction on 511 Nahw-Passage records.
 Accuracy is percentage. Prompt baselines are untouched; F1--F3 are
-equal-record QLoRA arms.}
+equal-record QLoRA arms. All displayed systems were evaluated on P100 GPUs.}
 \label{tab:main-results}
 \end{table}
 
@@ -289,26 +287,27 @@ exceeds F2 by 7.83 points (interval 3.13--12.52).  F3 is 3.33 points above F1,
 but its interval ($-0.39$ to 7.05) includes zero; we therefore do not claim
 that mixed supervision is better than natural-only supervision.
 
-Prompt engineering helps the untouched model modestly: B2 exceeds B0 by 4.31
-points (interval 1.96--6.85), while B1 and B0 are not distinguishable under the
-paired analysis.  F1 and F3 exceed B2 in staged comparisons.  F2 and B2 differ
-by only $-0.59$ points, with an interval spanning zero.  All arms produce 511
-aligned parsed predictions with no empty output or parsing failure.  Suspicious
-or multi-token outputs number 2 for F1, 20 for F2, 2 for F3, and 6 for B2;
-they are retained unchanged when scoring.  We do not introduce a post-hoc
-first-token parser.  Even crediting all 20 flagged F2 outputs would raise F2
-only to 125/511 (24.46\%), leaving F3 ahead by 7.24 points; format warnings
-cannot explain the full primary difference.
+Prompt engineering matters within the displayed untouched-model baselines: B2
+exceeds B1 by 3.72 points (interval 0.78--6.65).  F1 and F3 exceed B2 in staged
+comparisons.  F2 and B2 differ by only $-0.59$ points, with an interval
+spanning zero.  All arms produce 511 aligned parsed predictions with no empty
+output or parsing failure.  Suspicious or multi-token outputs number 2 for F1,
+20 for F2, 2 for F3, and 6 for B2; they are retained unchanged when scoring.
+We do not introduce a post-hoc first-token parser.  Even crediting all 20
+flagged F2 outputs would raise F2 only to 125/511 (24.46\%), leaving F3 ahead
+by 7.24 points; format warnings cannot explain the full primary difference.
 
 \section{Safety Diagnostics}
 
-Before the F1 diagnostic was run, we froze two matched checks comparing B0
-with F1.  First, on 154 corrected QALB-2015 L2 development sentences, each
-record designates one Arabic-script token already present in the corrected
-target.  F1 leaves the designated token unchanged in 78/154 cases (50.65\%),
-compared with 43/154 (27.92\%) for B0.  The paired difference is 22.73 points
-(95\% interval 12.34--33.12).  This indicates less overcorrection on this
-selected development diagnostic, not on arbitrary correct Arabic.
+Before the F1 diagnostic was run, we froze two matched checks and regenerated
+a fresh untouched-base control (\textbf{B0}) beside F1 within one P100 run.
+This is distinct from the excluded historical T4 Nahw evaluation.  First, on
+154 corrected QALB-2015 L2 development sentences, each record designates one
+Arabic-script token already present in the corrected target.  F1 leaves the
+designated token unchanged in 78/154 cases (50.65\%), compared with 43/154
+(27.92\%) for B0.  The paired difference is 22.73 points (95\% interval
+12.34--33.12).  This indicates less overcorrection on this selected
+development diagnostic, not on arbitrary correct Arabic.
 
 Second, we evaluate a balanced 1,000-question subset spanning all 40
 ArabicMMLU tasks \citep{koto-etal-2024-arabicmmlu}.  B0 scores 53.7\% and F1
@@ -374,11 +373,10 @@ error-type or expert-quality claims.  ARETA-derived aggregate evidence in the
 source literature does not substitute for expert labels on our outputs.
 
 The F1, F2/F3, and prompt-baseline evaluations were frozen and executed at
-different stages.  Hardware also differed for some historical comparisons:
-the accepted B0 run used a T4, whereas fine-tuned and later prompt runs used
-P100 GPUs.  Greedy decoding reduces but does not eliminate possible
-hardware-specific variation.  Only F3--F2 is a simultaneously executed,
-preregistered primary comparison.
+different stages.  The historical T4 Nahw baseline and every comparison
+derived from it are excluded; every displayed final-evaluation system ran on
+P100 hardware.  Only F3--F2 is a simultaneously executed, preregistered
+primary comparison.
 
 Our exact-hash overlap checks do not detect paraphrases, shared upstream
 sources, or unknown pretraining contamination.  F2/F3 capability and

@@ -46,7 +46,6 @@ before upload because venue instructions may change.
 
 The manuscript's empirical values are traceable to:
 
-- `results/b0_full_baseline_audit.md`;
 - `results/b1_p1_final_evaluation_audit.md`;
 - `results/b2_p1_final_evaluation_audit.md`;
 - `results/f1_p1_final_evaluation_audit.md`;
@@ -55,10 +54,16 @@ The manuscript's empirical values are traceable to:
 - the F1/F2/F3 corpus-text-free training summaries.
 
 The manuscript presents F3-P1 minus F2-P1 as the sole preregistered primary
-contrast. It labels comparisons involving B0, B1, B2, or F1 as staged, does
+contrast. It labels comparisons involving B1, B2, or F1 as staged, does
 not claim F3-P1 superiority over F1-P1, does not claim general capability
 retention, and does not claim expert linguistic validation or state of the
 art.
+
+The historical B0-P1 Nahw evaluation and every comparison derived from it were
+removed from the manuscript because that run alone used T4 hardware. Every
+displayed final-evaluation system now used P100 hardware. The B0 control in the
+retained F1 safety section is a separate artifact regenerated beside F1-P1
+within one matched P100 run; it is not the excluded T4 result.
 
 The reviewer-response revision adds five corpus-text-free clarifications:
 

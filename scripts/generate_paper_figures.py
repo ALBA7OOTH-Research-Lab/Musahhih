@@ -7,9 +7,8 @@ import json
 from pathlib import Path
 
 
-SYSTEM_ORDER = ("B0-P1", "B1-P1", "B2-P1", "F1-P1", "F2-P1", "F3-P1")
+SYSTEM_ORDER = ("B1-P1", "B2-P1", "F1-P1", "F2-P1", "F3-P1")
 SYSTEM_LABELS = {
-    "B0-P1": "B0\nzero-shot",
     "B1-P1": "B1\nfive-shot",
     "B2-P1": "B2\nexpert-style",
     "F1-P1": "F1\nnatural",
@@ -43,8 +42,8 @@ def generate(summary_path: Path, output_path: Path) -> None:
 
     values = load_accuracies(summary_path)
     labels = [SYSTEM_LABELS[system_id] for system_id in SYSTEM_ORDER]
-    fills = ["#d9d9d9"] * 3 + ["#737373"] * 3
-    hatches = ["", "..", "xx", "", "..", "xx"]
+    fills = ["#d9d9d9"] * 2 + ["#737373"] * 3
+    hatches = ["..", "xx", "", "..", "xx"]
 
     plt.rcParams.update(
         {
@@ -76,9 +75,9 @@ def generate(summary_path: Path, output_path: Path) -> None:
             fontsize=8,
         )
 
-    axis.axvline(2.5, color="#606060", linewidth=0.8, linestyle="--")
-    axis.text(1.0, 37.0, "Prompt-only", ha="center", va="center", fontsize=8)
-    axis.text(4.0, 37.0, "QLoRA fine-tuning", ha="center", va="center", fontsize=8)
+    axis.axvline(1.5, color="#606060", linewidth=0.8, linestyle="--")
+    axis.text(0.5, 37.0, "Prompt-only", ha="center", va="center", fontsize=8)
+    axis.text(3.0, 37.0, "QLoRA fine-tuning", ha="center", va="center", fontsize=8)
     axis.set_xticks(range(len(labels)), labels)
     axis.set_ylabel("Exact correction accuracy (%)")
     axis.set_ylim(0, 40)
