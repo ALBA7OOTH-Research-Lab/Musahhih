@@ -61,9 +61,9 @@ The private mapping is stored separately from the reviewer workbook.
 ## Reviewer-facing files
 
 - one-page Arabic instructions DOCX SHA-256:
-  `f02592e33fbf7f549f0ed14c6da4d4313d2dece65b57c3206e516dfa205f48f7`;
+  `54d7b2d7551fb9bb6ad3de53124d26066d23c1e1857183a3dc989168047c557f`;
 - populated 511-record Arabic XLSX SHA-256:
-  `2e89a9cf0f8c832f2043fa81ef9a17094a08f878dfca4e5c9c7e3e95c6eb3395`.
+  `0649defd0b9cf63ff4ab5ebd14a9d32cd50cb006d4d4234b881b9acb7775dad9`.
 
 Both files remain in ignored local output storage. The XLSX contains 512 rows
 on the review sheet, including one header row.
@@ -94,8 +94,8 @@ fallback.
 ## Privacy and use boundary
 
 The populated package and mapping are private. They must not be committed,
-uploaded to SciSpace or another public AI service, placed in public chat or
-issues, or shared beyond the owner and the specifically selected reviewer(s).
+uploaded to a public AI service, placed in public chat or issues, or shared
+beyond the owner and the specifically selected reviewer(s).
 
 If a second qualified reviewer participates, the owner must give that reviewer
 a separate copy and require independent work. Original returned files must be
