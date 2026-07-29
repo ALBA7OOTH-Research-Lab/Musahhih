@@ -11,6 +11,9 @@ Issue #149 produced the first anonymous ACL-format manuscript draft for the
 - bibliography: `paper/references.bib`;
 - corpus-text-free figure source:
   `scripts/generate_paper_figures.py`; and
+- corpus-text-free training-token analysis:
+  `scripts/summarize_training_token_budgets.py` and
+  `results/training_token_budget_summary.json`; and
 - generated review PDF:
   `output/pdf/musahhih-mrl-2026-anonymous-draft.pdf` (ignored, local).
 
@@ -57,6 +60,27 @@ not claim F3-P1 superiority over F1-P1, does not claim general capability
 retention, and does not claim expert linguistic validation or state of the
 art.
 
+The reviewer-response revision adds five corpus-text-free clarifications:
+
+- the paired interval is conditional on the one executed training seed and
+  does not estimate retraining variance;
+- a worst-case format-warning bound credits all 20 flagged F2-P1 outputs and
+  still leaves F3-P1 7.24 percentage points ahead;
+- the frozen common-development rule selected F2-P1 epoch 1 after loss
+  increased from 0.5975 to 0.6116 and F3-P1 epoch 2 after loss decreased from
+  0.3730 to 0.3441;
+- exact formatted-token totals are 312,644 for F1-P1, 522,756 for F2-P1, and
+  416,746 for F3-P1 per epoch; and
+- corresponding F2/F3 safety diagnostics remain absent and no comparison is
+  claimed.
+
+The token totals were computed from the byte-identical frozen private training
+records with Transformers 4.56.2 and the pinned Gemma tokenizer revision.
+The analysis loaded no model weights or test records, performed no training or
+inference, and emitted only aggregate counts, distributions, and hashes. F2-P1
+contains 25.4% more formatted tokens than F3-P1, so greater token exposure
+cannot explain the primary F3-P1 advantage.
+
 `results/research_results_consolidated.json` was updated to include the
 accepted B1-P1 and B2-P1 final results and the reviewed staged comparisons used
 by the manuscript figure.
@@ -76,8 +100,9 @@ primary-source verification.
 
 ## Validation
 
-- `python -m unittest discover -s tests -p 'test_*.py'`: 243 tests passed.
+- `python -m pytest -q`: 246 tests and 65 subtests passed.
 - `python -m compileall scripts`: passed.
+- pinned-tokenizer aggregate generation and idempotent rerun: passed.
 - JSON parse of `results/research_results_consolidated.json`: passed.
 - `git diff --check`: passed.
 - Manuscript identifier/credential scan: no match.

@@ -194,14 +194,18 @@ Every arm trains for two epochs and 250 optimizer steps with per-device batch
 size 1, gradient accumulation 16, AdamW 8-bit, learning rate
 $2\times10^{-4}$, a linear schedule, 3\% warmup, weight decay 0.01, and seed
 3407.  Packing is disabled.  Training runs on free Kaggle Tesla P100 GPUs.
-The actual numbers of tokens differ across arms; record-count matching is not
-token-budget matching.
+Using the pinned Gemma tokenizer on the complete formatted conversations, the
+per-epoch views contain 312,644 tokens for F1, 522,756 for F2, and 416,746 for
+F3.  F2 has 25.4\% more than F3; record matching therefore does not match token
+budgets, and greater exposure cannot explain F3's advantage.
 
 We evaluate checkpoints after each epoch on the same frozen 975-record natural
 development view.  The rule chooses the lowest mean assistant-token
 cross-entropy, breaking differences within $10^{-6}$ in favor of epoch 1.  It
-selects epoch 2 for F1, epoch 1 for F2, and epoch 2 for F3.  Neither Nahw nor
-generation-based development accuracy influences selection.
+selects epoch 2 for F1 and F3 but epoch 1 for F2: F2's loss increases from
+0.5975 to 0.6116, whereas F3's falls from 0.3730 to 0.3441.  The differing
+epochs thus follow one rule; neither Nahw nor generation accuracy influences
+selection.
 
 \section{Evaluation and Statistical Analysis}
 
@@ -213,10 +217,11 @@ are recorded rather than repaired.
 For the preregistered F3--F2 comparison, we report the accuracy difference,
 an exact two-sided McNemar test, and a deterministic 10,000-sample paired
 bootstrap percentile interval with seed 3407.  Both systems are aligned by
-the 511 frozen record identifiers.  Comparisons involving B0, B1, B2, or F1
-were executed or consolidated at different stages and are secondary.  Their
-intervals and tests are descriptive and are not treated as a simultaneous
-preregistered six-arm family.
+the 511 frozen record identifiers.  The interval is conditional on the single
+training seed and excludes retraining variance.  Comparisons involving B0,
+B1, B2, or F1 were executed or consolidated at different stages and are
+secondary.  Their intervals and tests are descriptive and are not treated as
+a simultaneous preregistered six-arm family.
 
 \section{Results}
 
@@ -290,7 +295,10 @@ paired analysis.  F1 and F3 exceed B2 in staged comparisons.  F2 and B2 differ
 by only $-0.59$ points, with an interval spanning zero.  All arms produce 511
 aligned parsed predictions with no empty output or parsing failure.  Suspicious
 or multi-token outputs number 2 for F1, 20 for F2, 2 for F3, and 6 for B2;
-they are retained unchanged when scoring.
+they are retained unchanged when scoring.  We do not introduce a post-hoc
+first-token parser.  Even crediting all 20 flagged F2 outputs would raise F2
+only to 125/511 (24.46\%), leaving F3 ahead by 7.24 points; format warnings
+cannot explain the full primary difference.
 
 \section{Safety Diagnostics}
 
@@ -353,9 +361,11 @@ upstream Tibyan release remains available under its own license.
 
 Our evidence is limited to one 4B model, one seed per trainable arm, one
 equal-record training size, and one principal test set.  Record matching does
-not equalize tokens, domains, or error categories.  We do not run the official
-QALB test, so our highlighted-token accuracy is not comparable to full-sentence
-M2 scores in prior work.
+not equalize tokens, domains, or error categories.  The paired interval is
+conditional on seed 3407; training-seed variance is unmeasured and cannot be
+separated from the observed effect.  Although F2 contains more tokens than F3,
+totals do not control length, domain, or source quality.  We do not run QALB
+test, so our accuracy is not comparable to full-sentence M2 scores.
 
 Exact single-reference matching is intentionally strict.  A linguistically
 valid alternative receives no credit unless it equals the supplied token.
