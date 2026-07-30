@@ -229,6 +229,10 @@ the compiler, frozen packages, imports, and precision controls. Issue #163
 prepares the remaining Unsloth-first import-order correction and separates
 write-once CPU-only private PVC staging from the five GPU Jobs. Staging, a
 final exact-commit preflight, and training each require independent owner GOs.
+Issue #163's first authorized staging attempt then remained unbound on the
+`cephfs` provisioner; its Pod never scheduled and no private file was uploaded.
+Issue #165 prepares a narrow switch to the namespace's proven `rook-cephfs`
+RWX class. The failed staging authorization is consumed.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

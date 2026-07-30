@@ -261,7 +261,7 @@ class NautilusReplicationTests(unittest.TestCase):
         pvc, pod = manifest["items"]
         self.assertEqual(pvc["kind"], "PersistentVolumeClaim")
         self.assertEqual(pvc["spec"]["accessModes"], ["ReadWriteMany"])
-        self.assertEqual(pvc["spec"]["storageClassName"], "cephfs")
+        self.assertEqual(pvc["spec"]["storageClassName"], "rook-cephfs")
         self.assertEqual(pod["kind"], "Pod")
         self.assertEqual(pod["spec"]["restartPolicy"], "Never")
         serialized = str(pod).lower()

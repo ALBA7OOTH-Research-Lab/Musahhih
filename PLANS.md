@@ -1,5 +1,23 @@
 # Active implementation plan
 
+## Issue #165 — use proven RWX storage for private staging
+
+- [x] Preserve issue #163's unbound-PVC failure without retry or private upload.
+- [x] Delete the unscheduled Pod and unbound, data-free PVC after evidence
+  capture.
+- [x] Switch from the waiting `cephfs` provisioner to the namespace's proven
+  `rook-cephfs` RWX class.
+- [x] Retain the exact PVC, no-GPU Pod, write-once upload, hash/count, and
+  training-separation contracts.
+- [x] Complete focused and full local validation.
+- [ ] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before replacement staging.
+
+Issue #165 is repository-only repair work. It authorizes no PVC, Pod, private
+upload, GPU allocation, model load, training, inference, metric, retry, or
+continuation.
+
 ## Issue #163 — finalize import order and private staging gate
 
 - [x] Preserve issue #161's passing no-input A100/compiler/import preflight.
