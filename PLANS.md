@@ -9,7 +9,7 @@
 - [x] Reject unpinned or malformed container-image digests before manifest
   generation.
 - [x] Complete focused and full local validation.
-- [ ] Complete Kubernetes dry-run validation at the repair commit.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
 - [ ] Open and merge a review PR.
 - [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
 

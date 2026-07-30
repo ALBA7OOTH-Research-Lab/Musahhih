@@ -40,6 +40,14 @@ Manifest preparation now rejects every container image that is not pinned by a
 full, lowercase, 64-character SHA-256 digest. The regression test covers an
 unpinned tag, a 62-character digest, and an uppercase digest.
 
+At repair commit `1429a9bb4336d44c6ecba8bf92b5d91060189e50`,
+compilation, formatting, lint, 8 focused tests with 7 subtests, and the full
+251-test suite with 72 subtests passed. The repaired one-object preflight
+manifest contained one `emptyDir`, zero private-volume mounts, and passed a
+Nautilus server dry-run without persistence. Its validation-only manifest
+SHA-256 was
+`52ec797e114ad30486e6f6c20d4d72d601e62fd9a11c2f1a6200f48ddcf7f184`.
+
 This repair authorizes no cluster object or GPU execution. After review and
 merge, one replacement no-input/no-model preflight requires a fresh
 exact-commit owner GO. Paired training remains unauthorized.
