@@ -19,6 +19,15 @@ Status: preparation only; no execution authorized.
 > replaces that subprocess with strict detached-HEAD metadata verification. A
 > further preflight still requires review, merge, and a fresh exact-commit GO.
 
+> Execution note (2026-07-30): a fresh second replacement on a healthy A100
+> node passed detached-HEAD verification and the synchronized exact-A100 CUDA
+> operation, then failed before any private access because importing
+> bitsandbytes initialized Triton and the minimal PyTorch `runtime` image had no
+> C compiler. Issue #161 keeps PyTorch 2.6.0, CUDA 12.4, cuDNN 9, and the frozen
+> package stack while switching to the matching official digest-pinned `devel`
+> image and adding an explicit compiler gate. Another preflight still requires
+> review, merge, and a fresh exact-commit GO.
+
 ## Purpose and interpretation
 
 This is a post-hoc, prospectively frozen robustness replication prompted by the

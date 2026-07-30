@@ -1,5 +1,23 @@
 # Active implementation plan
 
+## Issue #161 — use a compiler-capable pinned Nautilus runtime
+
+- [x] Preserve issue #159's failed compiler import gate without retry.
+- [x] Release the terminal failed Job after recording aggregate diagnostics.
+- [x] Retain PyTorch 2.6.0, CUDA 12.4, and cuDNN 9 while switching from the
+  official `runtime` image to its matching official `devel` image.
+- [x] Pin the full published Linux/AMD64 image digest.
+- [x] Require a discoverable C compiler before the bitsandbytes/Unsloth import
+  gate and add focused regression coverage.
+- [x] Complete focused and full local validation.
+- [ ] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
+
+Issue #161 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, private-input access, model load, training, inference, metric,
+retry, or replacement preflight.
+
 ## Issue #159 — remove Nautilus main-runtime git dependency
 
 - [x] Preserve issue #157's failed replacement preflight without retry.

@@ -19,8 +19,8 @@ from scripts.f2_f3_nautilus_utils import (
 
 REPOSITORY = "https://github.com/ALBA7OOTH-Research-Lab/Musahhih.git"
 PYTORCH_IMAGE = (
-    "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime@"
-    "sha256:77f17f843507062875ce8be2a6f76aa6aa3df7f9ef1e31d9d7432f4b0f563dee"
+    "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel@"
+    "sha256:0cf3402e946b7c384ba943ee05c90b4c5a4a05227923921f2b0918c011cfaf56"
 )
 GIT_IMAGE = (
     "alpine/git:2.47.2@"

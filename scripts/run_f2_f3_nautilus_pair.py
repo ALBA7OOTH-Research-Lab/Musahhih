@@ -11,6 +11,7 @@ import json
 import os
 import platform
 import re
+import shutil
 from pathlib import Path
 
 from scripts.f1_training_utils import (
@@ -68,6 +69,15 @@ def actual_commit(repository_root: Path | None = None) -> str:
     return commit
 
 
+def compiler_path() -> str:
+    """Require a compiler before imports that initialize Triton."""
+    for executable in ("cc", "gcc", "clang"):
+        path = shutil.which(executable)
+        if path:
+            return path
+    raise RuntimeError("Frozen Nautilus runtime requires a C compiler")
+
+
 def runtime_summary(torch_module, gpu_summary: dict) -> dict:
     versions = {}
     mismatches = {}
@@ -93,6 +103,7 @@ def runtime_summary(torch_module, gpu_summary: dict) -> dict:
         )
     if torch_module.version.cuda != "12.4":
         raise RuntimeError("Frozen Nautilus runtime requires CUDA 12.4")
+    compiler = compiler_path()
     import bitsandbytes  # noqa: F401
     import datasets  # noqa: F401
     import trl  # noqa: F401
@@ -101,6 +112,7 @@ def runtime_summary(torch_module, gpu_summary: dict) -> dict:
     return {
         "python": platform.python_version(),
         "cuda": torch_module.version.cuda,
+        "compiler": compiler,
         "packages": versions,
         "gpu": gpu_summary,
         "unsloth_compile_disabled": os.environ.get("UNSLOTH_COMPILE_DISABLE") == "1",
