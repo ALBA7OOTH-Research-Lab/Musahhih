@@ -13,6 +13,7 @@ from scripts.f2_f3_nautilus_utils import (
     NAMESPACE,
     PVC_NAME,
     SEEDS,
+    approval_attempt_id,
     arm_order,
     validate_activation,
 )
@@ -30,8 +31,6 @@ GIT_IMAGE = (
 PINNED_IMAGE_PATTERN = re.compile(r"^[^@\s]+@sha256:[0-9a-f]{64}$")
 PACKAGE_COMMAND = """
 set -euo pipefail
-python -m pip install --quiet --progress-bar off \
-  --requirement requirements-nautilus-f2-f3.txt
 runner_args=(
   --stage "$MUSAHHIH_STAGE"
   --approved-commit "$MUSAHHIH_APPROVED_COMMIT"
@@ -47,7 +46,36 @@ fi
 if [[ -n "$MUSAHHIH_OUTPUT_ROOT" ]]; then
   runner_args+=(--output-root "$MUSAHHIH_OUTPUT_ROOT")
 fi
-python -m scripts.run_f2_f3_nautilus_pair "${runner_args[@]}"
+run_workflow() {
+  python -m pip install --quiet --progress-bar off \
+    --requirement requirements-nautilus-f2-f3.txt || return "$?"
+  python -m scripts.run_f2_f3_nautilus_pair "${runner_args[@]}"
+}
+if [[ -n "$MUSAHHIH_OUTPUT_ROOT" ]]; then
+  log_root="/private/logs/issue-155/seed-$MUSAHHIH_SEED"
+  log_path="$log_root/attempt-$MUSAHHIH_ATTEMPT_ID.log"
+  exit_path="$log_root/attempt-$MUSAHHIH_ATTEMPT_ID.exit.json"
+  mkdir -p "$log_root"
+  test ! -e "$log_path"
+  test ! -e "$exit_path"
+  set +e
+  run_workflow 2>&1 | tee "$log_path"
+  pipeline_status=("${PIPESTATUS[@]}")
+  workflow_status="${pipeline_status[0]}"
+  tee_status="${pipeline_status[1]}"
+  set -e
+  if [[ "$tee_status" -ne 0 ]]; then
+    exit 90
+  fi
+  status="$workflow_status"
+  tmp_exit="$exit_path.tmp.$$"
+  printf '{"exit_code":%s,"automatic_retry":false,"contains_corpus_text":false}\\n' \
+    "$status" > "$tmp_exit"
+  mv "$tmp_exit" "$exit_path"
+  sync
+  exit "$status"
+fi
+run_workflow
 """.strip()
 
 
@@ -71,6 +99,7 @@ def environment(
         "MUSAHHIH_APPROVED_COMMIT": commit,
         "MUSAHHIH_APPROVAL_REFERENCE": approval_reference,
         "MUSAHHIH_CONFIRMATION": confirmation,
+        "MUSAHHIH_ATTEMPT_ID": approval_attempt_id(approval_reference),
         "MUSAHHIH_SEED": "" if seed is None else str(seed),
         "MUSAHHIH_INPUT_ROOT": ("" if seed is None else "/private/inputs/f2-f3"),
         "MUSAHHIH_OUTPUT_ROOT": ("" if seed is None else "/private/outputs/issue-155"),
@@ -114,8 +143,14 @@ def build_job(
         approval_reference=approval_reference,
         confirmation=confirmation,
     )
-    suffix = "preflight" if seed is None else f"s{seed}"
-    name = f"musahhih-f2-f3-{suffix}"
+    attempt_id = approval_attempt_id(approval_reference)
+    if seed is not None:
+        suffix = f"s{seed}"
+    elif stage == "fp16-trainer-smoke":
+        suffix = "fp16-trainer-smoke"
+    else:
+        suffix = "preflight"
+    name = f"musahhih-f2-f3-{suffix}-a{attempt_id[-8:]}"
     labels = {
         "app.kubernetes.io/name": "musahhih",
         "app.kubernetes.io/component": "f2-f3-replication",
@@ -211,6 +246,7 @@ def build_job(
             "annotations": {
                 "musahhih.openai/approved-commit": commit,
                 "musahhih.openai/approval-reference": approval_reference,
+                "musahhih.openai/attempt-id": attempt_id,
                 "musahhih.openai/arm-order": (
                     "none" if seed is None else ",".join(arm_order(seed))
                 ),
@@ -378,7 +414,11 @@ def build_manifest(
                 ),
             ],
         }
-    seeds = (None,) if stage == "a100-preflight" else SEEDS
+    seeds = (
+        (None,)
+        if stage in ("a100-preflight", "fp16-trainer-smoke")
+        else SEEDS
+    )
     items = list(
         build_job(
             stage=stage,
@@ -397,7 +437,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--stage",
         required=True,
-        choices=("a100-preflight", "private-staging", "paired-training"),
+        choices=(
+            "a100-preflight",
+            "fp16-trainer-smoke",
+            "private-staging",
+            "paired-training",
+        ),
     )
     parser.add_argument("--approved-commit", required=True)
     parser.add_argument("--approval-reference", required=True)

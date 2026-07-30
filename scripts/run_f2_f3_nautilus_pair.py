@@ -48,6 +48,10 @@ EXPECTED_STACK = {
     "triton": "3.2.0",
 }
 REQUIRED_IMPORTS = ("unsloth", "bitsandbytes", "datasets", "trl")
+FROZEN_PRECISION = "float16"
+RESUME_SAVE_STEPS = 25
+RESUME_IDENTITY_FILENAME = "musahhih_resume_identity.json"
+LEGACY_FAILED_WAVE_COMMIT = "b01e93d35bf134fc7b547b7dbc17bec185794faf"
 
 
 def sha256_file(path: Path) -> str:
@@ -135,6 +139,102 @@ def checkpoint_identity(checkpoint: Path) -> dict:
     }
 
 
+def resume_checkpoint_identity(checkpoint: Path) -> dict:
+    """Hash every state file required for a scientifically exact continuation."""
+    required = (
+        "adapter_model.safetensors",
+        "adapter_config.json",
+        "trainer_state.json",
+        "optimizer.pt",
+        "scheduler.pt",
+        "rng_state.pth",
+    )
+    files = {}
+    for name in required:
+        path = checkpoint / name
+        if not path.is_file():
+            raise RuntimeError(f"Incomplete resumable checkpoint: {checkpoint.name}")
+        files[name] = {
+            "bytes": path.stat().st_size,
+            "sha256": sha256_file(path),
+        }
+    return {
+        "checkpoint": checkpoint.name,
+        "files": files,
+        "contains_corpus_text": False,
+    }
+
+
+def model_load_kwargs(torch_module) -> dict:
+    """Force the original P100 FP16 contract when loading on BF16-capable A100s."""
+    dtype = getattr(torch_module, "float16", None)
+    if dtype is None:
+        raise RuntimeError("PyTorch float16 dtype is unavailable")
+    return {
+        "model_name": MODEL_ID,
+        "revision": MODEL_REVISION,
+        "max_seq_length": MAX_SEQUENCE_LENGTH,
+        "load_in_4bit": True,
+        "dtype": dtype,
+    }
+
+
+def require_fp16_model(model, torch_module) -> str:
+    """Fail before trainer construction if model loading ignored the FP16 request."""
+    observed = getattr(getattr(model, "config", None), "torch_dtype", None)
+    if observed != torch_module.float16:
+        raise RuntimeError(
+            "Frozen precision mismatch: model must load with torch.float16"
+        )
+    return FROZEN_PRECISION
+
+
+def latest_resumable_checkpoint(output_dir: Path) -> Path | None:
+    """Return the newest durable Trainer checkpoint, rejecting malformed candidates."""
+    if not output_dir.exists():
+        return None
+    checkpoints = []
+    for candidate in output_dir.glob("checkpoint-*"):
+        match = re.fullmatch(r"checkpoint-([1-9][0-9]*)", candidate.name)
+        if not match or not candidate.is_dir():
+            continue
+        identity_path = candidate / RESUME_IDENTITY_FILENAME
+        observed = read_json_object(
+            identity_path, f"{candidate.name} resume identity"
+        )
+        expected = resume_checkpoint_identity(candidate)
+        if observed != expected:
+            raise RuntimeError(f"Resume checkpoint identity mismatch: {candidate.name}")
+        checkpoints.append((int(match.group(1)), candidate))
+    return max(checkpoints, default=(0, None))[1]
+
+
+def failure_summary(
+    *,
+    activation: dict,
+    phase: str,
+    completed_arms: list[str],
+    error: BaseException,
+) -> dict:
+    """Create a corpus-text-free durable failure record."""
+    message_digest = hashlib.sha256(
+        str(error).encode("utf-8", errors="replace")
+    ).hexdigest()
+    return {
+        "status": "failed",
+        "activation": activation,
+        "phase": phase,
+        "completed_arms": completed_arms,
+        "error_type": type(error).__name__,
+        "error_message_sha256": message_digest,
+        "automatic_retry": False,
+        "resume_requires_fresh_authorization": True,
+        "contains_corpus_text": False,
+        "nahw_passage_used": False,
+        "qalb_test_used": False,
+    }
+
+
 def validate_staging_manifest(input_root: Path) -> dict:
     path = input_root / "staging_manifest.json"
     expected = {
@@ -166,17 +266,17 @@ def train_arm(
     from unsloth.chat_templates import get_chat_template
     from unsloth.trainer import UnslothVisionDataCollator
     from datasets import load_dataset
+    from transformers import TrainerCallback
     from trl import SFTConfig, SFTTrainer
 
-    if output_dir.exists():
-        raise RuntimeError(f"Output already exists for {arm} seed {seed}")
+    if (output_dir / "checkpoint_selection.json").exists():
+        raise RuntimeError(f"Completed output must be validated before {arm} resumes")
+    resume_checkpoint = latest_resumable_checkpoint(output_dir)
 
     model, processor = FastModel.from_pretrained(
-        model_name=MODEL_ID,
-        revision=MODEL_REVISION,
-        max_seq_length=MAX_SEQUENCE_LENGTH,
-        load_in_4bit=True,
+        **model_load_kwargs(torch_module),
     )
+    require_fp16_model(model, torch_module)
     processor = get_chat_template(processor, chat_template="gemma-3")
     model = FastModel.get_peft_model(
         model,
@@ -232,8 +332,9 @@ def train_arm(
         remove_unused_columns=False,
         completion_only_loss=True,
         eval_strategy="epoch",
-        save_strategy="epoch",
-        save_total_limit=2,
+        save_strategy="steps",
+        save_steps=RESUME_SAVE_STEPS,
+        save_total_limit=None,
         report_to="none",
         bf16=False,
         fp16=True,
@@ -249,6 +350,15 @@ def train_arm(
         response_part="<start_of_turn>model\n",
         completion_only_loss=True,
     )
+    class DurableCheckpointCallback(TrainerCallback):
+        def on_save(self, args, state, control, **kwargs):
+            checkpoint = Path(args.output_dir) / f"checkpoint-{state.global_step}"
+            atomic_write_json(
+                checkpoint / RESUME_IDENTITY_FILENAME,
+                resume_checkpoint_identity(checkpoint),
+            )
+            return control
+
     trainer = SFTTrainer(
         model=model,
         processing_class=processor,
@@ -256,12 +366,17 @@ def train_arm(
         train_dataset=private_data["train"],
         eval_dataset=private_data["validation"],
         args=args,
+        callbacks=[DurableCheckpointCallback()],
     )
     first_labels = collator([private_data["train"][0]])["labels"][0]
     if not torch_module.any(first_labels != -100).item():
         raise RuntimeError("Completion masking produced no assistant tokens")
 
-    trainer.train()
+    trainer.train(
+        resume_from_checkpoint=(
+            None if resume_checkpoint is None else str(resume_checkpoint)
+        )
+    )
     evaluations = [
         item
         for item in trainer.state.log_history
@@ -296,6 +411,10 @@ def train_arm(
         "evaluations": evaluations,
         "selected_checkpoint": selected_checkpoint.name,
         "checkpoints": identities,
+        "precision": FROZEN_PRECISION,
+        "resumed_from_checkpoint": (
+            None if resume_checkpoint is None else resume_checkpoint.name
+        ),
         "contains_corpus_text": False,
         "nahw_passage_used": False,
         "qalb_test_used": False,
@@ -309,10 +428,198 @@ def train_arm(
     return summary
 
 
+def run_fp16_trainer_smoke(*, torch_module) -> dict:
+    """Load the exact model and construct the exact trainer without training or data."""
+    from unsloth import FastModel
+    from unsloth.chat_templates import get_chat_template
+    from unsloth.trainer import UnslothVisionDataCollator
+    from datasets import Dataset
+    from trl import SFTConfig, SFTTrainer
+
+    seed = 3407
+    model, processor = FastModel.from_pretrained(**model_load_kwargs(torch_module))
+    require_fp16_model(model, torch_module)
+    processor = get_chat_template(processor, chat_template="gemma-3")
+    model = FastModel.get_peft_model(
+        model,
+        r=16,
+        lora_alpha=32,
+        lora_dropout=0.0,
+        bias="none",
+        target_modules=list(LORA_TARGETS),
+        use_gradient_checkpointing="unsloth",
+        random_state=seed,
+    )
+    smoke_data = Dataset.from_list(
+        [
+            {
+                "messages": [
+                    {"role": "user", "content": "Input token."},
+                    {"role": "assistant", "content": "Output token."},
+                ]
+            }
+        ]
+    )
+    args = SFTConfig(
+        output_dir="/tmp/musahhih-fp16-trainer-smoke",
+        max_length=MAX_SEQUENCE_LENGTH,
+        dataset_text_field="",
+        dataset_kwargs={"skip_prepare_dataset": True},
+        remove_unused_columns=False,
+        completion_only_loss=True,
+        eval_strategy="no",
+        save_strategy="no",
+        report_to="none",
+        bf16=False,
+        fp16=True,
+        seed=seed,
+        **TRAINING_CONFIG,
+    )
+    collator = UnslothVisionDataCollator(
+        model,
+        processor,
+        max_seq_length=MAX_SEQUENCE_LENGTH,
+        train_on_responses_only=True,
+        instruction_part="<start_of_turn>user\n",
+        response_part="<start_of_turn>model\n",
+        completion_only_loss=True,
+    )
+
+    trainer = SFTTrainer(
+        model=model,
+        processing_class=processor,
+        data_collator=collator,
+        train_dataset=smoke_data,
+        args=args,
+    )
+    labels = collator([smoke_data[0]])["labels"][0]
+    if not torch_module.any(labels != -100).item():
+        raise RuntimeError("FP16 trainer smoke produced no assistant tokens")
+    result = {
+        "status": "passed",
+        "model_loaded": True,
+        "model_dtype": FROZEN_PRECISION,
+        "peft_constructed": True,
+        "trainer_constructed": True,
+        "optimizer_steps": 0,
+        "datasets_mounted": 0,
+        "private_records_used": 0,
+        "contains_corpus_text": False,
+    }
+    del trainer, collator, smoke_data, model, processor
+    gc.collect()
+    torch_module.cuda.empty_cache()
+    torch_module.cuda.synchronize()
+    return result
+
+
+def read_json_object(path: Path, label: str) -> dict:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"Cannot read {label}") from exc
+    if not isinstance(value, dict):
+        raise RuntimeError(f"{label} must be a JSON object")
+    return value
+
+
+def validate_completed_arm(
+    *,
+    seed_root: Path,
+    position: int,
+    arm: str,
+    seed: int,
+    workflow_commit: str,
+) -> dict | None:
+    """Reuse only a fully hashed arm completed under the exact executable commit."""
+    marker = seed_root / f"{position}0_{arm.lower()}_complete.json"
+    output_dir = seed_root / arm.lower()
+    selection_path = output_dir / "checkpoint_selection.json"
+    if not marker.exists() and not selection_path.exists():
+        return None
+    selection = read_json_object(selection_path, f"{arm} checkpoint selection")
+    if (
+        selection.get("arm") != arm
+        or selection.get("seed") != seed
+        or selection.get("workflow_commit") != workflow_commit
+        or selection.get("precision") != FROZEN_PRECISION
+        or selection.get("contains_corpus_text") is not False
+    ):
+        raise RuntimeError(f"{arm} checkpoint-selection contract mismatch")
+    identities = selection.get("checkpoints")
+    if not isinstance(identities, list) or len(identities) != 2:
+        raise RuntimeError(f"{arm} must preserve two checkpoint identities")
+    for expected in identities:
+        checkpoint = output_dir / str(expected.get("checkpoint"))
+        if checkpoint_identity(checkpoint) != expected:
+            raise RuntimeError(f"{arm} checkpoint identity mismatch")
+    if marker.exists():
+        observed = read_json_object(marker, f"{arm} completion marker")
+        if (
+            observed.get("arm") != arm
+            or observed.get("seed") != seed
+            or observed.get("contains_corpus_text") is not False
+            or observed.get("selected_checkpoint")
+            != selection.get("selected_checkpoint")
+        ):
+            raise RuntimeError(f"{arm} completion marker contract mismatch")
+    return selection
+
+
+def initialize_attempt(
+    *,
+    output_root: Path,
+    seed: int,
+    activation: dict,
+    runtime: dict,
+    private_inputs: dict,
+) -> tuple[Path, Path]:
+    """Create a write-once attempt while retaining compatible prior seed state."""
+    seed_root = output_root / f"seed-{seed}"
+    seed_root.mkdir(parents=True, exist_ok=True)
+    original_start = seed_root / "00_started.json"
+    if original_start.exists():
+        observed = read_json_object(original_start, "seed start marker")
+        prior_activation = observed.get("activation", {})
+        if (
+            prior_activation.get("seed") != seed
+            or prior_activation.get("approved_commit")
+            not in (activation["approved_commit"], LEGACY_FAILED_WAVE_COMMIT)
+            or observed.get("private_inputs") != private_inputs
+            or observed.get("contains_corpus_text") is not False
+        ):
+            raise RuntimeError("Existing seed output is incompatible with continuation")
+    else:
+        atomic_write_json(
+            original_start,
+            {
+                "activation": activation,
+                "runtime": runtime,
+                "private_inputs": private_inputs,
+                "contains_corpus_text": False,
+            },
+        )
+    attempt_root = seed_root / "attempts" / activation["attempt_id"]
+    attempt_root.mkdir(parents=True, exist_ok=False)
+    atomic_write_json(
+        attempt_root / "00_started.json",
+        {
+            "activation": activation,
+            "runtime": runtime,
+            "private_inputs": private_inputs,
+            "automatic_retry": False,
+            "contains_corpus_text": False,
+        },
+    )
+    return seed_root, attempt_root
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--stage", required=True, choices=("a100-preflight", "paired-training")
+        "--stage",
+        required=True,
+        choices=("a100-preflight", "fp16-trainer-smoke", "paired-training"),
     )
     parser.add_argument("--seed", type=int)
     parser.add_argument("--approved-commit", required=True)
@@ -344,12 +651,22 @@ def main() -> None:
     runtime = runtime_summary(torch, gpu)
     runtime["precision"] = {
         "training": "fp16",
+        "model_load_dtype": FROZEN_PRECISION,
         "bf16": False,
         "tf32_matmul": False,
         "tf32_cudnn": False,
     }
     if args.stage == "a100-preflight":
         print(json.dumps({"activation": activation, "runtime": runtime}, indent=2))
+        return
+    if args.stage == "fp16-trainer-smoke":
+        smoke = run_fp16_trainer_smoke(torch_module=torch)
+        print(
+            json.dumps(
+                {"activation": activation, "runtime": runtime, "smoke": smoke},
+                indent=2,
+            )
+        )
         return
 
     if args.input_root is None or args.output_root is None:
@@ -372,57 +689,96 @@ def main() -> None:
             input_paths["common_dev_records.jsonl"], "development"
         ),
     }
-    seed_root = args.output_root / f"seed-{seed}"
-    seed_root.mkdir(parents=True, exist_ok=False)
-    atomic_write_json(
-        seed_root / "00_started.json",
-        {
-            "activation": activation,
-            "runtime": runtime,
-            "private_inputs": private_inputs,
-            "contains_corpus_text": False,
-        },
+    seed_root, attempt_root = initialize_attempt(
+        output_root=args.output_root,
+        seed=seed,
+        activation=activation,
+        runtime=runtime,
+        private_inputs=private_inputs,
     )
 
-    completed = []
-    for position, arm in enumerate(arm_order(seed), 1):
-        training_path = input_paths[
-            "f2_train_records.jsonl" if arm == "F2-P1" else "f3_train_records.jsonl"
-        ]
-        summary = train_arm(
-            arm=arm,
-            seed=seed,
-            train_path=training_path,
-            development_path=input_paths["common_dev_records.jsonl"],
-            output_dir=seed_root / arm.lower(),
-            workflow_commit=commit,
-            approval_reference=args.approval_reference,
-            torch_module=torch,
-        )
-        completed.append(arm)
+    phase = "attempt_initialized"
+    completed: list[str] = []
+    try:
+        if (seed_root / "99_pair_complete.json").exists():
+            raise RuntimeError("Seed pair is already complete; refusing duplicate training")
+        for position, arm in enumerate(arm_order(seed), 1):
+            phase = f"{arm}:validate_existing"
+            summary = validate_completed_arm(
+                seed_root=seed_root,
+                position=position,
+                arm=arm,
+                seed=seed,
+                workflow_commit=commit,
+            )
+            if summary is None:
+                training_path = input_paths[
+                    (
+                        "f2_train_records.jsonl"
+                        if arm == "F2-P1"
+                        else "f3_train_records.jsonl"
+                    )
+                ]
+                phase = f"{arm}:trainer"
+                summary = train_arm(
+                    arm=arm,
+                    seed=seed,
+                    train_path=training_path,
+                    development_path=input_paths["common_dev_records.jsonl"],
+                    output_dir=seed_root / arm.lower(),
+                    workflow_commit=commit,
+                    approval_reference=args.approval_reference,
+                    torch_module=torch,
+                )
+            completed.append(arm)
+            marker = seed_root / f"{position}0_{arm.lower()}_complete.json"
+            if not marker.exists():
+                atomic_write_json(
+                    marker,
+                    {
+                        "arm": arm,
+                        "seed": seed,
+                        "selected_checkpoint": summary["selected_checkpoint"],
+                        "completed_arms": completed,
+                        "contains_corpus_text": False,
+                    },
+                )
+            phase = f"{arm}:complete"
+
         atomic_write_json(
-            seed_root / f"{position}0_{arm.lower()}_complete.json",
+            seed_root / "99_pair_complete.json",
             {
-                "arm": arm,
                 "seed": seed,
-                "selected_checkpoint": summary["selected_checkpoint"],
+                "arm_order": list(arm_order(seed)),
                 "completed_arms": completed,
+                "workflow_commit": commit,
+                "attempt_id": activation["attempt_id"],
+                "contains_corpus_text": False,
+                "nahw_passage_used": False,
+                "qalb_test_used": False,
+            },
+        )
+        atomic_write_json(
+            attempt_root / "99_complete.json",
+            {
+                "status": "complete",
+                "seed": seed,
+                "completed_arms": completed,
+                "automatic_retry": False,
                 "contains_corpus_text": False,
             },
         )
-
-    atomic_write_json(
-        seed_root / "99_pair_complete.json",
-        {
-            "seed": seed,
-            "arm_order": list(arm_order(seed)),
-            "completed_arms": completed,
-            "workflow_commit": commit,
-            "contains_corpus_text": False,
-            "nahw_passage_used": False,
-            "qalb_test_used": False,
-        },
-    )
+    except BaseException as error:
+        atomic_write_json(
+            attempt_root / "98_failed.json",
+            failure_summary(
+                activation=activation,
+                phase=phase,
+                completed_arms=completed,
+                error=error,
+            ),
+        )
+        raise
     print(
         json.dumps(
             {

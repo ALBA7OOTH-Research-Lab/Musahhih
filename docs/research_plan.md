@@ -233,6 +233,16 @@ Issue #163's first authorized staging attempt then remained unbound on the
 `cephfs` provisioner; its Pod never scheduled and no private file was uploaded.
 Issue #165 prepares a narrow switch to the namespace's proven `rook-cephfs`
 RWX class. The failed staging authorization is consumed.
+The replacement staging and final import-order preflight then passed at exact
+commit `b01e93d35bf134fc7b547b7dbc17bec185794faf`. The separately authorized
+five-seed wave nevertheless failed before its first optimizer step because
+Gemma loaded as BF16 on A100 while the frozen trainer requested FP16. Issue
+#167 prepares the narrow scientific-contract repair: force FP16 at model load,
+prove exact model/collator/trainer construction in one no-private A100 smoke,
+persist write-once logs and failure records, and retain 25-step recovery
+checkpoints for fresh-GO continuation. It changes no dataset, model revision,
+optimizer, schedule, batch, loss, evaluation cadence, checkpoint-selection
+rule, inference, or metric. Merge authorizes no GPU execution or retry.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

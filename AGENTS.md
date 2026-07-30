@@ -207,6 +207,16 @@ empty outputs and no demonstration bundle. See
 F1-P1 and F3-P1 exceeded B2-P1; F2-P1 was not established as different from
 B2-P1. Private record-level artifacts remain ignored. The authorization is
 consumed; do not rerun or tune from B2-P1.
+Issue #155's authorized five-seed A100 robustness wave failed before its first
+optimizer step. Retained logs for seeds 3408, 3409, and 3411 showed that Gemma
+loaded as BF16 on A100 while the frozen trainer requested FP16; Unsloth rejected
+the mismatch during `SFTTrainer` construction. No checkpoint, inference,
+prediction, or metric was produced, and no retry occurred. The authorization
+is consumed. Issue #167 prepares a repository-only repair that forces FP16
+model loading, adds a no-private zero-step model/trainer smoke, writes durable
+private logs and corpus-free failure records, and retains 25-step recovery
+checkpoints for fresh-GO continuation. The repair authorizes no GPU execution,
+private-input access, training, retry, continuation, inference, or metric.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

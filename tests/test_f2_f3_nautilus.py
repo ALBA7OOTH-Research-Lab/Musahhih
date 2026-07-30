@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import inspect
 from os import environ
 from pathlib import Path
 from unittest.mock import patch
@@ -10,21 +11,33 @@ from scripts.f2_f3_nautilus_utils import (
     PREFLIGHT_CONFIRMATION,
     SEEDS,
     STAGING_CONFIRMATION,
+    TRAINER_SMOKE_CONFIRMATION,
     a100_preflight,
+    approval_attempt_id,
     arm_order,
     atomic_write_json,
     validate_activation,
 )
 from scripts.prepare_f2_f3_nautilus_jobs import (
     GIT_IMAGE,
+    PACKAGE_COMMAND,
     PYTORCH_IMAGE,
     build_manifest,
     validate_pinned_image,
 )
 from scripts.run_f2_f3_nautilus_pair import (
     REQUIRED_IMPORTS,
+    RESUME_IDENTITY_FILENAME,
+    RESUME_SAVE_STEPS,
     actual_commit,
     compiler_path,
+    failure_summary,
+    initialize_attempt,
+    latest_resumable_checkpoint,
+    model_load_kwargs,
+    require_fp16_model,
+    resume_checkpoint_identity,
+    train_arm,
     validate_staging_manifest,
 )
 
@@ -74,6 +87,8 @@ class FakeCuda:
 
 
 class FakeTorch:
+    float16 = object()
+
     def __init__(self, **cuda_kwargs):
         self.cuda = FakeCuda(**cuda_kwargs)
 
@@ -137,6 +152,122 @@ class NautilusReplicationTests(unittest.TestCase):
         self.assertLess(
             REQUIRED_IMPORTS.index("unsloth"), REQUIRED_IMPORTS.index("trl")
         )
+
+    def test_model_load_and_trainer_contract_force_float16(self):
+        torch = FakeTorch()
+        kwargs = model_load_kwargs(torch)
+        self.assertIs(kwargs["dtype"], torch.float16)
+        self.assertTrue(kwargs["load_in_4bit"])
+
+        class Config:
+            torch_dtype = torch.float16
+
+        class Model:
+            config = Config()
+
+        self.assertEqual(require_fp16_model(Model(), torch), "float16")
+        Config.torch_dtype = object()
+        with self.assertRaisesRegex(RuntimeError, "precision mismatch"):
+            require_fp16_model(Model(), torch)
+
+    def test_latest_checkpoint_requires_durable_trainer_state(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            first = output / "checkpoint-125"
+            second = output / "checkpoint-250"
+            first.mkdir()
+            second.mkdir()
+            required = (
+                "adapter_model.safetensors",
+                "adapter_config.json",
+                "trainer_state.json",
+                "optimizer.pt",
+                "scheduler.pt",
+                "rng_state.pth",
+            )
+            for checkpoint in (first, second):
+                for name in required:
+                    (checkpoint / name).write_bytes(name.encode("ascii"))
+                atomic_write_json(
+                    checkpoint / RESUME_IDENTITY_FILENAME,
+                    resume_checkpoint_identity(checkpoint),
+                )
+            self.assertEqual(latest_resumable_checkpoint(output), second)
+            (second / "optimizer.pt").write_bytes(b"tampered")
+            with self.assertRaisesRegex(RuntimeError, "identity mismatch"):
+                latest_resumable_checkpoint(output)
+
+    def test_training_saves_resumable_progress_without_pruning_epoch_checkpoints(self):
+        source = inspect.getsource(train_arm)
+        self.assertEqual(RESUME_SAVE_STEPS, 25)
+        self.assertIn("save_strategy=\"steps\"", source)
+        self.assertIn("save_steps=RESUME_SAVE_STEPS", source)
+        self.assertIn("save_total_limit=None", source)
+        self.assertIn("resume_from_checkpoint=", source)
+        self.assertIn("DurableCheckpointCallback", source)
+        self.assertIn("resume_checkpoint_identity(checkpoint)", source)
+
+    def test_failure_record_is_corpus_free_and_requires_fresh_go(self):
+        activation = {
+            "stage": "paired-training",
+            "seed": 3407,
+            "attempt_id": "123",
+            "contains_corpus_text": False,
+        }
+        result = failure_summary(
+            activation=activation,
+            phase="F2-P1:trainer",
+            completed_arms=[],
+            error=RuntimeError("private diagnostic"),
+        )
+        self.assertEqual(result["error_type"], "RuntimeError")
+        self.assertNotIn("private diagnostic", str(result))
+        self.assertTrue(result["resume_requires_fresh_authorization"])
+        self.assertFalse(result["automatic_retry"])
+
+    def test_attempts_are_write_once_and_legacy_failed_state_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            seed_root = output / "seed-3407"
+            seed_root.mkdir()
+            private_inputs = {"hashes": "frozen", "contains_corpus_text": False}
+            atomic_write_json(
+                seed_root / "00_started.json",
+                {
+                    "activation": {
+                        "seed": 3407,
+                        "approved_commit": (
+                            "b01e93d35bf134fc7b547b7dbc17bec185794faf"
+                        ),
+                    },
+                    "private_inputs": private_inputs,
+                    "contains_corpus_text": False,
+                },
+            )
+            activation = {
+                "seed": 3407,
+                "approved_commit": COMMIT,
+                "attempt_id": "123",
+                "contains_corpus_text": False,
+            }
+            observed_seed, attempt = initialize_attempt(
+                output_root=output,
+                seed=3407,
+                activation=activation,
+                runtime={"contains_corpus_text": False},
+                private_inputs=private_inputs,
+            )
+            self.assertEqual(observed_seed, seed_root)
+            self.assertTrue((attempt / "00_started.json").is_file())
+            self.assertTrue((seed_root / "00_started.json").is_file())
+            with self.assertRaises(FileExistsError):
+                initialize_attempt(
+                    output_root=output,
+                    seed=3407,
+                    activation=activation,
+                    runtime={"contains_corpus_text": False},
+                    private_inputs=private_inputs,
+                )
 
     def test_training_requires_exact_private_staging_manifest(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -206,6 +337,27 @@ class NautilusReplicationTests(unittest.TestCase):
                 confirmation=PREFLIGHT_CONFIRMATION,
             )
 
+    def test_fp16_trainer_smoke_requires_distinct_confirmation_and_no_seed(self):
+        result = validate_activation(
+            stage="fp16-trainer-smoke",
+            seed=None,
+            approved_commit=COMMIT,
+            actual_commit=COMMIT,
+            approval_reference=APPROVAL,
+            confirmation=TRAINER_SMOKE_CONFIRMATION,
+        )
+        self.assertEqual(result["attempt_id"], "1")
+        self.assertEqual(approval_attempt_id(APPROVAL), "1")
+        with self.assertRaises(NautilusReplicationError):
+            validate_activation(
+                stage="fp16-trainer-smoke",
+                seed=None,
+                approved_commit=COMMIT,
+                actual_commit=COMMIT,
+                approval_reference=APPROVAL,
+                confirmation=PREFLIGHT_CONFIRMATION,
+            )
+
     def test_a100_preflight_executes_cuda_and_rejects_wrong_gpu(self):
         torch = FakeTorch()
         summary = a100_preflight(torch)
@@ -249,6 +401,52 @@ class NautilusReplicationTests(unittest.TestCase):
             serialized = str(job).lower()
             self.assertNotIn("nahw", serialized)
             self.assertNotIn("qalb_test", serialized)
+            self.assertIn("attempt-$MUSAHHIH_ATTEMPT_ID.log", PACKAGE_COMMAND)
+            self.assertIn("PIPESTATUS[@]", PACKAGE_COMMAND)
+            self.assertIn("tee_status", PACKAGE_COMMAND)
+            self.assertIn('|| return "$?"', PACKAGE_COMMAND)
+            self.assertIn("automatic_retry", PACKAGE_COMMAND)
+
+    def test_attempt_id_makes_fresh_go_job_names_write_once(self):
+        first = build_manifest(
+            stage="paired-training",
+            commit=COMMIT,
+            approval_reference=APPROVAL,
+            confirmation=PAIR_CONFIRMATION,
+        )
+        second = build_manifest(
+            stage="paired-training",
+            commit=COMMIT,
+            approval_reference=APPROVAL[:-1] + "2",
+            confirmation=PAIR_CONFIRMATION,
+        )
+        first_names = {item["metadata"]["name"] for item in first["items"]}
+        second_names = {item["metadata"]["name"] for item in second["items"]}
+        self.assertTrue(first_names.isdisjoint(second_names))
+
+    def test_fp16_trainer_smoke_has_model_gpu_but_no_private_volume(self):
+        manifest = build_manifest(
+            stage="fp16-trainer-smoke",
+            commit=COMMIT,
+            approval_reference=APPROVAL,
+            confirmation=TRAINER_SMOKE_CONFIRMATION,
+        )
+        self.assertEqual(len(manifest["items"]), 1)
+        job = manifest["items"][0]
+        self.assertIn("fp16-trainer-smoke", job["metadata"]["name"])
+        self.assertEqual(
+            job["spec"]["template"]["spec"]["volumes"],
+            [{"name": "repository", "emptyDir": {}}],
+        )
+        container = job["spec"]["template"]["spec"]["containers"][0]
+        self.assertEqual(container["resources"]["limits"]["nvidia.com/a100"], "1")
+        self.assertEqual(
+            container["volumeMounts"],
+            [{"name": "repository", "mountPath": "/repo"}],
+        )
+        environment = {item["name"]: item.get("value") for item in container["env"]}
+        self.assertEqual(environment["MUSAHHIH_INPUT_ROOT"], "")
+        self.assertEqual(environment["MUSAHHIH_OUTPUT_ROOT"], "")
 
     def test_private_staging_manifest_has_one_rwx_pvc_and_no_gpu(self):
         manifest = build_manifest(
