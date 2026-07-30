@@ -9,6 +9,7 @@ from scripts.f2_f3_nautilus_utils import (
     PAIR_CONFIRMATION,
     PREFLIGHT_CONFIRMATION,
     SEEDS,
+    STAGING_CONFIRMATION,
     a100_preflight,
     arm_order,
     atomic_write_json,
@@ -20,7 +21,12 @@ from scripts.prepare_f2_f3_nautilus_jobs import (
     build_manifest,
     validate_pinned_image,
 )
-from scripts.run_f2_f3_nautilus_pair import actual_commit, compiler_path
+from scripts.run_f2_f3_nautilus_pair import (
+    REQUIRED_IMPORTS,
+    actual_commit,
+    compiler_path,
+    validate_staging_manifest,
+)
 
 
 APPROVAL = (
@@ -126,6 +132,26 @@ class NautilusReplicationTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "requires a C compiler"):
                 compiler_path()
 
+    def test_unsloth_is_imported_before_training_frameworks(self):
+        self.assertEqual(REQUIRED_IMPORTS[0], "unsloth")
+        self.assertLess(
+            REQUIRED_IMPORTS.index("unsloth"), REQUIRED_IMPORTS.index("trl")
+        )
+
+    def test_training_requires_exact_private_staging_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "staging_manifest.json"
+            manifest.write_text(
+                '{"status":"complete","records":{"f2":2000,"f3":2000,'
+                '"development":975},"contains_corpus_text":false}\n',
+                encoding="utf-8",
+            )
+            self.assertEqual(validate_staging_manifest(root)["status"], "complete")
+            manifest.write_text('{"status":"complete"}\n', encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "contract mismatch"):
+                validate_staging_manifest(root)
+
     def test_five_seeds_have_balanced_deterministic_orders(self):
         self.assertEqual(SEEDS, (3407, 3408, 3409, 3410, 3411))
         self.assertEqual(arm_order(3407), ("F2-P1", "F3-P1"))
@@ -202,18 +228,15 @@ class NautilusReplicationTests(unittest.TestCase):
             with self.assertRaisesRegex(NautilusReplicationError, "overwrite"):
                 atomic_write_json(path, {"contains_corpus_text": False})
 
-    def test_training_manifest_has_five_a100_jobs_and_one_rwx_pvc(self):
+    def test_training_manifest_has_only_five_a100_jobs_for_prestaged_pvc(self):
         manifest = build_manifest(
             stage="paired-training",
             commit=COMMIT,
             approval_reference=APPROVAL,
             confirmation=PAIR_CONFIRMATION,
         )
-        self.assertEqual(len(manifest["items"]), 6)
-        pvc, *jobs = manifest["items"]
-        self.assertEqual(pvc["kind"], "PersistentVolumeClaim")
-        self.assertEqual(pvc["spec"]["accessModes"], ["ReadWriteMany"])
-        self.assertEqual(pvc["spec"]["storageClassName"], "cephfs")
+        self.assertEqual(len(manifest["items"]), 5)
+        jobs = manifest["items"]
         self.assertEqual(len({job["metadata"]["name"] for job in jobs}), 5)
         for job in jobs:
             self.assertEqual(job["spec"]["backoffLimit"], 0)
@@ -226,6 +249,26 @@ class NautilusReplicationTests(unittest.TestCase):
             serialized = str(job).lower()
             self.assertNotIn("nahw", serialized)
             self.assertNotIn("qalb_test", serialized)
+
+    def test_private_staging_manifest_has_one_rwx_pvc_and_no_gpu(self):
+        manifest = build_manifest(
+            stage="private-staging",
+            commit=COMMIT,
+            approval_reference=APPROVAL,
+            confirmation=STAGING_CONFIRMATION,
+        )
+        self.assertEqual(len(manifest["items"]), 2)
+        pvc, pod = manifest["items"]
+        self.assertEqual(pvc["kind"], "PersistentVolumeClaim")
+        self.assertEqual(pvc["spec"]["accessModes"], ["ReadWriteMany"])
+        self.assertEqual(pvc["spec"]["storageClassName"], "cephfs")
+        self.assertEqual(pod["kind"], "Pod")
+        self.assertEqual(pod["spec"]["restartPolicy"], "Never")
+        serialized = str(pod).lower()
+        self.assertNotIn("nvidia.com", serialized)
+        self.assertIn("staging_manifest.json", serialized)
+        self.assertNotIn("nahw", serialized)
+        self.assertNotIn("qalb_test", serialized)
 
     def test_preflight_manifest_has_no_private_volume(self):
         manifest = build_manifest(

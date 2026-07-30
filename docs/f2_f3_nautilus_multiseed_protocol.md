@@ -28,6 +28,16 @@ Status: preparation only; no execution authorized.
 > image and adding an explicit compiler gate. Another preflight still requires
 > review, merge, and a fresh exact-commit GO.
 
+> Execution note (2026-07-30): the separately authorized compiler-capable
+> preflight at `d25725e2e9fba947e2b649664de3b26d52a6b1a2` completed 1/1
+> with zero restarts. It validated one `NVIDIA A100-PCIE-40GB`, compute
+> capability 8.0, a synchronized CUDA tensor operation, `/usr/bin/cc`, every
+> frozen package version, all required imports, FP16, BF16 disabled, and TF32
+> disabled. It used no private volume, dataset, model, training, inference, or
+> metric. A non-fatal warning showed that TRL was imported before Unsloth.
+> Issue #163 makes Unsloth-first ordering explicit and separates private
+> CPU-only staging from the five GPU Jobs before training is eligible.
+
 ## Purpose and interpretation
 
 This is a post-hoc, prospectively frozen robustness replication prompted by the
@@ -82,11 +92,21 @@ failure, nonzero exit, or any other failure does not cause an automatic
 research retry.
 
 The private PVC is named `musahhih-f2-f3-replication`, uses `ReadWriteMany`,
-requests 100 GiB on `cephfs`, and is mounted only by authorized training Jobs.
+and requests 100 GiB on `cephfs`. A separately authorized CPU-only staging Pod
+mounts it once to receive the three ignored private files. After write-once
+hash/count verification, the staging Pod terminates and is deleted. The
+pre-staged PVC is then mounted only by separately authorized training Jobs.
 
 ## Execution order and privacy boundary
 
-Before a private path is constructed or opened, the runner must:
+Private staging and training are separate authorizations. The staging manifest
+creates exactly one RWX PVC and one no-GPU Pod. Files are copied to an upload
+directory, and a separate readiness marker triggers verification. The Pod
+requires the frozen SHA-256 and line count for all three files, atomically
+moves them into the input directory, writes a corpus-text-free completion
+manifest, and exits. Existing upload or input content causes immediate failure.
+
+Before a training private path is constructed or opened, the runner must:
 
 1. check out the exact approved repository commit in detached mode;
 2. validate the issue-comment GO;
@@ -94,9 +114,11 @@ Before a private path is constructed or opened, the runner must:
 4. require an NVIDIA A100 with compute capability 8.0;
 5. execute and synchronize a real CUDA tensor operation.
 
-Only then may an authorized training Job open the frozen F2, F3, and common
-development files and validate their existing hashes, counts, schemas, and
-provenance.
+Only then may an authorized training Job validate the exact staging completion
+manifest and open the frozen F2, F3, and common development files to validate
+their existing hashes, counts, schemas, and provenance. The paired-training
+manifest emits only the five Jobs and refuses to create or replace the
+pre-staged PVC.
 
 Nahw-Passage and QALB test are not mounted, addressed, opened, or accepted by
 the training runner. No inference or metric is part of this issue.
@@ -122,6 +144,14 @@ retried, or replaced without a separate owner decision and fresh GO.
 
 Merge of the preparation code authorizes nothing.
 
+Private CPU-only staging requires a fresh comment of the form:
+
+> GO: authorize exactly one private-input staging operation for Musahhih issue
+> #163 at exact merged commit `<40-hex-commit>`: create the reviewed 100 GiB
+> RWX PVC and one no-GPU staging Pod, upload only the frozen F2, F3, and common
+> development JSONL files, verify only their exact hashes and counts without
+> printing corpus text, preserve the first terminal state, and do not retry.
+
 One no-input/no-model A100 preflight requires a fresh comment of the form:
 
 > GO: authorize exactly one no-input/no-model Nautilus A100 preflight for
@@ -129,8 +159,8 @@ One no-input/no-model A100 preflight requires a fresh comment of the form:
 > datasets, zero model loading, zero training, zero inference, and zero metric.
 > Preserve the first terminal state and do not retry.
 
-Only after that smoke passes may the owner separately authorize the five-job
-training wave:
+Only after private staging and the final import-order smoke both pass may the
+owner separately authorize the five-job training wave:
 
 > GO: authorize exactly five Nautilus A100 Jobs for Musahhih issue #155 at
 > exact merged commit `<40-hex-commit>`, one Job for each seed 3407–3411. Each

@@ -1,5 +1,25 @@
 # Active implementation plan
 
+## Issue #163 — finalize import order and private staging gate
+
+- [x] Preserve issue #161's passing no-input A100/compiler/import preflight.
+- [x] Assemble the three frozen ignored local files with exact expected hashes
+  and counts without printing corpus text.
+- [x] Import Unsloth before bitsandbytes, datasets, and TRL.
+- [x] Separate one CPU-only PVC/staging Pod from the five A100 training Jobs.
+- [x] Make staging write-once, hash/count gated, and corpus-text-free.
+- [x] Require the exact staging completion manifest before training opens the
+  three private record files.
+- [x] Complete focused and full local validation.
+- [ ] Complete Kubernetes dry-run validation at the preparation commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain separate fresh exact-commit owner GOs for staging, a final
+  import-order preflight, and the five-Job training wave.
+
+Issue #163 is repository-only preparation. It authorizes no Kubernetes object,
+private upload, GPU allocation, model load, training, inference, metric, retry,
+or continuation.
+
 ## Issue #161 — use a compiler-capable pinned Nautilus runtime
 
 - [x] Preserve issue #159's failed compiler import gate without retry.

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import gc
 import hashlib
+import importlib
 import importlib.metadata as metadata
 import json
 import os
@@ -46,6 +47,7 @@ EXPECTED_STACK = {
     "numpy": "2.0.2",
     "triton": "3.2.0",
 }
+REQUIRED_IMPORTS = ("unsloth", "bitsandbytes", "datasets", "trl")
 
 
 def sha256_file(path: Path) -> str:
@@ -104,10 +106,8 @@ def runtime_summary(torch_module, gpu_summary: dict) -> dict:
     if torch_module.version.cuda != "12.4":
         raise RuntimeError("Frozen Nautilus runtime requires CUDA 12.4")
     compiler = compiler_path()
-    import bitsandbytes  # noqa: F401
-    import datasets  # noqa: F401
-    import trl  # noqa: F401
-    import unsloth  # noqa: F401
+    for package in REQUIRED_IMPORTS:
+        importlib.import_module(package)
 
     return {
         "python": platform.python_version(),
@@ -135,6 +135,22 @@ def checkpoint_identity(checkpoint: Path) -> dict:
     }
 
 
+def validate_staging_manifest(input_root: Path) -> dict:
+    path = input_root / "staging_manifest.json"
+    expected = {
+        "status": "complete",
+        "records": {"f2": 2000, "f3": 2000, "development": 975},
+        "contains_corpus_text": False,
+    }
+    try:
+        observed = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError("Cannot read private staging manifest") from exc
+    if observed != expected:
+        raise RuntimeError("Private staging manifest contract mismatch")
+    return observed
+
+
 def train_arm(
     *,
     arm: str,
@@ -146,11 +162,11 @@ def train_arm(
     approval_reference: str,
     torch_module,
 ) -> dict:
-    from datasets import load_dataset
-    from trl import SFTConfig, SFTTrainer
     from unsloth import FastModel
     from unsloth.chat_templates import get_chat_template
     from unsloth.trainer import UnslothVisionDataCollator
+    from datasets import load_dataset
+    from trl import SFTConfig, SFTTrainer
 
     if output_dir.exists():
         raise RuntimeError(f"Output already exists for {arm} seed {seed}")
@@ -340,6 +356,7 @@ def main() -> None:
         raise RuntimeError("Paired training requires private input/output roots")
     seed = args.seed
     assert seed is not None
+    validate_staging_manifest(args.input_root)
     input_paths = {name: args.input_root / name for name in INPUT_FILENAMES}
     if any(not path.is_file() for path in input_paths.values()):
         raise RuntimeError("Expected private input files are missing")
