@@ -206,6 +206,12 @@ selection rule unchanged. See
 [`f2_f3_nautilus_multiseed_protocol.md`](f2_f3_nautilus_multiseed_protocol.md).
 Preparation authorizes no cluster object, private-input access, model loading,
 training, inference, Nahw-Passage access, metric, retry, or continuation.
+The first separately authorized no-input/no-model A100 preflight failed before
+its init container started because the pinned checkout-image checksum had an
+invalid length. No checkout or CUDA operation occurred, the failed allocation
+was released without retry, and that authorization is consumed. Issue #157
+prepares a repository-only full-digest repair and manifest-generation guard;
+even after merge, a replacement preflight requires a fresh exact-commit GO.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

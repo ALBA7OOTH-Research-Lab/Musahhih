@@ -1,5 +1,22 @@
 # Active implementation plan
 
+## Issue #157 — repair Nautilus checkout-image digest validation
+
+- [x] Preserve issue #155's failed first preflight state without retry.
+- [x] Release the failed pod's scheduled A100 after recording its diagnostics.
+- [x] Replace the malformed 62-character checkout-image checksum with the
+  authoritative 64-character Linux/AMD64 digest for the same image tag.
+- [x] Reject unpinned or malformed container-image digests before manifest
+  generation.
+- [x] Complete focused and full local validation.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
+
+Issue #157 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, private-input access, model load, training, inference, metric,
+retry, or replacement preflight.
+
 ## Issue #155 — prepare five-seed F2/F3 Nautilus replication
 
 - [x] Register a dedicated preparation issue and branch.

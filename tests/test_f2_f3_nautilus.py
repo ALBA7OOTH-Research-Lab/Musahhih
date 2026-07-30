@@ -12,7 +12,12 @@ from scripts.f2_f3_nautilus_utils import (
     atomic_write_json,
     validate_activation,
 )
-from scripts.prepare_f2_f3_nautilus_jobs import build_manifest
+from scripts.prepare_f2_f3_nautilus_jobs import (
+    GIT_IMAGE,
+    PYTORCH_IMAGE,
+    build_manifest,
+    validate_pinned_image,
+)
 
 
 APPROVAL = (
@@ -69,6 +74,19 @@ class FakeTorch:
 
 
 class NautilusReplicationTests(unittest.TestCase):
+    def test_container_images_use_complete_sha256_pins(self):
+        self.assertEqual(validate_pinned_image(GIT_IMAGE), GIT_IMAGE)
+        self.assertEqual(validate_pinned_image(PYTORCH_IMAGE), PYTORCH_IMAGE)
+        self.assertEqual(len(GIT_IMAGE.rsplit(":", 1)[1]), 64)
+        for malformed in (
+            "alpine/git:2.47.2",
+            "alpine/git:2.47.2@sha256:" + "a" * 62,
+            "alpine/git:2.47.2@sha256:" + "A" * 64,
+        ):
+            with self.subTest(image=malformed):
+                with self.assertRaisesRegex(ValueError, "full lowercase sha256"):
+                    validate_pinned_image(malformed)
+
     def test_five_seeds_have_balanced_deterministic_orders(self):
         self.assertEqual(SEEDS, (3407, 3408, 3409, 3410, 3411))
         self.assertEqual(arm_order(3407), ("F2-P1", "F3-P1"))

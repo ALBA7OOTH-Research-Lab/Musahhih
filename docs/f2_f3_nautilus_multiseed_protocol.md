@@ -2,6 +2,14 @@
 
 Status: preparation only; no execution authorized.
 
+> Execution note (2026-07-30): the first authorized A100 preflight at
+> `8ce1cca566c07cb3b544a6c865a0bdc7d3613733` failed before its init container
+> started because the pinned checkout-image checksum was only 62 hexadecimal
+> characters. No checkout, CUDA operation, private access, model loading,
+> training, inference, or metric occurred, and no retry was made. Issue #157
+> prepares a repository-only digest repair plus pre-generation validation. A
+> replacement preflight requires review, merge, and a fresh exact-commit GO.
+
 ## Purpose and interpretation
 
 This is a post-hoc, prospectively frozen robustness replication prompted by the
