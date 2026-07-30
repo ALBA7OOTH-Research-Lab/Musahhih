@@ -243,6 +243,15 @@ persist write-once logs and failure records, and retain 25-step recovery
 checkpoints for fresh-GO continuation. It changes no dataset, model revision,
 optimizer, schedule, batch, loss, evaluation cadence, checkpoint-selection
 rule, inference, or metric. Merge authorizes no GPU execution or retry.
+The separately authorized smoke subsequently completed the exact A100
+model/LoRA/collator/`SFTTrainer` construction path with zero optimizer steps.
+The explicit float16 model-configuration guard passed and the prior BF16/FP16
+construction mismatch did not recur. Unsloth used float32 master weights for
+Gemma 3 while retaining the frozen FP16 trainer configuration. No PVC, corpus,
+private record, training, inference, prediction, or metric was used. See
+[`../results/f2_f3_nautilus_fp16_trainer_smoke_audit.md`](../results/f2_f3_nautilus_fp16_trainer_smoke_audit.md).
+The authorization is consumed; replacement training still requires a fresh
+exact-commit owner GO.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
