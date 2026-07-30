@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 
 from scripts.f2_f3_nautilus_utils import (
@@ -23,8 +24,9 @@ PYTORCH_IMAGE = (
 )
 GIT_IMAGE = (
     "alpine/git:2.47.2@"
-    "sha256:062a01ad7a0eb17cff382bc5e26086b4d710e56dfdf001109a49b6d9bd378c"
+    "sha256:0d9a3a551058dba37ea77757955d3e834442ccf8540783671cc25c0d97957894"
 )
+PINNED_IMAGE_PATTERN = re.compile(r"^[^@\s]+@sha256:[0-9a-f]{64}$")
 PACKAGE_COMMAND = """
 set -euo pipefail
 python -m pip install --quiet --progress-bar off \
@@ -46,6 +48,13 @@ if [[ -n "$MUSAHHIH_OUTPUT_ROOT" ]]; then
 fi
 python -m scripts.run_f2_f3_nautilus_pair "${runner_args[@]}"
 """.strip()
+
+
+def validate_pinned_image(image: str) -> str:
+    """Reject tags and malformed digests before emitting a cluster manifest."""
+    if not PINNED_IMAGE_PATTERN.fullmatch(image):
+        raise ValueError(f"image must use a full lowercase sha256 pin: {image!r}")
+    return image
 
 
 def environment(
@@ -94,6 +103,8 @@ def build_job(
     confirmation: str,
     seed: int | None,
 ) -> dict:
+    validate_pinned_image(GIT_IMAGE)
+    validate_pinned_image(PYTORCH_IMAGE)
     validate_activation(
         stage=stage,
         seed=seed,
