@@ -12,9 +12,10 @@ from scripts.f2_f3_training_utils import APPROVAL_REFERENCE_PATTERN, ARMS
 
 
 SEEDS = (3407, 3408, 3409, 3410, 3411)
-STAGES = ("a100-preflight", "paired-training")
+STAGES = ("a100-preflight", "private-staging", "paired-training")
 PAIR_CONFIRMATION = "RUN_F2_F3_NAUTILUS_FIVE_SEED_TRAINING"
 PREFLIGHT_CONFIRMATION = "RUN_F2_F3_NAUTILUS_A100_PREFLIGHT"
+STAGING_CONFIRMATION = "STAGE_F2_F3_NAUTILUS_PRIVATE_INPUTS"
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 NAMESPACE = "aiea-interns"
 PVC_NAME = "musahhih-f2-f3-replication"
@@ -61,14 +62,16 @@ def validate_activation(
         raise NautilusReplicationError(
             "Approval reference must be a Musahhih issue-comment URL"
         )
-    expected = (
-        PREFLIGHT_CONFIRMATION if stage == "a100-preflight" else PAIR_CONFIRMATION
-    )
+    expected = {
+        "a100-preflight": PREFLIGHT_CONFIRMATION,
+        "private-staging": STAGING_CONFIRMATION,
+        "paired-training": PAIR_CONFIRMATION,
+    }[stage]
     if confirmation != expected:
         raise NautilusReplicationError("Stage confirmation mismatch")
-    if stage == "a100-preflight":
+    if stage in ("a100-preflight", "private-staging"):
         if seed is not None:
-            raise NautilusReplicationError("A100 preflight must not select a seed")
+            raise NautilusReplicationError(f"{stage} must not select a seed")
         order = None
     else:
         if seed is None:
@@ -146,6 +149,7 @@ __all__ = [
     "NautilusReplicationError",
     "PAIR_CONFIRMATION",
     "PREFLIGHT_CONFIRMATION",
+    "STAGING_CONFIRMATION",
     "PVC_NAME",
     "SEEDS",
     "STAGES",

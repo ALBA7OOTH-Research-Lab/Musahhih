@@ -223,6 +223,12 @@ compiler absent from the minimal PyTorch runtime image. Issue #161 prepares a
 matching official digest-pinned `devel` image while retaining PyTorch 2.6.0,
 CUDA 12.4, cuDNN 9, and every frozen experiment setting. That authorization is
 consumed; another preflight requires a fresh exact-commit GO.
+The compiler-capable replacement subsequently passed the complete no-input
+A100 gate. It validated exact A100 identity, a synchronized CUDA operation,
+the compiler, frozen packages, imports, and precision controls. Issue #163
+prepares the remaining Unsloth-first import-order correction and separates
+write-once CPU-only private PVC staging from the five GPU Jobs. Staging, a
+final exact-commit preflight, and training each require independent owner GOs.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 
 from scripts.f2_f3_nautilus_utils import (
+    INPUT_FILENAMES,
     NAMESPACE,
     PVC_NAME,
     SEEDS,
@@ -236,6 +237,127 @@ def build_pvc() -> dict:
     }
 
 
+def build_staging_pod(
+    *,
+    commit: str,
+    approval_reference: str,
+    confirmation: str,
+) -> dict:
+    validate_pinned_image(GIT_IMAGE)
+    validate_activation(
+        stage="private-staging",
+        seed=None,
+        approved_commit=commit,
+        actual_commit=commit,
+        approval_reference=approval_reference,
+        confirmation=confirmation,
+    )
+    expected = {
+        "f2_train_records.jsonl": (
+            "bbc48dcf78ddff1830661ad749fcc8f9fbfce8206f4f09cd9f4d6501823201d2",
+            2000,
+        ),
+        "f3_train_records.jsonl": (
+            "d16decebe559e9a25da41ef59f63ca95e339972e22b9659dfc763e071fbc1546",
+            2000,
+        ),
+        "common_dev_records.jsonl": (
+            "adfdeb0c2e5730357226ce4e5156c300679629142ea0576d32dea9ac3050a950",
+            975,
+        ),
+    }
+    verification_lines = []
+    for name, (digest, count) in expected.items():
+        verification_lines.extend(
+            (
+                f'verify "/private/staging-upload/{name}" "{digest}" "{count}"',
+                f'mv "/private/staging-upload/{name}" '
+                f'"/private/inputs/f2-f3/{name}"',
+            )
+        )
+    verification = "\n".join(verification_lines)
+    command = f"""
+set -eu
+mkdir -p /private/staging-upload /private/inputs/f2-f3
+mkdir -p /private/outputs/issue-155 /private/cache/huggingface /private/cache/pip
+test -z "$(ls -A /private/staging-upload)"
+test -z "$(ls -A /private/inputs/f2-f3)"
+touch /tmp/staging-ready
+while [ ! -f /private/staging-upload/READY ]; do sleep 1; done
+verify() {{
+  path="$1"
+  expected_hash="$2"
+  expected_count="$3"
+  test -f "$path"
+  actual_hash="$(sha256sum "$path" | awk '{{print $1}}')"
+  actual_count="$(wc -l < "$path" | tr -d ' ')"
+  test "$actual_hash" = "$expected_hash"
+  test "$actual_count" = "$expected_count"
+}}
+{verification}
+test -z "$(find /private/staging-upload -type f ! -name READY -print -quit)"
+rm /private/staging-upload/READY
+printf '%s\n' '{{"status":"complete","records":{{"f2":2000,"f3":2000,"development":975}},"contains_corpus_text":false}}' > /private/inputs/f2-f3/staging_manifest.json.tmp
+mv /private/inputs/f2-f3/staging_manifest.json.tmp /private/inputs/f2-f3/staging_manifest.json
+sync
+printf '%s\n' '{{"status":"complete","contains_corpus_text":false}}'
+""".strip()
+    labels = {
+        "app.kubernetes.io/name": "musahhih",
+        "app.kubernetes.io/component": "f2-f3-private-staging",
+        "musahhih.openai/issue": "163",
+        "musahhih.openai/stage": "private-staging",
+    }
+    return {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "metadata": {
+            "name": "musahhih-f2-f3-staging",
+            "namespace": NAMESPACE,
+            "labels": labels,
+            "annotations": {
+                "musahhih.openai/approved-commit": commit,
+                "musahhih.openai/approval-reference": approval_reference,
+                "musahhih.openai/input-filenames": ",".join(INPUT_FILENAMES),
+            },
+        },
+        "spec": {
+            "restartPolicy": "Never",
+            "activeDeadlineSeconds": 86400,
+            "containers": [
+                {
+                    "name": "private-staging",
+                    "image": GIT_IMAGE,
+                    "command": ["/bin/sh", "-c", command],
+                    "resources": {
+                        "requests": {
+                            "cpu": "100m",
+                            "memory": "128Mi",
+                            "ephemeral-storage": "1Gi",
+                        },
+                        "limits": {
+                            "cpu": "100m",
+                            "memory": "128Mi",
+                            "ephemeral-storage": "1Gi",
+                        },
+                    },
+                    "readinessProbe": {
+                        "exec": {"command": ["test", "-f", "/tmp/staging-ready"]},
+                        "periodSeconds": 1,
+                    },
+                    "volumeMounts": [{"name": "private", "mountPath": "/private"}],
+                }
+            ],
+            "volumes": [
+                {
+                    "name": "private",
+                    "persistentVolumeClaim": {"claimName": PVC_NAME},
+                }
+            ],
+        },
+    }
+
+
 def build_manifest(
     *,
     stage: str,
@@ -243,11 +365,21 @@ def build_manifest(
     approval_reference: str,
     confirmation: str,
 ) -> dict:
+    if stage == "private-staging":
+        return {
+            "apiVersion": "v1",
+            "kind": "List",
+            "items": [
+                build_pvc(),
+                build_staging_pod(
+                    commit=commit,
+                    approval_reference=approval_reference,
+                    confirmation=confirmation,
+                ),
+            ],
+        }
     seeds = (None,) if stage == "a100-preflight" else SEEDS
-    items = []
-    if stage == "paired-training":
-        items.append(build_pvc())
-    items.extend(
+    items = list(
         build_job(
             stage=stage,
             commit=commit,
@@ -263,7 +395,9 @@ def build_manifest(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--stage", required=True, choices=("a100-preflight", "paired-training")
+        "--stage",
+        required=True,
+        choices=("a100-preflight", "private-staging", "paired-training"),
     )
     parser.add_argument("--approved-commit", required=True)
     parser.add_argument("--approval-reference", required=True)
