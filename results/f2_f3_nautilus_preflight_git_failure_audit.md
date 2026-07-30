@@ -40,6 +40,13 @@ hexadecimal characters before comparing it with the approved commit.
 Regression coverage verifies success with an empty `PATH` and failure for a
 symbolic HEAD, malformed or uppercase commit IDs, and missing HEAD metadata.
 
+At repair commit `83891a15f70a9e7a8f671a7e4bdc82ab3d40e8d7`,
+compilation, formatting, lint, 10 focused tests with 10 subtests, and the full
+253-test suite with 75 subtests passed. The one-object preflight manifest
+contained zero private-volume mounts and passed a Nautilus server dry-run
+without persistence. Its validation-only manifest SHA-256 was
+`67a5b39b52e2ce21d281b9ca6c2d2c50cf13c354756a19c6a85147f5a5aec462`.
+
 This repository-only repair authorizes no cluster object or GPU execution. A
 further no-input/no-model preflight requires review, merge, and a fresh
 exact-commit owner GO. Paired training remains unauthorized.
