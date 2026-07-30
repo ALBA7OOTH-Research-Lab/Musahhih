@@ -1,5 +1,24 @@
 # Active implementation plan
 
+## Issue #155 — prepare five-seed F2/F3 Nautilus replication
+
+- [x] Register a dedicated preparation issue and branch.
+- [x] Confirm the namespace can create Jobs/PVCs and has quota for five A100s.
+- [x] Freeze five paired seeds, balanced arm order, A100 runtime, and post-hoc
+  interpretation.
+- [x] Add fail-closed Nautilus activation, A100 preflight, paired training, and
+  write-once private output handling.
+- [x] Generate five Job manifests with no Nahw-Passage mount and no automatic
+  retry.
+- [x] Add focused tests and corpus-text-free preparation evidence.
+- [ ] Open a review PR and record the exact merged executable commit.
+- [ ] Obtain a separate GO for one no-input/no-model A100 smoke.
+- [ ] Obtain another exact-commit GO before the five-job training wave.
+
+Issue #155 is preparation only. It authorizes no cluster resource creation,
+private-input access, model loading, optimizer step, training, inference,
+Nahw-Passage access, metric, retry, or continuation.
+
 ## Issue #122 — classify the B1/B2 global package conflict
 
 - [x] Register a diagnostic-repair issue and branch.
