@@ -212,11 +212,18 @@ optimizer step. Retained logs for seeds 3408, 3409, and 3411 showed that Gemma
 loaded as BF16 on A100 while the frozen trainer requested FP16; Unsloth rejected
 the mismatch during `SFTTrainer` construction. No checkpoint, inference,
 prediction, or metric was produced, and no retry occurred. The authorization
-is consumed. Issue #167 prepares a repository-only repair that forces FP16
-model loading, adds a no-private zero-step model/trainer smoke, writes durable
+is consumed. Issue #167's repository repair forces an explicit FP16 model
+configuration, adds a no-private zero-step model/trainer smoke, writes durable
 private logs and corpus-free failure records, and retains 25-step recovery
-checkpoints for fresh-GO continuation. The repair authorizes no GPU execution,
-private-input access, training, retry, continuation, inference, or metric.
+checkpoints for fresh-GO continuation. The separately authorized A100 smoke
+then completed model, LoRA, collator, and `SFTTrainer` construction in 138
+seconds with zero optimizer steps. Unsloth used float32 master weights for
+Gemma 3 while retaining the frozen FP16 trainer path; the prior
+BF16-model/FP16-trainer construction failure did not recur. See
+`results/f2_f3_nautilus_fp16_trainer_smoke_audit.md`. No PVC, corpus, private
+record, training, inference, prediction, or metric was used. The smoke
+authorization is consumed. Replacement training remains unauthorized and
+requires a fresh exact-commit owner GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
