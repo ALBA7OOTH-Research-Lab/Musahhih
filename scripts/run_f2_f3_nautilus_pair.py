@@ -10,7 +10,7 @@ import importlib.metadata as metadata
 import json
 import os
 import platform
-import subprocess
+import re
 from pathlib import Path
 
 from scripts.f1_training_utils import (
@@ -55,14 +55,17 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def actual_commit() -> str:
-    result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return result.stdout.strip()
+def actual_commit(repository_root: Path | None = None) -> str:
+    """Read the init container's detached checkout without requiring git."""
+    root = Path.cwd() if repository_root is None else repository_root
+    head_path = root / ".git" / "HEAD"
+    try:
+        commit = head_path.read_text(encoding="ascii").strip()
+    except OSError as exc:
+        raise RuntimeError(f"cannot read detached checkout HEAD: {head_path}") from exc
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise RuntimeError("checkout HEAD is not a detached lowercase 40-hex commit")
+    return commit
 
 
 def runtime_summary(torch_module, gpu_summary: dict) -> dict:

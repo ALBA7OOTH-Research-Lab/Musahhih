@@ -1,5 +1,22 @@
 # Active implementation plan
 
+## Issue #159 — remove Nautilus main-runtime git dependency
+
+- [x] Preserve issue #157's failed replacement preflight without retry.
+- [x] Release the terminal failed Job after recording aggregate diagnostics.
+- [x] Replace the main container's `git rev-parse` call with strict detached
+  `.git/HEAD` verification from the init container's validated checkout.
+- [x] Add regression coverage for an empty runtime `PATH`, symbolic HEAD,
+  malformed commit IDs, and missing metadata.
+- [x] Complete focused and full local validation.
+- [ ] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
+
+Issue #159 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, private-input access, model load, training, inference, metric,
+retry, or replacement preflight.
+
 ## Issue #157 — repair Nautilus checkout-image digest validation
 
 - [x] Preserve issue #155's failed first preflight state without retry.

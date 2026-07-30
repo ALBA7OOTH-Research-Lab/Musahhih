@@ -10,6 +10,15 @@ Status: preparation only; no execution authorized.
 > prepares a repository-only digest repair plus pre-generation validation. A
 > replacement preflight requires review, merge, and a fresh exact-commit GO.
 
+> Execution note (2026-07-30): the separately authorized replacement preflight
+> at `45fb80f0208bd8a504ef9bb66a9207cb7e09199e` passed the repaired image pull,
+> immutable checkout, PyTorch image pull, and dependency installation, then
+> failed before CUDA because the main runtime lacked a `git` executable used by
+> the runner's redundant commit check. No private access, model loading,
+> training, inference, or metric occurred, and no retry was made. Issue #159
+> replaces that subprocess with strict detached-HEAD metadata verification. A
+> further preflight still requires review, merge, and a fresh exact-commit GO.
+
 ## Purpose and interpretation
 
 This is a post-hoc, prospectively frozen robustness replication prompted by the
