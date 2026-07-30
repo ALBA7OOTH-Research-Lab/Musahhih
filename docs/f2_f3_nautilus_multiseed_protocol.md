@@ -98,6 +98,8 @@ steps. They do not participate in checkpoint selection and do not change the
 optimizer, schedule, batches, examples, loss, evaluation cadence, or the two
 epoch-boundary candidates. Their sole role is to cap lost work after an
 external Pod or node failure. Epoch checkpoints are never pruned.
+Each save also writes a durable identity sidecar hashing the adapter model,
+adapter configuration, Trainer state, optimizer, scheduler, and RNG state.
 
 ## Cluster contract
 

@@ -19,6 +19,7 @@
     "trainer_bf16": false,
     "tf32": false,
     "recovery_checkpoint_steps": 25,
+    "checkpoint_identity_sidecar": true,
     "automatic_retry": false,
     "fresh_go_required_for_resume": true,
     "persistent_private_log": true,

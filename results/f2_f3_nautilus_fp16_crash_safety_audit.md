@@ -42,7 +42,8 @@ The repository now:
   arms, exception class, and a SHA-256 of the exception message;
 - saves operational recovery checkpoints every 25 optimizer steps without
   pruning either epoch-boundary checkpoint or changing the checkpoint-selection
-  rule; and
+  rule, and writes a durable SHA-256 sidecar covering the adapter, Trainer,
+  optimizer, scheduler, and RNG state for every checkpoint; and
 - permits continuation only after a fresh GO and exact validation of the
   commit, seed, private-input identities, completed-arm records, checkpoint
   identities, and Trainer state.

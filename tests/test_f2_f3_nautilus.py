@@ -27,6 +27,7 @@ from scripts.prepare_f2_f3_nautilus_jobs import (
 )
 from scripts.run_f2_f3_nautilus_pair import (
     REQUIRED_IMPORTS,
+    RESUME_IDENTITY_FILENAME,
     RESUME_SAVE_STEPS,
     actual_commit,
     compiler_path,
@@ -35,6 +36,7 @@ from scripts.run_f2_f3_nautilus_pair import (
     latest_resumable_checkpoint,
     model_load_kwargs,
     require_fp16_model,
+    resume_checkpoint_identity,
     train_arm,
     validate_staging_manifest,
 )
@@ -175,11 +177,24 @@ class NautilusReplicationTests(unittest.TestCase):
             second = output / "checkpoint-250"
             first.mkdir()
             second.mkdir()
-            (first / "trainer_state.json").write_text("{}\n", encoding="utf-8")
-            (second / "trainer_state.json").write_text("{}\n", encoding="utf-8")
+            required = (
+                "adapter_model.safetensors",
+                "adapter_config.json",
+                "trainer_state.json",
+                "optimizer.pt",
+                "scheduler.pt",
+                "rng_state.pth",
+            )
+            for checkpoint in (first, second):
+                for name in required:
+                    (checkpoint / name).write_bytes(name.encode("ascii"))
+                atomic_write_json(
+                    checkpoint / RESUME_IDENTITY_FILENAME,
+                    resume_checkpoint_identity(checkpoint),
+                )
             self.assertEqual(latest_resumable_checkpoint(output), second)
-            (second / "trainer_state.json").unlink()
-            with self.assertRaisesRegex(RuntimeError, "Incomplete trainer checkpoint"):
+            (second / "optimizer.pt").write_bytes(b"tampered")
+            with self.assertRaisesRegex(RuntimeError, "identity mismatch"):
                 latest_resumable_checkpoint(output)
 
     def test_training_saves_resumable_progress_without_pruning_epoch_checkpoints(self):
@@ -189,6 +204,8 @@ class NautilusReplicationTests(unittest.TestCase):
         self.assertIn("save_steps=RESUME_SAVE_STEPS", source)
         self.assertIn("save_total_limit=None", source)
         self.assertIn("resume_from_checkpoint=", source)
+        self.assertIn("DurableCheckpointCallback", source)
+        self.assertIn("resume_checkpoint_identity(checkpoint)", source)
 
     def test_failure_record_is_corpus_free_and_requires_fresh_go(self):
         activation = {

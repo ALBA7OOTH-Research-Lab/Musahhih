@@ -50,6 +50,7 @@ EXPECTED_STACK = {
 REQUIRED_IMPORTS = ("unsloth", "bitsandbytes", "datasets", "trl")
 FROZEN_PRECISION = "float16"
 RESUME_SAVE_STEPS = 25
+RESUME_IDENTITY_FILENAME = "musahhih_resume_identity.json"
 LEGACY_FAILED_WAVE_COMMIT = "b01e93d35bf134fc7b547b7dbc17bec185794faf"
 
 
@@ -138,6 +139,32 @@ def checkpoint_identity(checkpoint: Path) -> dict:
     }
 
 
+def resume_checkpoint_identity(checkpoint: Path) -> dict:
+    """Hash every state file required for a scientifically exact continuation."""
+    required = (
+        "adapter_model.safetensors",
+        "adapter_config.json",
+        "trainer_state.json",
+        "optimizer.pt",
+        "scheduler.pt",
+        "rng_state.pth",
+    )
+    files = {}
+    for name in required:
+        path = checkpoint / name
+        if not path.is_file():
+            raise RuntimeError(f"Incomplete resumable checkpoint: {checkpoint.name}")
+        files[name] = {
+            "bytes": path.stat().st_size,
+            "sha256": sha256_file(path),
+        }
+    return {
+        "checkpoint": checkpoint.name,
+        "files": files,
+        "contains_corpus_text": False,
+    }
+
+
 def model_load_kwargs(torch_module) -> dict:
     """Force the original P100 FP16 contract when loading on BF16-capable A100s."""
     dtype = getattr(torch_module, "float16", None)
@@ -171,8 +198,13 @@ def latest_resumable_checkpoint(output_dir: Path) -> Path | None:
         match = re.fullmatch(r"checkpoint-([1-9][0-9]*)", candidate.name)
         if not match or not candidate.is_dir():
             continue
-        if not (candidate / "trainer_state.json").is_file():
-            raise RuntimeError(f"Incomplete trainer checkpoint: {candidate.name}")
+        identity_path = candidate / RESUME_IDENTITY_FILENAME
+        observed = read_json_object(
+            identity_path, f"{candidate.name} resume identity"
+        )
+        expected = resume_checkpoint_identity(candidate)
+        if observed != expected:
+            raise RuntimeError(f"Resume checkpoint identity mismatch: {candidate.name}")
         checkpoints.append((int(match.group(1)), candidate))
     return max(checkpoints, default=(0, None))[1]
 
@@ -234,6 +266,7 @@ def train_arm(
     from unsloth.chat_templates import get_chat_template
     from unsloth.trainer import UnslothVisionDataCollator
     from datasets import load_dataset
+    from transformers import TrainerCallback
     from trl import SFTConfig, SFTTrainer
 
     if (output_dir / "checkpoint_selection.json").exists():
@@ -317,6 +350,15 @@ def train_arm(
         response_part="<start_of_turn>model\n",
         completion_only_loss=True,
     )
+    class DurableCheckpointCallback(TrainerCallback):
+        def on_save(self, args, state, control, **kwargs):
+            checkpoint = Path(args.output_dir) / f"checkpoint-{state.global_step}"
+            atomic_write_json(
+                checkpoint / RESUME_IDENTITY_FILENAME,
+                resume_checkpoint_identity(checkpoint),
+            )
+            return control
+
     trainer = SFTTrainer(
         model=model,
         processing_class=processor,
@@ -324,6 +366,7 @@ def train_arm(
         train_dataset=private_data["train"],
         eval_dataset=private_data["validation"],
         args=args,
+        callbacks=[DurableCheckpointCallback()],
     )
     first_labels = collator([private_data["train"][0]])["labels"][0]
     if not torch_module.any(first_labels != -100).item():
@@ -441,6 +484,7 @@ def run_fp16_trainer_smoke(*, torch_module) -> dict:
         response_part="<start_of_turn>model\n",
         completion_only_loss=True,
     )
+
     trainer = SFTTrainer(
         model=model,
         processing_class=processor,
