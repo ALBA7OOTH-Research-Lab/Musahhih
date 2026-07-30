@@ -38,6 +38,14 @@ Status: preparation only; no execution authorized.
 > Issue #163 makes Unsloth-first ordering explicit and separates private
 > CPU-only staging from the five GPU Jobs before training is eligible.
 
+> Execution note (2026-07-30): issue #163's authorized private-staging
+> operation created exactly one no-GPU Pod and one 100 GiB RWX PVC, but the
+> selected `cephfs` provisioner emitted only repeated `ExternalProvisioning`
+> waits. After more than 5.5 minutes, the PVC had no volume or capacity and the
+> Pod remained unscheduled. No private byte was uploaded. The Pod and unbound,
+> data-free claim were deleted without retry. Issue #165 switches only the
+> storage class to the namespace's proven `rook-cephfs` RWX provisioner.
+
 ## Purpose and interpretation
 
 This is a post-hoc, prospectively frozen robustness replication prompted by the
@@ -92,7 +100,7 @@ failure, nonzero exit, or any other failure does not cause an automatic
 research retry.
 
 The private PVC is named `musahhih-f2-f3-replication`, uses `ReadWriteMany`,
-and requests 100 GiB on `cephfs`. A separately authorized CPU-only staging Pod
+and requests 100 GiB on `rook-cephfs`. A separately authorized CPU-only staging Pod
 mounts it once to receive the three ignored private files. After write-once
 hash/count verification, the staging Pod terminates and is deleted. The
 pre-staged PVC is then mounted only by separately authorized training Jobs.

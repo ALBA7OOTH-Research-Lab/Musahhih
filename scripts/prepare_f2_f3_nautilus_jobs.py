@@ -232,7 +232,7 @@ def build_pvc() -> dict:
         "spec": {
             "accessModes": ["ReadWriteMany"],
             "resources": {"requests": {"storage": "100Gi"}},
-            "storageClassName": "cephfs",
+            "storageClassName": "rook-cephfs",
         },
     }
 
