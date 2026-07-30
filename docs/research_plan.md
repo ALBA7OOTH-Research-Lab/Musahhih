@@ -198,6 +198,15 @@ repeated or used for tuning.
 The existing F1 test results predate this companion protocol, so the paper must
 disclose the staged design and cannot call all arms simultaneously preregistered.
 
+Issue #155 separately prepares a post-hoc, prospectively frozen five-seed
+F2-P1/F3-P1 robustness cohort on matched A100 hardware. Seeds 3407–3411 are
+paired within five Jobs, with alternating arm order, forced FP16, disabled
+TF32, both epoch checkpoints retained, and the original common-development
+selection rule unchanged. See
+[`f2_f3_nautilus_multiseed_protocol.md`](f2_f3_nautilus_multiseed_protocol.md).
+Preparation authorizes no cluster object, private-input access, model loading,
+training, inference, Nahw-Passage access, metric, retry, or continuation.
+
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
 `0c34d1846cebc81ea847d8c2c352c353f8988d46`. It produced 89/511 exact
