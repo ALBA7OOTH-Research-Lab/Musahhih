@@ -20,7 +20,7 @@ from scripts.prepare_f2_f3_nautilus_jobs import (
     build_manifest,
     validate_pinned_image,
 )
-from scripts.run_f2_f3_nautilus_pair import actual_commit
+from scripts.run_f2_f3_nautilus_pair import actual_commit, compiler_path
 
 
 APPROVAL = (
@@ -103,6 +103,7 @@ class NautilusReplicationTests(unittest.TestCase):
         self.assertEqual(validate_pinned_image(GIT_IMAGE), GIT_IMAGE)
         self.assertEqual(validate_pinned_image(PYTORCH_IMAGE), PYTORCH_IMAGE)
         self.assertEqual(len(GIT_IMAGE.rsplit(":", 1)[1]), 64)
+        self.assertIn("2.6.0-cuda12.4-cudnn9-devel@", PYTORCH_IMAGE)
         for malformed in (
             "alpine/git:2.47.2",
             "alpine/git:2.47.2@sha256:" + "a" * 62,
@@ -111,6 +112,19 @@ class NautilusReplicationTests(unittest.TestCase):
             with self.subTest(image=malformed):
                 with self.assertRaisesRegex(ValueError, "full lowercase sha256"):
                     validate_pinned_image(malformed)
+
+    def test_compiler_gate_accepts_devel_toolchain_and_fails_without_it(self):
+        with patch(
+            "scripts.run_f2_f3_nautilus_pair.shutil.which",
+            side_effect=lambda name: "/usr/bin/gcc" if name == "gcc" else None,
+        ):
+            self.assertEqual(compiler_path(), "/usr/bin/gcc")
+        with patch(
+            "scripts.run_f2_f3_nautilus_pair.shutil.which",
+            return_value=None,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "requires a C compiler"):
+                compiler_path()
 
     def test_five_seeds_have_balanced_deterministic_orders(self):
         self.assertEqual(SEEDS, (3407, 3408, 3409, 3410, 3411))

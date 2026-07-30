@@ -217,6 +217,12 @@ because the main container lacked the `git` executable used by a redundant
 commit check. Issue #159 prepares strict detached-HEAD metadata verification
 without a main-runtime Git dependency. The replacement authorization is
 consumed, and any further preflight still requires a fresh exact-commit GO.
+A fresh second replacement then passed the exact-A100 synchronized CUDA
+operation but failed the complete import gate because Triton required a C
+compiler absent from the minimal PyTorch runtime image. Issue #161 prepares a
+matching official digest-pinned `devel` image while retaining PyTorch 2.6.0,
+CUDA 12.4, cuDNN 9, and every frozen experiment setting. That authorization is
+consumed; another preflight requires a fresh exact-commit GO.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
