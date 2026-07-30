@@ -212,6 +212,11 @@ invalid length. No checkout or CUDA operation occurred, the failed allocation
 was released without retry, and that authorization is consumed. Issue #157
 prepares a repository-only full-digest repair and manifest-generation guard;
 even after merge, a replacement preflight requires a fresh exact-commit GO.
+That replacement passed checkout and runtime setup but failed before CUDA
+because the main container lacked the `git` executable used by a redundant
+commit check. Issue #159 prepares strict detached-HEAD metadata verification
+without a main-runtime Git dependency. The replacement authorization is
+consumed, and any further preflight still requires a fresh exact-commit GO.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

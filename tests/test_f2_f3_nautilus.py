@@ -1,6 +1,8 @@
 import tempfile
 import unittest
+from os import environ
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.f2_f3_nautilus_utils import (
     NautilusReplicationError,
@@ -18,6 +20,7 @@ from scripts.prepare_f2_f3_nautilus_jobs import (
     build_manifest,
     validate_pinned_image,
 )
+from scripts.run_f2_f3_nautilus_pair import actual_commit
 
 
 APPROVAL = (
@@ -74,6 +77,28 @@ class FakeTorch:
 
 
 class NautilusReplicationTests(unittest.TestCase):
+    def test_commit_attestation_needs_no_git_executable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / ".git").mkdir()
+            (root / ".git" / "HEAD").write_text(COMMIT + "\n", encoding="ascii")
+            with patch.dict(environ, {"PATH": ""}):
+                self.assertEqual(actual_commit(root), COMMIT)
+
+    def test_commit_attestation_rejects_non_detached_or_missing_head(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / ".git").mkdir()
+            head = root / ".git" / "HEAD"
+            for value in ("ref: refs/heads/main\n", "a" * 39, "A" * 40):
+                head.write_text(value, encoding="ascii")
+                with self.subTest(value=value):
+                    with self.assertRaisesRegex(RuntimeError, "detached lowercase"):
+                        actual_commit(root)
+            head.unlink()
+            with self.assertRaisesRegex(RuntimeError, "cannot read"):
+                actual_commit(root)
+
     def test_container_images_use_complete_sha256_pins(self):
         self.assertEqual(validate_pinned_image(GIT_IMAGE), GIT_IMAGE)
         self.assertEqual(validate_pinned_image(PYTORCH_IMAGE), PYTORCH_IMAGE)
