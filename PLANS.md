@@ -10,7 +10,7 @@
 - [x] Retain the exact PVC, no-GPU Pod, write-once upload, hash/count, and
   training-separation contracts.
 - [x] Complete focused and full local validation.
-- [ ] Complete Kubernetes dry-run validation at the repair commit.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
 - [ ] Open and merge a review PR.
 - [ ] Obtain a fresh exact-commit owner GO before replacement staging.
 

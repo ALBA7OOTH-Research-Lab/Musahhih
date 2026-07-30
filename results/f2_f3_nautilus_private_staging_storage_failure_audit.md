@@ -43,3 +43,10 @@ claims, using `rook-cephfs`. Issue #165 changes only the storage class from
 
 This repository-only repair authorizes no cluster object or private upload.
 Replacement staging requires review, merge, and a fresh exact-commit owner GO.
+
+At repair commit `0c77ad655ba09a747f0d25e4ae31e0bf53119c79`,
+compilation, formatting, lint, 14 focused tests with 10 subtests, and the full
+257-test suite with 75 subtests passed. The corrected two-object manifest used
+`rook-cephfs`, contained no GPU request, and passed a Nautilus server dry-run
+without persistence. Its validation-only SHA-256 was
+`941257ae417668a72c3e1db316abe582d12f39d3061573d71b36ac1ff83207a5`.
