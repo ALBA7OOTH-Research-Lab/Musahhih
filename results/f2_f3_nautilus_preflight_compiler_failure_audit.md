@@ -45,6 +45,14 @@ The runner now requires a discoverable C compiler before the unchanged
 bitsandbytes/Unsloth import gate. Regression coverage checks both a present
 compiler and a fail-closed compiler-free runtime.
 
+At repair commit `f4e186858f888a23664a221ae16b51d16851daec`,
+compilation, formatting, lint, 11 focused tests with 10 subtests, and the full
+254-test suite with 75 subtests passed. The one-object preflight manifest used
+the full `devel` image digest, contained zero private-volume mounts, and passed
+a Nautilus server dry-run without persistence. Its validation-only manifest
+SHA-256 was
+`ef925ece22e07f910ad736cc18961dad9f17ffdb75443d17ab7ccd6bd00b15e1`.
+
 This repository-only repair authorizes no cluster object or GPU execution. A
 further no-input/no-model preflight requires review, merge, and a fresh
 exact-commit owner GO. Paired training remains unauthorized.

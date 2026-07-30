@@ -10,7 +10,7 @@
 - [x] Require a discoverable C compiler before the bitsandbytes/Unsloth import
   gate and add focused regression coverage.
 - [x] Complete focused and full local validation.
-- [ ] Complete Kubernetes dry-run validation at the repair commit.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
 - [ ] Open and merge a review PR.
 - [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
 
