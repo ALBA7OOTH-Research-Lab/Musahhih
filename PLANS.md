@@ -658,3 +658,21 @@ mount-discovery repair and a fresh exact-commit owner GO.
 - [x] Publish only corpus-text-free evidence.
 
 Issue #147's authorization is consumed. Do not rerun or tune from B2-P1.
+
+## Issue #167 — repair A100 FP16 initialization and crash safety
+
+- [x] Preserve and report issue #155's five terminal failures without retry.
+- [x] Force the frozen FP16 dtype during Gemma model loading on A100.
+- [x] Add a no-private, zero-step exact model/collator/trainer smoke stage.
+- [x] Give every fresh GO a unique write-once Job, log, exit, and attempt ID.
+- [x] Persist complete stdout/stderr and corpus-free failure records on the PVC.
+- [x] Retain recovery checkpoints every 25 steps without changing selection.
+- [x] Permit only fresh-GO, identity-verified checkpoint/arm continuation.
+- [ ] Pass focused and full validation.
+- [ ] Obtain review and merge the repository-only repair.
+- [ ] Obtain a fresh exact-commit GO before one FP16 trainer smoke.
+- [ ] Obtain a later separate GO before any replacement training wave.
+
+Issue #167 authorizes repository preparation only. It authorizes no GPU
+execution, private-input access, training, retry, continuation, inference,
+prediction, metric, Nahw-Passage access, or QALB-test access.

@@ -46,6 +46,18 @@ Status: preparation only; no execution authorized.
 > data-free claim were deleted without retry. Issue #165 switches only the
 > storage class to the namespace's proven `rook-cephfs` RWX provisioner.
 
+> Execution note (2026-07-30): issue #165's replacement staging passed on a
+> 100 GiB `rook-cephfs` RWX claim. The exact F2, F3, and common-development
+> hashes and counts passed without corpus text output. A final no-input
+> import-order A100 preflight also passed at
+> `b01e93d35bf134fc7b547b7dbc17bec185794faf`. The subsequently authorized five
+> Jobs all failed before the first optimizer step. Retained logs from seeds
+> 3408, 3409, and 3411 showed one common cause: model loading selected BF16 on
+> the A100 while the frozen trainer requested FP16, and Unsloth rejected the
+> mismatch during `SFTTrainer` construction. Issue #167 forces FP16 model
+> loading, adds an exact model-and-trainer construction smoke, and adds durable
+> crash/continuation controls. Merge authorizes no execution.
+
 ## Purpose and interpretation
 
 This is a post-hoc, prospectively frozen robustness replication prompted by the
@@ -81,6 +93,12 @@ Both epoch checkpoints are preserved. The original common-development rule
 selects the lower assistant-token loss, with a difference within `1e-6`
 selecting epoch 1.
 
+Operational recovery checkpoints are additionally written every 25 optimizer
+steps. They do not participate in checkpoint selection and do not change the
+optimizer, schedule, batches, examples, loss, evaluation cadence, or the two
+epoch-boundary candidates. Their sole role is to cap lost work after an
+external Pod or node failure. Epoch checkpoints are never pruned.
+
 ## Cluster contract
 
 The prepared namespace is `aiea-interns`. Read-only inspection on 2026-07-30
@@ -98,6 +116,13 @@ memory, 40 GiB ephemeral storage, and one `nvidia.com/a100`. It uses no
 opportunistic priority class. Each Job has `backoffLimit: 0`; eviction, node
 failure, nonzero exit, or any other failure does not cause an automatic
 research retry.
+
+Every authorized training attempt derives a unique write-once attempt ID from
+its GitHub owner-comment URL. The Kubernetes Job name, private log, exit record,
+and attempt state use that ID, so a fresh GO cannot overwrite an earlier
+failure. The shell wrapper copies complete stdout/stderr to the private PVC,
+requires the log write to succeed, atomically records the process exit code,
+and calls `sync` before exit.
 
 The private PVC is named `musahhih-f2-f3-replication`, uses `ReadWriteMany`,
 and requests 100 GiB on `rook-cephfs`. A separately authorized CPU-only staging Pod
@@ -137,16 +162,23 @@ to corpus-text-free configuration and reviewed aggregate audits.
 
 ## Write-once behavior
 
-Each seed receives a new output root. Existing seed output causes immediate
-failure. The runner writes append-only, atomically replaced state artifacts:
+Each seed has a stable private output root plus write-once per-GO attempt
+records. Existing state is never deleted or overwritten. The runner writes:
 
 - `00_started.json`;
+- `attempts/<owner-comment-id>/00_started.json`;
+- `attempts/<owner-comment-id>/98_failed.json` on a Python failure, containing
+  only phase, exception class, a message hash, and aggregate state;
 - one completion record after each arm;
+- `attempts/<owner-comment-id>/99_complete.json` after the pair;
 - `99_pair_complete.json` only after both arms finish.
 
 Every epoch checkpoint must contain a hashed adapter model and adapter
-configuration. A failed or incomplete Job is preserved. It cannot be resumed,
-retried, or replaced without a separate owner decision and fresh GO.
+configuration. A fresh-GO continuation validates the exact commit, seed,
+private-input identities, completed-arm markers, checkpoint identities, and
+Trainer state before skipping a completed arm or resuming the newest compatible
+25-step checkpoint. It never resumes automatically. A failed or incomplete Job
+remains preserved and still requires a separate owner decision and fresh GO.
 
 ## Authorization separation
 
@@ -167,8 +199,19 @@ One no-input/no-model A100 preflight requires a fresh comment of the form:
 > datasets, zero model loading, zero training, zero inference, and zero metric.
 > Preserve the first terminal state and do not retry.
 
-Only after private staging and the final import-order smoke both pass may the
-owner separately authorize the five-job training wave:
+After issue #167 merges, one no-private exact model/trainer smoke requires a
+fresh comment of the form:
+
+> GO: authorize exactly one no-private Nautilus A100 FP16 model-and-trainer
+> construction smoke for Musahhih issue #167 at exact merged commit
+> `<40-hex-commit>`. It may load only the frozen Gemma revision, construct the
+> frozen FP16 LoRA model, completion-only collator, and `SFTTrainer` on the
+> built-in synthetic smoke row, and execute zero optimizer steps. Mount no PVC
+> or corpus; run no training, inference, prediction, or metric. Preserve the
+> first terminal state and do not retry.
+
+Only after private staging and the FP16 model/trainer smoke both pass may the
+owner separately authorize the replacement five-job training wave:
 
 > GO: authorize exactly five Nautilus A100 Jobs for Musahhih issue #155 at
 > exact merged commit `<40-hex-commit>`, one Job for each seed 3407–3411. Each
@@ -176,8 +219,9 @@ owner separately authorize the five-job training wave:
 > for two epochs per arm, using only the frozen training views and common QALB
 > development set. Preserve both epoch checkpoints and private logs. Do not
 > mount or access Nahw-Passage or QALB test; do not run inference or metrics;
-> do not tune any setting; do not retry, continue, or replace a failed Job
-> without another fresh GO.
+> do not tune any setting. Resume only exact-commit, hash-verified compatible
+> private progress; do not retry or replace a failed Job without another fresh
+> GO.
 
 The no-input smoke GO cannot authorize training. The training GO cannot
 authorize later evaluation. Any selected-checkpoint or fixed-epoch evaluation

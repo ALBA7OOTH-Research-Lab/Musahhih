@@ -12,9 +12,15 @@ from scripts.f2_f3_training_utils import APPROVAL_REFERENCE_PATTERN, ARMS
 
 
 SEEDS = (3407, 3408, 3409, 3410, 3411)
-STAGES = ("a100-preflight", "private-staging", "paired-training")
+STAGES = (
+    "a100-preflight",
+    "fp16-trainer-smoke",
+    "private-staging",
+    "paired-training",
+)
 PAIR_CONFIRMATION = "RUN_F2_F3_NAUTILUS_FIVE_SEED_TRAINING"
 PREFLIGHT_CONFIRMATION = "RUN_F2_F3_NAUTILUS_A100_PREFLIGHT"
+TRAINER_SMOKE_CONFIRMATION = "RUN_F2_F3_NAUTILUS_FP16_TRAINER_SMOKE"
 STAGING_CONFIRMATION = "STAGE_F2_F3_NAUTILUS_PRIVATE_INPUTS"
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 NAMESPACE = "aiea-interns"
@@ -42,6 +48,15 @@ def validate_seed(seed: int) -> int:
     return seed
 
 
+def approval_attempt_id(approval_reference: str) -> str:
+    """Derive a stable write-once attempt ID from the owner comment."""
+    if not APPROVAL_REFERENCE_PATTERN.fullmatch(approval_reference):
+        raise NautilusReplicationError(
+            "Approval reference must be a Musahhih issue-comment URL"
+        )
+    return approval_reference.rsplit("issuecomment-", 1)[1]
+
+
 def validate_activation(
     *,
     stage: str,
@@ -58,18 +73,16 @@ def validate_activation(
         or approved_commit != actual_commit
     ):
         raise NautilusReplicationError("Approved repository commit mismatch")
-    if not APPROVAL_REFERENCE_PATTERN.fullmatch(approval_reference):
-        raise NautilusReplicationError(
-            "Approval reference must be a Musahhih issue-comment URL"
-        )
+    attempt_id = approval_attempt_id(approval_reference)
     expected = {
         "a100-preflight": PREFLIGHT_CONFIRMATION,
+        "fp16-trainer-smoke": TRAINER_SMOKE_CONFIRMATION,
         "private-staging": STAGING_CONFIRMATION,
         "paired-training": PAIR_CONFIRMATION,
     }[stage]
     if confirmation != expected:
         raise NautilusReplicationError("Stage confirmation mismatch")
-    if stage in ("a100-preflight", "private-staging"):
+    if stage in ("a100-preflight", "fp16-trainer-smoke", "private-staging"):
         if seed is not None:
             raise NautilusReplicationError(f"{stage} must not select a seed")
         order = None
@@ -84,6 +97,7 @@ def validate_activation(
         "arm_order": order,
         "approved_commit": approved_commit,
         "approval_reference": approval_reference,
+        "attempt_id": attempt_id,
         "contains_corpus_text": False,
     }
 
@@ -149,11 +163,13 @@ __all__ = [
     "NautilusReplicationError",
     "PAIR_CONFIRMATION",
     "PREFLIGHT_CONFIRMATION",
+    "TRAINER_SMOKE_CONFIRMATION",
     "STAGING_CONFIRMATION",
     "PVC_NAME",
     "SEEDS",
     "STAGES",
     "a100_preflight",
+    "approval_attempt_id",
     "arm_order",
     "atomic_write_json",
     "validate_activation",
