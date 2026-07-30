@@ -55,3 +55,16 @@ printed:
 This preparation authorizes no private upload or cluster object. CPU-only
 staging, a final exact-commit import-order preflight, and paired training
 require separate fresh owner GOs.
+
+At preparation commit `94067944708d6462e1da302bd2a70f81910348b4`,
+compilation, formatting, lint, 14 focused tests with 10 subtests, and the full
+257-test suite with 75 subtests passed. Nautilus server dry-runs accepted:
+
+- a two-object staging manifest containing exactly one RWX PVC and one no-GPU
+  Pod, SHA-256
+  `28b14f2484be5477d4cbea3230540d6f967f6463a94b4429f9e199c49643b9e1`;
+- a five-object training manifest containing exactly five A100 Jobs and no PVC,
+  SHA-256
+  `2c1233cead2e134b6a70022e3eaa7037252d7a190d6a578e8f6f4b46c77db846`.
+
+No server-dry-run object persisted.

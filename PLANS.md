@@ -11,7 +11,7 @@
 - [x] Require the exact staging completion manifest before training opens the
   three private record files.
 - [x] Complete focused and full local validation.
-- [ ] Complete Kubernetes dry-run validation at the preparation commit.
+- [x] Complete Kubernetes dry-run validation at the preparation commit.
 - [ ] Open and merge a review PR.
 - [ ] Obtain separate fresh exact-commit owner GOs for staging, a final
   import-order preflight, and the five-Job training wave.
