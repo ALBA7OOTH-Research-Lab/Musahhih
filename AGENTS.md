@@ -232,6 +232,14 @@ QALB test, inference, prediction, or final metric was used. The training
 authorization is consumed. Do not repeat or tune the training; any private
 artifact audit or multi-seed evaluation requires a separately reviewed gate
 and fresh exact-commit owner GO.
+Issue #171 prepares that gate as three separately authorized stages: one
+CPU-only frozen-test staging Pod, five timeout-safe A100 selected-adapter
+evaluation Jobs, and one CPU-only aggregate audit. See
+`docs/f2_f3_nautilus_multiseed_evaluation_protocol.md` and
+`results/f2_f3_nautilus_multiseed_evaluation_gate_audit.md`. Preparation
+authorizes no Kubernetes object, private-input access, model loading,
+inference, prediction, metric, retry, or continuation. Each stage requires a
+fresh exact-commit owner GO after merge; training must not be repeated.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

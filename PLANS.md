@@ -1,5 +1,25 @@
 # Active implementation plan
 
+## Issue #171 — prepare five-seed evaluation and aggregation
+
+- [x] Register and claim a dedicated repository-only issue and branch.
+- [x] Freeze the five selected-checkpoint pairs, test identity, A100 runtime,
+  decoding, statistics, and post-hoc interpretation.
+- [x] Add a separate CPU-only, write-once test staging gate.
+- [x] Add five unique timeout-safe evaluation Jobs with per-row persistence,
+  metric-free handoff, and exact fresh-GO continuation.
+- [x] Add a CPU-only aggregate gate that validates five summaries and ten
+  private prediction artifacts before reporting the frozen statistics.
+- [x] Complete focused and full local validation and Kubernetes client dry-run.
+- [x] Complete Kubernetes server dry-run with zero persisted objects.
+- [ ] Open and merge a review PR.
+- [ ] Obtain separate fresh exact-commit owner GOs for test staging, five
+  evaluations, and final aggregation.
+
+Issue #171 is preparation only. It authorizes no cluster object, private-input
+access, model load, inference, prediction, metric, training, retry, or
+continuation.
+
 ## Issue #165 — use proven RWX storage for private staging
 
 - [x] Preserve issue #163's unbound-PVC failure without retry or private upload.
