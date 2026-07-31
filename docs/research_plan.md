@@ -251,7 +251,14 @@ Gemma 3 while retaining the frozen FP16 trainer configuration. No PVC, corpus,
 private record, training, inference, prediction, or metric was used. See
 [`../results/f2_f3_nautilus_fp16_trainer_smoke_audit.md`](../results/f2_f3_nautilus_fp16_trainer_smoke_audit.md).
 The authorization is consumed; replacement training still requires a fresh
-exact-commit owner GO.
+exact-commit owner GO. That separately authorized replacement wave later
+completed all five seeds, with both frozen two-epoch arms and the
+common-development checkpoint-selection workflow returning normally in every
+Job. See
+[`../results/f2_f3_nautilus_multiseed_training_audit.md`](../results/f2_f3_nautilus_multiseed_training_audit.md).
+No test set, inference, prediction, or final metric was used. The training
+authorization is consumed; evaluation and aggregation require a separately
+reviewed protocol and fresh GO.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

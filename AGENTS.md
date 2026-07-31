@@ -222,8 +222,16 @@ Gemma 3 while retaining the frozen FP16 trainer path; the prior
 BF16-model/FP16-trainer construction failure did not recur. See
 `results/f2_f3_nautilus_fp16_trainer_smoke_audit.md`. No PVC, corpus, private
 record, training, inference, prediction, or metric was used. The smoke
-authorization is consumed. Replacement training remains unauthorized and
-requires a fresh exact-commit owner GO.
+authorization is consumed. A separately authorized replacement wave then ran
+seeds 3407–3411 as five unique A100 Jobs. All five Pods completed both frozen
+two-epoch arms and the common-development checkpoint-selection workflow with
+exit code zero and zero restarts. See
+`results/f2_f3_nautilus_multiseed_training_audit.md`. Private adapters,
+checkpoints, losses, and logs remain on the retained PVC. No Nahw-Passage,
+QALB test, inference, prediction, or final metric was used. The training
+authorization is consumed. Do not repeat or tune the training; any private
+artifact audit or multi-seed evaluation requires a separately reviewed gate
+and fresh exact-commit owner GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
