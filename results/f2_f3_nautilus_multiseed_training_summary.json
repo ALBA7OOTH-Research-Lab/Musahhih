@@ -1,0 +1,80 @@
+{
+  "issue": 167,
+  "status": "complete",
+  "approved_commit": "108888dcf0ad34c49157b47e2561c406c5463bf8",
+  "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/167#issuecomment-5136464333",
+  "manifest_sha256": "e89a02d9380048c2ed435b19ba5598ac35ee67e5a4467d91216d450170279e24",
+  "attempt_id": "5136464333",
+  "jobs_submitted": 5,
+  "pods_succeeded": 5,
+  "pods_failed": 0,
+  "automatic_retries": 0,
+  "seeds": [
+    {
+      "seed": 3407,
+      "arm_order": ["F2-P1", "F3-P1"],
+      "node": "tu.gp-engine.greatplains.net",
+      "container_start": "2026-07-31T00:34:55Z",
+      "container_finish": "2026-07-31T07:52:11Z",
+      "duration_seconds": 26236,
+      "exit_code": 0,
+      "restarts": 0,
+      "log_sha256_as_returned": "16a83fea77972d5164cee8fc771e574a127df96cb012c203374e6adfb630bf16"
+    },
+    {
+      "seed": 3408,
+      "arm_order": ["F3-P1", "F2-P1"],
+      "node": "tu.gp-engine.greatplains.net",
+      "container_start": "2026-07-31T00:34:54Z",
+      "container_finish": "2026-07-31T07:42:13Z",
+      "duration_seconds": 25639,
+      "exit_code": 0,
+      "restarts": 0,
+      "log_sha256_as_returned": "574571aa24611fbfa3cc5cc44687ac21642ccd9f43c7b45e00cb851b1f84b4b5"
+    },
+    {
+      "seed": 3409,
+      "arm_order": ["F2-P1", "F3-P1"],
+      "node": "gpn-fiona-mizzou-4.rnet.missouri.edu",
+      "container_start": "2026-07-31T00:33:40Z",
+      "container_finish": "2026-07-31T07:33:41Z",
+      "duration_seconds": 25201,
+      "exit_code": 0,
+      "restarts": 0,
+      "log_sha256_as_returned": "d42a898915e7b393f970620654d912211af8912cacdfa403d509cbf74fa90886"
+    },
+    {
+      "seed": 3410,
+      "arm_order": ["F3-P1", "F2-P1"],
+      "node": "rci-nrp-gpu-02.sdsu.edu",
+      "container_start": "2026-07-31T00:34:02Z",
+      "container_finish": "2026-07-31T08:30:36Z",
+      "duration_seconds": 28594,
+      "exit_code": 0,
+      "restarts": 0,
+      "log_sha256_as_returned": "fddc7967b940a9d94327b5eae9d1a97286f60aa75d3053da1c771fac72798726"
+    },
+    {
+      "seed": 3411,
+      "arm_order": ["F2-P1", "F3-P1"],
+      "node": "sdsmt.gp-argo.greatplains.net",
+      "container_start": "2026-07-31T00:33:16Z",
+      "container_finish": "2026-07-31T09:22:52Z",
+      "duration_seconds": 31776,
+      "exit_code": 0,
+      "restarts": 0,
+      "log_sha256_as_returned": "9ec604d8192ee0688ab737016ea39dd1aebbdc7e41a43a7b1e4e09d970e0f54b"
+    }
+  ],
+  "both_arms_complete_per_seed": true,
+  "checkpoint_selection_workflow_returned": true,
+  "private_artifacts_published": false,
+  "nahw_passage_used": false,
+  "qalb_test_used": false,
+  "inference_executed": false,
+  "prediction_produced": false,
+  "final_metric_computed": false,
+  "contains_corpus_text": false,
+  "authorization_consumed": true,
+  "evaluation_authorized": false
+}
