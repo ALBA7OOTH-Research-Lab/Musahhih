@@ -259,6 +259,14 @@ Job. See
 No test set, inference, prediction, or final metric was used. The training
 authorization is consumed; evaluation and aggregation require a separately
 reviewed protocol and fresh GO.
+Issue #171 prepares that protocol with separate frozen-test staging,
+five-seed selected-adapter evaluation, and corpus-free aggregation gates. Each
+evaluation uses the exact selected training artifacts, deterministic decoding,
+per-row persistence, a metric-free safe stop, and fresh-GO-only continuation.
+The aggregate reports every seed, per-arm mean/sample SD, and the mean,
+sample SD, and range of paired F3-minus-F2 differences. See
+[`f2_f3_nautilus_multiseed_evaluation_protocol.md`](f2_f3_nautilus_multiseed_evaluation_protocol.md).
+Preparation authorizes no execution or private access.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
