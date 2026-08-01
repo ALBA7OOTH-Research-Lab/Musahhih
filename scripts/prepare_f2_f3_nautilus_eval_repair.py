@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate, but never submit, issue #173 canary/continuation manifests."""
+"""Generate, but never submit, issue #175 canary/continuation manifests."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ def _labels(stage: str, lane: str | None = None) -> dict:
     labels = {
         "app.kubernetes.io/name": "musahhih",
         "app.kubernetes.io/component": "f2-f3-evaluation-repair",
-        "musahhih.openai/issue": "173",
+        "musahhih.openai/issue": "175",
         "musahhih.openai/stage": stage,
     }
     if lane is not None:
@@ -103,7 +103,7 @@ def build_canary_job(
     labels = _labels("utilization-canary")
     command = """
 set -euo pipefail
-log_root=/private/logs/issue-173/canary
+log_root=/private/logs/issue-175/canary
 log_path="$log_root/attempt-$MUSAHHIH_ATTEMPT_ID.log"
 exit_path="$log_root/attempt-$MUSAHHIH_ATTEMPT_ID.exit.json"
 mkdir -p "$log_root"
@@ -115,7 +115,7 @@ set +e
   timeout --signal=TERM --kill-after=30s 4200s \
     python -m scripts.run_f2_f3_nautilus_eval_repair_canary \
       --training-root /private/outputs/issue-155 \
-      --output-root /private/canaries/issue-173 \
+      --output-root /private/canaries/issue-175 \
       --approved-commit "$MUSAHHIH_APPROVED_COMMIT" \
       --approval-reference "$MUSAHHIH_APPROVAL_REFERENCE" \
       --confirmation "$MUSAHHIH_CONFIRMATION"
@@ -194,7 +194,7 @@ def build_continuation_job(
     labels = _labels("continuation", lane)
     command = """
 set -euo pipefail
-log_root="/private/logs/issue-173/continuation/lane-$MUSAHHIH_LANE"
+log_root="/private/logs/issue-175/continuation/lane-$MUSAHHIH_LANE"
 log_path="$log_root/attempt-$MUSAHHIH_ATTEMPT_ID.log"
 exit_path="$log_root/attempt-$MUSAHHIH_ATTEMPT_ID.exit.json"
 mkdir -p "$log_root"
@@ -209,7 +209,7 @@ set +e
       --training-root /private/outputs/issue-155 \
       --test-input-root /private/inputs/issue-171 \
       --output-root /private/evaluations/issue-171 \
-      --canary-root "/private/canaries/issue-173/attempt-$MUSAHHIH_CANARY_ATTEMPT_ID" \
+      --canary-root "/private/canaries/issue-175/attempt-$MUSAHHIH_CANARY_ATTEMPT_ID" \
       --source-attempt-id "$MUSAHHIH_SOURCE_ATTEMPT_ID" \
       --source-commit "$MUSAHHIH_SOURCE_COMMIT" \
       --approved-commit "$MUSAHHIH_APPROVED_COMMIT" \

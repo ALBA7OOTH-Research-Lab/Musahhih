@@ -14,7 +14,11 @@ from scripts.f2_f3_eval_repair_utils import (
     validate_repair_activation,
 )
 from scripts.prepare_f2_f3_nautilus_eval_repair import build_manifest
-from scripts.run_f2_f3_nautilus_eval_repair_canary import run_canary
+from scripts.run_f2_f3_nautilus_eval_repair_canary import (
+    RepairCanaryError,
+    run_and_persist_canary,
+    run_canary,
+)
 from scripts.run_f2_f3_nautilus_multiseed_eval import (
     REPAIR_BATCH_SIZE,
     _generate_arm_batched,
@@ -30,7 +34,7 @@ from scripts.supervise_f2_f3_nautilus_eval_repair import (
 COMMIT = "a" * 40
 APPROVAL = (
     "https://github.com/ALBA7OOTH-Research-Lab/"
-    "Musahhih/issues/173#issuecomment-123456"
+    "Musahhih/issues/175#issuecomment-123456"
 )
 
 
@@ -95,13 +99,13 @@ class EvaluationRepairTests(unittest.TestCase):
             source_commit=SOURCE_EVALUATION_COMMIT,
         )
         self.assertEqual(source["recorded_counts"], {"F2-P1": 236, "F3-P1": 511})
-        with self.assertRaisesRegex(Exception, "issue #173"):
+        with self.assertRaisesRegex(Exception, "issue #175"):
             validate_repair_activation(
                 stage="continuation",
                 seed=3408,
                 approved_commit=COMMIT,
                 actual_commit=COMMIT,
-                approval_reference=APPROVAL.replace("173", "171"),
+                approval_reference=APPROVAL.replace("175", "171"),
                 confirmation=CONTINUATION_CONFIRMATION,
             )
 
@@ -265,6 +269,9 @@ class EvaluationRepairTests(unittest.TestCase):
                     "approved_commit": COMMIT,
                     "single_batch_equivalent": True,
                     "batch_size": REPAIR_BATCH_SIZE,
+                    "synthetic_generations": 1024,
+                    "durability_probe_rows": 1024,
+                    "per_row_fsync": True,
                     "mean_gpu_utilization_percent": 80,
                     "peak_memory_fraction": 0.3,
                     "nahw_passage_used": False,
@@ -273,6 +280,44 @@ class EvaluationRepairTests(unittest.TestCase):
                 },
             )
             self.assertEqual(validate_canary_summary(root, COMMIT)["status"], "complete")
+
+    def test_canary_failure_persists_exact_resource_evidence(self):
+        class FakeGenerator:
+            def __init__(self, _adapter, *, required_gpu):
+                self.required_gpu = required_gpu
+
+            def __call__(self, prompt):
+                return "TOKEN"
+
+            def generate_batch(self, prompts):
+                return ["TOKEN"] * len(prompts)
+
+        def fake_sampler(stop, samples):
+            samples["gpu"].extend([20] * 12)
+            samples["memory"].extend([(25, 100)] * 12)
+
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "scripts.run_f2_f3_nautilus_eval_repair_canary._sample_resources",
+            side_effect=fake_sampler,
+        ):
+            path = Path(directory) / "public_summary.json"
+            with self.assertRaises(RepairCanaryError):
+                run_and_persist_canary(
+                    adapter_path=Path("adapter"),
+                    common={
+                        "schema_version": 1,
+                        "approved_commit": COMMIT,
+                        "contains_corpus_text": False,
+                    },
+                    summary_path=path,
+                    generator_factory=FakeGenerator,
+                )
+            summary = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "failed")
+            self.assertEqual(summary["batch_size"], REPAIR_BATCH_SIZE)
+            self.assertEqual(summary["mean_gpu_utilization_percent"], 20)
+            self.assertEqual(summary["peak_memory_fraction"], 0.25)
+            self.assertFalse(summary["contains_corpus_text"])
 
     def test_manifests_limit_gpu_concurrency_and_right_size_resources(self):
         canary = build_manifest(

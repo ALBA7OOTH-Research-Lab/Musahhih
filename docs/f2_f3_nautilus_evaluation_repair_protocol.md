@@ -1,6 +1,7 @@
 # F2/F3 Nautilus evaluation repair protocol
 
-Status: issue #173 repository preparation only; no execution authorized.
+Status: issue #173 canary failed the utilization gate; superseded by
+`f2_f3_nautilus_evaluation_utilization_repair_protocol.md`.
 
 ## Preserved source
 

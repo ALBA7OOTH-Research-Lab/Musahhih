@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Supervise one issue #173 continuation worker outside its inference call."""
+"""Supervise one issue #175 continuation worker outside its inference call."""
 
 from __future__ import annotations
 
@@ -47,6 +47,9 @@ def validate_canary_summary(root: Path, approved_commit: str) -> dict:
         or summary.get("approved_commit") != approved_commit
         or summary.get("single_batch_equivalent") is not True
         or summary.get("batch_size") != REPAIR_BATCH_SIZE
+        or summary.get("synthetic_generations") != 1024
+        or summary.get("durability_probe_rows") != 1024
+        or summary.get("per_row_fsync") is not True
         or not isinstance(summary.get("mean_gpu_utilization_percent"), (int, float))
         or summary["mean_gpu_utilization_percent"] < 40
         or not isinstance(summary.get("peak_memory_fraction"), (int, float))

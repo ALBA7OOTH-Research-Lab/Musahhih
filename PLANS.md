@@ -713,3 +713,24 @@ prediction, metric, Nahw-Passage access, or QALB-test access.
 Issue #173 authorizes repository preparation only. It authorizes no Kubernetes
 submission, GPU allocation, model loading, private-input access, inference,
 metric, retry, continuation, training, QALB-test access, or XG.
+
+## Issue #175 — repair A100 utilization canary failure
+
+- [x] Preserve the single issue-#173 canary terminal failure without retry.
+- [x] Keep the total synthetic workload fixed at 1,024 generations.
+- [x] Increase the repaired inference batch from 16 to 64.
+- [x] Include 1,024 per-row synthetic durability writes in the utilization
+  sampling window.
+- [x] Persist exact corpus-free telemetry on both pass and failure paths.
+- [x] Require new issue-#175 approval URLs and confirmation strings.
+- [x] Pass compilation, focused tests, and the full 281-test suite.
+- [x] Generate and parse one-canary and two-lane continuation manifests.
+- [x] Pass Kubernetes client/server dry-runs for one canary and two
+  continuation-lane Jobs; zero objects were persisted.
+- [x] Create and reconcile GitHub issue #175.
+- [ ] Push the branch, open the PR, and merge.
+- [ ] Obtain a fresh exact-commit owner GO before exactly one canary.
+
+Issue #175 authorizes repository preparation only. It authorizes no Kubernetes
+submission, GPU allocation, model loading, private-input access, inference,
+metric, retry, continuation, training, QALB-test access, or XG.

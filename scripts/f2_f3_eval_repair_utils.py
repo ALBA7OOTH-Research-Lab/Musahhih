@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frozen issue #173 repair identities and activation checks."""
+"""Frozen issue #175 repair identities and activation checks."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import re
 from scripts.f2_f3_nautilus_utils import SEEDS, approval_attempt_id, validate_seed
 
 
-ISSUE = 173
+ISSUE = 175
 SOURCE_ATTEMPT_ID = "5144097114"
 SOURCE_EVALUATION_COMMIT = "30290dd3a8bde5054555cc37ac422f3d1512d3ba"
 SOURCE_PROGRESS_COUNTS = {
@@ -25,18 +25,20 @@ SOURCE_TERMINAL_STATES = {
     3410: "JobSuspended",
     3411: "OOMKilled",
 }
-CANARY_CONFIRMATION = "RUN_F2_F3_EVAL_REPAIR_UTILIZATION_CANARY"
-CONTINUATION_CONFIRMATION = "CONTINUE_F2_F3_EVAL_FROM_ATTEMPT_5144097114"
+CANARY_CONFIRMATION = "RUN_F2_F3_EVAL_REPAIR_UTILIZATION_CANARY_V2"
+CONTINUATION_CONFIRMATION = (
+    "CONTINUE_F2_F3_EVAL_BATCH64_FROM_ATTEMPT_5144097114"
+)
 STAGES = ("utilization-canary", "continuation")
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 APPROVAL_PATTERN = re.compile(
     r"https://github\.com/ALBA7OOTH-Research-Lab/Musahhih/"
-    r"issues/173#issuecomment-[1-9][0-9]*"
+    r"issues/175#issuecomment-[1-9][0-9]*"
 )
 
 
 class EvaluationRepairError(ValueError):
-    """Raised before issue #173 can cross a frozen gate."""
+    """Raised before issue #175 can cross a frozen gate."""
 
 
 def validate_repair_activation(
@@ -56,7 +58,7 @@ def validate_repair_activation(
     ):
         raise EvaluationRepairError("approved repository commit mismatch")
     if not APPROVAL_PATTERN.fullmatch(approval_reference):
-        raise EvaluationRepairError("approval must be an issue #173 comment URL")
+        raise EvaluationRepairError("approval must be an issue #175 comment URL")
     expected = {
         "utilization-canary": CANARY_CONFIRMATION,
         "continuation": CONTINUATION_CONFIRMATION,

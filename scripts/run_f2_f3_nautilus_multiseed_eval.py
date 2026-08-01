@@ -53,7 +53,7 @@ from scripts.run_f2_f3_nautilus_pair import actual_commit, runtime_summary
 
 SAFE_STOP_ELAPSED_SECONDS = 64_800
 PROGRESS_SCHEMA_VERSION = 1
-REPAIR_BATCH_SIZE = 16
+REPAIR_BATCH_SIZE = 64
 
 
 class MultiSeedRunError(RuntimeError):

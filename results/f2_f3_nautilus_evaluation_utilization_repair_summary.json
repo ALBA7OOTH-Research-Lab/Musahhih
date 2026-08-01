@@ -1,0 +1,35 @@
+{
+  "issue": 175,
+  "status": "repository_repair_prepared",
+  "failed_canary": {
+    "attempt_id": "5151539419",
+    "commit": "f861ad34631c66f211f49a4278c2028b624ca5d4",
+    "exit_code": 1,
+    "restarts": 0,
+    "oom_killed": false,
+    "failure": "mean_gpu_utilization_below_40_percent",
+    "exact_utilization_persisted": false,
+    "test_input_used": false,
+    "metric_computed": false,
+    "automatic_retry": false
+  },
+  "repair": {
+    "batch_size": 64,
+    "soak_batches": 16,
+    "synthetic_generations": 1024,
+    "durability_probe_rows": 1024,
+    "per_row_fsync": true,
+    "minimum_mean_gpu_utilization_percent": 40,
+    "maximum_memory_fraction": 0.8,
+    "failure_telemetry_persisted": true
+  },
+  "validation": {
+    "focused_tests": 7,
+    "full_tests": 281,
+    "client_dry_run_objects": 3,
+    "server_dry_run_objects": 3,
+    "persisted_objects": 0
+  },
+  "execution_authorized": false,
+  "contains_corpus_text": false
+}
