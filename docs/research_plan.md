@@ -267,6 +267,13 @@ The aggregate reports every seed, per-arm mean/sample SD, and the mean,
 sample SD, and range of paired F3-minus-F2 differences. See
 [`f2_f3_nautilus_multiseed_evaluation_protocol.md`](f2_f3_nautilus_multiseed_evaluation_protocol.md).
 Preparation authorizes no execution or private access.
+The authorized staging later passed, but the first five evaluation Jobs
+preserved only 3,739/5,110 record-arm outputs before three OOM failures and two
+owner suspensions after prolonged no-progress GPU idling. No metric was
+computed. Issue #173 therefore prepares fresh-process, externally supervised,
+batch-16 continuation behind a separate non-test equivalence/utilization
+canary. The source prefixes remain immutable, and neither canary nor
+continuation is authorized by the repair merge.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
