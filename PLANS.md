@@ -14,7 +14,7 @@
   five incomplete seed-arms while preserving all 3,739 durable source rows.
 - [x] Complete focused/full validation and Kubernetes client/server dry-runs
   with zero persisted objects.
-- [ ] Review and merge a narrow PR.
+- [x] Review and merge a narrow PR.
 - [ ] Obtain a fresh exact-commit owner GO before one synthetic canary; obtain
   a separate later GO before any private-test continuation.
 
