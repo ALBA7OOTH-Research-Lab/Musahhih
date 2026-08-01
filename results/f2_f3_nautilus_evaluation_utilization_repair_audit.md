@@ -1,6 +1,6 @@
 # F2/F3 Nautilus evaluation utilization follow-up audit
 
-## Outcome
+## Preparation outcome
 
 Issue #175 prepares a repository-only follow-up to the single failed issue-#173
 canary. It does not submit a Job or access a model, corpus, prediction, or
@@ -23,9 +23,18 @@ was not persisted by that failure path and is not reported.
 - issue-#173 authorization cannot activate the new gate; and
 - all prior memory, timeout, prefix, hashing, and no-retry safeguards remain.
 
-Execution remains disabled pending merge and a fresh exact-commit issue-#175
-GO for one canary. Continuation requires a later, separate GO even if that
-canary passes.
+At preparation time, execution remained disabled pending merge and a fresh
+exact-commit issue-#175 GO. That GO was later consumed by the terminal canary
+recorded below.
+
+## Terminal canary outcome
+
+The later authorized canary at
+`ff18bc5212d564aae5a110cd2636461f343a6428` failed closed after 1,951 seconds
+because batch-64 and single-record synthetic outputs differed. It stopped
+before the soak, used no test input, prediction, metric, or training, and was
+not retried. Issue #177 supersedes this strategy with concurrent isolated
+batch-16 workers.
 
 ## Local validation
 

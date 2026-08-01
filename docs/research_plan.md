@@ -273,11 +273,16 @@ owner suspensions after prolonged no-progress GPU idling. No metric was
 computed. Issue #173 therefore prepared fresh-process, externally supervised,
 batch-16 continuation behind a separate non-test equivalence/utilization
 canary. Its single authorized canary completed the synthetic equivalence and
-soak without OOM but failed the 40% mean-A100-utilization gate. Issue #175
-prepares a batch-64 follow-up that keeps 1,024 synthetic generations, includes
-per-row durability writes in the utilization window, and persists exact
-telemetry even on failure. The source prefixes remain immutable, and neither a
-new canary nor continuation is authorized by the repair merge.
+soak without OOM but failed the 40% mean-A100-utilization gate. Issue #175's
+single authorized batch-64 follow-up then failed closed before its soak because
+batch-64 and single-record synthetic outputs differed. It accessed no test
+input or metric and was not retried. Issue #177 now prepares five isolated,
+concurrent batch-16 workers on one 80 GB A100, retaining the already established
+single/batch-16 equivalence while satisfying the official NRP utilization rule
+through workload packing rather than a decoding change. See
+[`f2_f3_nautilus_evaluation_concurrency_protocol.md`](f2_f3_nautilus_evaluation_concurrency_protocol.md).
+The source prefixes remain immutable. The synthetic canary, private
+continuation, and aggregation each require separate fresh exact-commit GOs.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

@@ -1,6 +1,12 @@
 # F2/F3 Nautilus evaluation utilization repair protocol
 
-Status: issue #175 repository preparation only; no execution authorized.
+Status: superseded after its single authorized canary failed batch equivalence.
+
+> Execution note (2026-08-01): the issue #175 canary at
+> `ff18bc5212d564aae5a110cd2636461f343a6428` failed closed before its soak
+> because batch-64 and single-record synthetic outputs differed. No test input,
+> prediction, metric, training, retry, or continuation occurred. See
+> `f2_f3_nautilus_evaluation_concurrency_protocol.md` for the issue #177 repair.
 
 ## Preserved failed canary
 
