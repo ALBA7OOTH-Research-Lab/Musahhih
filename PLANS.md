@@ -1,5 +1,27 @@
 # Active implementation plan
 
+## Issue #177 — use concurrent batch-16 evaluation workers
+
+- [x] Preserve the terminal issue-#175 batch-64 equivalence failure without
+  retry or test access.
+- [x] Read the official Nautilus resource, GPU, monitoring, and batch-Job
+  guidance and inspect the namespace/cluster capabilities read-only.
+- [x] Restore the already validated batch size 16 and run isolated workers
+  concurrently on one 80 GB A100.
+- [x] Add a synthetic-only concurrency/equivalence/utilization canary with
+  exact host/GPU-memory and failure telemetry.
+- [x] Replace sequential lanes with one fail-closed supervisor for exactly the
+  five incomplete seed-arms while preserving all 3,739 durable source rows.
+- [x] Complete focused/full validation and Kubernetes client/server dry-runs
+  with zero persisted objects.
+- [ ] Review and merge a narrow PR.
+- [ ] Obtain a fresh exact-commit owner GO before one synthetic canary; obtain
+  a separate later GO before any private-test continuation.
+
+Issue #177 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, model load, private-input access, inference, prediction,
+metric, training, retry, continuation, QALB test, or XG.
+
 ## Issue #171 — prepare five-seed evaluation and aggregation
 
 - [x] Register and claim a dedicated repository-only issue and branch.

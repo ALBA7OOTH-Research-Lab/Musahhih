@@ -251,12 +251,17 @@ CPUs, and at most two A100 continuation lanes. Its single authorized non-test
 canary completed synthetic equivalence and the full soak without OOM, then
 failed closed because mean A100 utilization was below 40%. The failure path did
 not persist the exact mean, so no value may be inferred. The authorization is
-consumed; no retry or continuation occurred. Issue #175 prepares a batch-64
-follow-up canary with the same 1,024 synthetic generations, per-row durability
-I/O inside the utilization window, and exact pass/failure telemetry. See
-`docs/f2_f3_nautilus_evaluation_utilization_repair_protocol.md`. No canary or
-continuation is authorized before merge and a fresh exact-commit owner GO. No
-partial multi-seed metric or robustness claim is allowed.
+consumed; no retry or continuation occurred. Issue #175's single authorized
+batch-64 canary then failed closed before its soak because batch-64 and
+single-record synthetic outputs differed. It accessed no test input or metric
+and was not retried. Issue #177 prepares a repository-only repair using five
+isolated concurrent batch-16 workers on one 80 GB A100, which retains the
+already proven batch-16 equivalence and follows the official NRP utilization
+policy without changing decoding. See
+`docs/f2_f3_nautilus_evaluation_concurrency_protocol.md`. No canary or
+continuation is authorized before merge and a fresh exact-commit owner GO; the
+two stages require separate GOs. No partial multi-seed metric or robustness
+claim is allowed.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

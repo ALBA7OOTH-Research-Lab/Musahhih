@@ -34,6 +34,10 @@ from scripts.f2_f3_eval_repair_utils import (
     validate_interrupted_source_identity,
     validate_repair_activation,
 )
+from scripts.f2_f3_eval_concurrency_utils import (
+    CONCURRENT_BATCH_SIZE,
+    validate_concurrency_activation,
+)
 from scripts.f2_f3_nautilus_utils import a100_preflight, arm_order
 from scripts.nahw_baseline_utils import parse_model_response, summarize_predictions
 from scripts.run_f2_f3_final_eval import (
@@ -503,6 +507,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--approval-reference", required=True)
     parser.add_argument("--confirmation", required=True)
     parser.add_argument("--repair-continuation", action="store_true")
+    parser.add_argument("--concurrent-continuation", action="store_true")
     parser.add_argument("--resume-source-attempt-id")
     parser.add_argument("--resume-source-commit")
     parser.add_argument("--batch-size", type=int, default=1)
@@ -513,7 +518,35 @@ def main() -> None:
     args = parse_args()
     commit = actual_commit()
     interrupted_source = None
-    if args.repair_continuation:
+    if args.repair_continuation and args.concurrent_continuation:
+        raise MultiSeedRunError("only one continuation contract may be active")
+    if args.concurrent_continuation:
+        activation = validate_concurrency_activation(
+            stage="continuation",
+            seed=args.seed,
+            approved_commit=args.approved_commit,
+            actual_commit=commit,
+            approval_reference=args.approval_reference,
+            confirmation=args.confirmation,
+        )
+        source_attempt_id = args.resume_source_attempt_id or ""
+        source_commit = args.resume_source_commit or ""
+        if (
+            source_attempt_id != SOURCE_ATTEMPT_ID
+            or source_commit != SOURCE_EVALUATION_COMMIT
+        ):
+            raise MultiSeedRunError("concurrent continuation source identity mismatch")
+        interrupted_source = validate_interrupted_source_identity(
+            seed=args.seed,
+            source_attempt_id=source_attempt_id,
+            source_commit=source_commit,
+        )
+        activation["resume_source"] = interrupted_source
+        if args.batch_size != CONCURRENT_BATCH_SIZE or args.resume_root is None:
+            raise MultiSeedRunError(
+                "concurrent continuation requires batch 16 and the frozen source"
+            )
+    elif args.repair_continuation:
         activation = validate_repair_activation(
             stage="continuation",
             seed=args.seed,
@@ -589,7 +622,7 @@ def main() -> None:
             resume_root.relative_to(output_root)
         except ValueError as error:
             raise MultiSeedRunError("resume root must stay under output root") from error
-    if args.repair_continuation and (
+    if (args.repair_continuation or args.concurrent_continuation) and (
         resume_root is None
         or resume_root.name != args.resume_source_attempt_id
         or resume_root.parent.parent.name != f"seed-{args.seed}"
