@@ -696,3 +696,20 @@ Issue #147's authorization is consumed. Do not rerun or tune from B2-P1.
 Issue #167 authorizes repository preparation only. It authorizes no GPU
 execution, private-input access, training, retry, continuation, inference,
 prediction, metric, Nahw-Passage access, or QALB-test access.
+
+## Issue #173 — repair multi-seed evaluation memory and utilization safety
+
+- [x] Preserve issue #171 terminal/suspended states and exact durable prefixes.
+- [x] Isolate unfinished-arm inference in fresh worker processes.
+- [x] Add a parent-side no-progress timeout and cgroup-memory watchdog.
+- [x] Preserve exact-prefix validation, per-row `fsync`, and metric-free handoff.
+- [x] Right-size CPU/RAM and limit the repair canary to one A100 Job.
+- [x] Add a non-test synthetic utilization and memory-soak canary gate.
+- [x] Add focused tests and run the complete repository suite.
+- [x] Pass Kubernetes client/server dry-runs with zero persisted objects.
+- [ ] Merge the preparation and record the exact executable commit.
+- [ ] Obtain a fresh exact-commit owner GO before any canary or continuation.
+
+Issue #173 authorizes repository preparation only. It authorizes no Kubernetes
+submission, GPU allocation, model loading, private-input access, inference,
+metric, retry, continuation, training, QALB-test access, or XG.
