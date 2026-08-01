@@ -23,6 +23,13 @@
     "maximum_memory_fraction": 0.8,
     "failure_telemetry_persisted": true
   },
+  "validation": {
+    "focused_tests": 7,
+    "full_tests": 281,
+    "client_dry_run_objects": 3,
+    "server_dry_run_objects": 3,
+    "persisted_objects": 0
+  },
   "execution_authorized": false,
   "contains_corpus_text": false
 }

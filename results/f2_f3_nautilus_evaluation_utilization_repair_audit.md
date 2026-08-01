@@ -34,5 +34,7 @@ canary passes.
 - complete repository suite: 281 tests passed.
 - generated manifest JSON for one canary and two continuation lanes parsed
   successfully.
-- Kubernetes client/server dry-runs were attempted but the Nautilus API was
-  unreachable; no object was persisted.
+- one canary Job and two continuation-lane Jobs passed Kubernetes client
+  dry-run.
+- the same three objects passed Kubernetes server dry-run.
+- zero dry-run objects were persisted.
