@@ -245,12 +245,18 @@ gate. The five evaluation Jobs then preserved 3,739/5,110 record-arm outputs
 without computing a metric before seeds 3407, 3409, and 3411 were OOM-killed
 and seeds 3408 and 3410 were owner-suspended after prolonged no-progress GPU
 idling. The source attempt `5144097114` is immutable; do not restart or alter
-it. Issue #173 prepares a repository-only repair with fresh worker processes,
-batch-16 decoding behind a non-test equivalence/utilization canary, external
-no-progress and memory guards, 64 GiB RAM, two CPUs, and at most two A100
-continuation lanes. See `docs/f2_f3_nautilus_evaluation_repair_protocol.md`.
-No canary or continuation is authorized before merge and a fresh exact-commit
-owner GO. No partial multi-seed metric or robustness claim is allowed.
+it. Issue #173 prepared a repository-only repair with fresh worker processes,
+batch-16 decoding, external no-progress and memory guards, 64 GiB RAM, two
+CPUs, and at most two A100 continuation lanes. Its single authorized non-test
+canary completed synthetic equivalence and the full soak without OOM, then
+failed closed because mean A100 utilization was below 40%. The failure path did
+not persist the exact mean, so no value may be inferred. The authorization is
+consumed; no retry or continuation occurred. Issue #175 prepares a batch-64
+follow-up canary with the same 1,024 synthetic generations, per-row durability
+I/O inside the utilization window, and exact pass/failure telemetry. See
+`docs/f2_f3_nautilus_evaluation_utilization_repair_protocol.md`. No canary or
+continuation is authorized before merge and a fresh exact-commit owner GO. No
+partial multi-seed metric or robustness claim is allowed.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

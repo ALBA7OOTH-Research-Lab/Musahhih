@@ -270,10 +270,14 @@ Preparation authorizes no execution or private access.
 The authorized staging later passed, but the first five evaluation Jobs
 preserved only 3,739/5,110 record-arm outputs before three OOM failures and two
 owner suspensions after prolonged no-progress GPU idling. No metric was
-computed. Issue #173 therefore prepares fresh-process, externally supervised,
+computed. Issue #173 therefore prepared fresh-process, externally supervised,
 batch-16 continuation behind a separate non-test equivalence/utilization
-canary. The source prefixes remain immutable, and neither canary nor
-continuation is authorized by the repair merge.
+canary. Its single authorized canary completed the synthetic equivalence and
+soak without OOM but failed the 40% mean-A100-utilization gate. Issue #175
+prepares a batch-64 follow-up that keeps 1,024 synthetic generations, includes
+per-row durability writes in the utilization window, and persists exact
+telemetry even on failure. The source prefixes remain immutable, and neither a
+new canary nor continuation is authorized by the repair merge.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
