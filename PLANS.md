@@ -1,5 +1,22 @@
 # Active implementation plan
 
+## Issue #192 — prepare fixed-checkpoint sensitivity evaluation
+
+- [x] Verify that the seed-3407 robustness result is an independent A100
+  replication, not a transcription error or reuse of the primary P100 adapter.
+- [x] Confirm both epoch checkpoints remain available for every seed-arm.
+- [x] Reuse the already audited selected-checkpoint predictions and schedule
+  only the ten missing unselected-checkpoint evaluations.
+- [x] Add exact identity, RTX 3090 equivalence, timeout, per-row durability,
+  no-progress, write-once, and no-retry gates.
+- [x] Complete focused/full validation and review the five generated Jobs.
+- [x] Merge preparation before any fresh exact-commit execution GO.
+- [ ] Prepare and separately authorize a CPU-only aggregate after completion.
+
+Issue #192 is preparation only. It authorizes no Kubernetes object, GPU use,
+private-test access, model load, inference, prediction, metric, training,
+retry, continuation, QALB test, prompt/parser change, or XG.
+
 ## Issue #149 — prepare the MRL 2026 anonymous manuscript
 
 - [x] Register and claim a dedicated manuscript issue and branch.

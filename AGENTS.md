@@ -313,6 +313,15 @@ F2-P1 outputs and 0/2 flagged F3-P1 outputs, so both arm scores and the
 `results/f2_f3_first_token_sensitivity_audit.md`. No GPU, model loading,
 inference, training, parser change, or record-level publication occurred. The
 authorization is consumed; do not rerun or replace the frozen primary parser.
+Issue #192 prepares a post-hoc fixed-checkpoint sensitivity gate over the same
+five A100-trained seeds. Both epoch checkpoints are retained, so the gate
+reuses the already audited selected-checkpoint predictions and schedules only
+the ten missing unselected-checkpoint evaluations on the same uniform RTX 3090
+path. See `docs/f2_f3_fixed_checkpoint_sensitivity_protocol.md`. Preparation
+authorizes no Kubernetes object, private-test access, model load, inference,
+prediction, metric, training, retry, or continuation. After merge, the five
+evaluation Jobs require a fresh exact-commit owner GO; aggregation requires a
+later separate gate and GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
