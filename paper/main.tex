@@ -240,11 +240,12 @@ Their intervals and tests are descriptive rather than a simultaneous
 five-arm family.
 
 We additionally report a post-hoc training-seed robustness cohort.  Five
-paired F2/F3 replicas use seeds 3407--3411, the frozen training recipe, and the
-same checkpoint rule.  Training uses A100 GPUs, and all ten selected adapters
-are evaluated from record zero on uniform RTX 3090 GPUs.  This cohort was run
-after the primary result and is therefore robustness evidence rather than a
-second pre-specified analysis.
+independently trained F2/F3 replicas use seeds 3407--3411, the frozen training
+recipe, and the same checkpoint rule.  Training uses A100 GPUs, and all ten
+selected adapters are evaluated from record zero on uniform RTX 3090 GPUs.
+The seed-3407 replica does not reuse either original P100 adapter.  This cohort
+was run after the primary result and is therefore robustness evidence rather
+than a second pre-specified analysis.
 
 \section{Results}
 
@@ -329,9 +330,9 @@ difference under this sensitivity; the frozen parser remains primary.
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrr}
 \toprule
-Seed & F2 & F3 & F3 $-$ F2 \\
+Training seed & F2 & F3 & F3 $-$ F2 \\
 \midrule
-3407 & 20.55 & 33.07 & +12.52 \\
+3407-A100 & 20.55 & 33.07 & +12.52 \\
 3408 & 21.92 & 31.51 & +9.59 \\
 3409 & 21.72 & 30.33 & +8.61 \\
 3410 & 22.50 & 33.07 & +10.57 \\
@@ -341,8 +342,9 @@ Mean (SD) & 21.68 (0.71) & 31.98 (1.15) & +10.29 (1.45) \\
 \bottomrule
 \end{tabular}
 \caption{Post-hoc five-seed robustness cohort. Values are exact-match
-percentages; SD is the sample standard deviation across seeds. These adapters
-were trained on A100s and evaluated uniformly on RTX 3090s.}
+percentages; SD is the sample standard deviation across seeds. All rows are
+independent A100 retrains evaluated uniformly on RTX 3090s; ``3407-A100'' is
+not the original P100 primary run.}
 \label{tab:multiseed}
 \end{table}
 
@@ -351,7 +353,13 @@ exceeds F2 in all five seeds; the paired difference ranges from 8.61 to 12.52
 points.  The mean difference of 10.29 points (SD 1.45) is close to the
 11.15-point primary estimate.  Because this cohort is post-hoc and uses a
 different but internally uniform hardware path, it supports robustness of the
-direction and magnitude without replacing the primary analysis.
+direction and magnitude without replacing the primary analysis.  On seed
+3407, the independent A100/RTX-3090 path gives F3 169/511 (33.07\%), seven
+more exact matches than the original P100 run's 162/511 (31.70\%); F2 happens
+to give 105/511 on both paths.  We verified these counts against the frozen
+aggregate audits.  Cross-platform bitwise determinism was neither required nor
+achieved, so this row is a replication rather than a reproduction of the
+original adapter.
 
 \section{Auxiliary Behavioral Diagnostics}
 
@@ -435,6 +443,12 @@ tokens than F3, token totals do not control length, domain, or source quality.
 We do not run QALB test, so our accuracy is not comparable to full-sentence M2
 scores.
 
+Every trainable arm selects between epoch 1 and epoch 2 using loss on the same
+natural QALB development view.  The rule was frozen before test access, but a
+natural development distribution could still favor F3 over F2.  We do not yet
+report a fixed-epoch sensitivity, so the multi-seed cohort addresses training
+randomness but not this checkpoint-policy concern.
+
 Exact single-reference matching is intentionally strict.  A linguistically
 valid alternative receives no credit unless it equals the supplied token.
 No qualified linguist reviewed the private predictions, so we provide no
@@ -444,7 +458,10 @@ source literature does not substitute for expert labels on our outputs.
 F1, F2/F3, and the prompt baselines were executed at different stages, so only
 the simultaneously executed F3--F2 contrast is primary.  We exclude the
 historical T4 Nahw baseline and all comparisons derived from it; every
-displayed final-evaluation system ran on P100 hardware.
+system reported in Tables~\ref{tab:main-results}--\ref{tab:paired} and
+Figure~\ref{fig:accuracy} was evaluated on P100 hardware.  The separate
+post-hoc cohort in Table~\ref{tab:multiseed} was trained on A100s and evaluated
+uniformly on RTX 3090s.
 
 Our exact-hash overlap checks do not detect paraphrases, shared upstream
 sources, or unknown pretraining contamination.  F2/F3 capability and

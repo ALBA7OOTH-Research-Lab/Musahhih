@@ -34,7 +34,7 @@ checkpoints, adapters, or credentials.
   bibliography style for repository diff hygiene.
 - Review mode produces A4, two-column output with line numbers.
 - The abstract contains 172 words, below the 200-word limit.
-- The compiled PDF contains seven pages; references begin on page six.
+- The compiled PDF contains seven pages; references begin on page seven.
 - No overfull box, undefined control sequence, unresolved citation, unresolved
   reference, or LaTeX error appears in the final build log.
 - PDF metadata contains no author or lab identity.
@@ -66,7 +66,7 @@ The official workshop call and live OpenReview configuration were rechecked on
 | Abstract | Pass | 172 words, below the ACL 200-word maximum. |
 | Required Limitations section | Pass | A dedicated section titled `Limitations` occurs after the conclusion and before the references. |
 | Ethical discussion | Pass | The optional `Ethical Considerations` section follows Limitations and precedes the references. |
-| PDF upload constraint | Pass | The rebuilt PDF is approximately 141 KiB, below the live form's 50 MB maximum. |
+| PDF upload constraint | Pass | The rebuilt PDF is approximately 143 KiB, below the live form's 50 MB maximum. |
 | Submission deadline | Recorded | The workshop states 2026-08-10 at 23:59 AoE; the live OpenReview deadline encodes 2026-08-11 11:59 UTC. |
 | Camera-ready allowance | Not yet applicable | Accepted research papers receive one additional content page. |
 
@@ -95,9 +95,11 @@ art.
 
 The historical B0-P1 Nahw evaluation and every comparison derived from it were
 removed from the manuscript because that run alone used T4 hardware. Every
-displayed final-evaluation system now used P100 hardware. The B0 control in the
-retained F1 safety section is a separate artifact regenerated beside F1-P1
-within one matched P100 run; it is not the excluded T4 result.
+system in Tables 1--2 and Figure 1 used P100 evaluation hardware. The separate
+Table 3 robustness cohort used A100 training and uniform RTX 3090 evaluation.
+The B0 control in the retained F1 safety section is a separate artifact
+regenerated beside F1-P1 within one matched P100 run; it is not the excluded
+T4 result.
 
 The reviewer-response revisions add corpus-text-free clarifications:
 
@@ -134,6 +136,18 @@ SD 0.71 points), F3-P1 mean 31.98% (SD 1.15), and mean paired difference
 seed. The manuscript keeps the original seed-3407 P100 run as primary and
 labels the A100-training/RTX-3090-evaluation cohort as post-hoc robustness
 evidence.
+
+The seed-3407 robustness row is an independent A100-trained replication, not
+reuse of the original P100 adapter. Its audited F3 result is 169/511 (33.07%),
+seven exact matches above the original 162/511 (31.70%); its F2 result is
+105/511 on both paths. The manuscript labels the row `3407-A100`, states that
+cross-platform bitwise determinism was not required or achieved, and does not
+attribute the difference to a single unmeasured cause.
+
+Both epoch checkpoints remain preserved for all five robustness seeds. A
+fixed-epoch checkpoint-policy sensitivity would require new test inference on
+the unselected adapters and therefore remains unauthorized until a separate
+reviewed gate and fresh exact-commit owner GO.
 
 The separately authorized first-token audit used the accepted private
 seed-3407 prediction hashes and published only corpus-text-free aggregate
