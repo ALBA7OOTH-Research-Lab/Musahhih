@@ -183,6 +183,14 @@ ignored local/Kaggle private paths. Public artifacts may contain only:
 ArabicMMLU remains CC BY-NC 4.0. QALB remains research-restricted. Preserve
 their existing attribution and privacy controls.
 
+When the active Kaggle account cannot attach the original private kernel
+outputs, the same artifacts may be copied into one new private Kaggle dataset
+only after all 12 source files pass their existing byte, schema, count, and
+alignment gates. The bundle must be write-once, remain private, contain no
+extra checkpoint or log, and be attached only as an input source. This transport
+change cannot alter the evaluator, adapter, input, reference prediction, or
+metric identity.
+
 ## Issue #200 decisions and authorization boundary
 
 The owner requested both diagnostics for the submission. The frozen primary
