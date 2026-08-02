@@ -322,6 +322,17 @@ authorizes no Kubernetes object, private-test access, model load, inference,
 prediction, metric, training, retry, or continuation. After merge, the five
 evaluation Jobs require a fresh exact-commit owner GO; aggregation requires a
 later separate gate and GO.
+The subsequently authorized issue-#192 wave created all five Jobs in namespace
+`aiea-interns`. Seeds 3408, 3410, and 3411 completed; seeds 3407 and 3409
+failed before test access because the pre-test synthetic batch-16 output did
+not equal the single-record output. No prediction or metric was produced for
+either failed seed, and no retry occurred. Issue #194 prepares a narrow repair
+that retains batch 16 but requires repeated stability of that exact frozen
+execution path. Only failed seeds 3407 and 3409 are eligible for fresh
+record-zero replacements after review, merge, and a new exact-commit owner GO.
+The successful seeds must not be rerun, and aggregation remains separately
+unauthorized. See
+`docs/f2_f3_fixed_checkpoint_batch_stability_repair.md`.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
