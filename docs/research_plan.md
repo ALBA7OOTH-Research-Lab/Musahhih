@@ -317,6 +317,14 @@ points (sample SD 1.45; range +8.61 to +12.52). F3 exceeded F2 in all five
 seeds. This is post-hoc robustness evidence; the original seed-3407 result
 remains primary.
 
+One separately authorized local CPU-only post-hoc audit then tested the
+reviewer-suggested first-token sensitivity on only outputs already flagged
+`multiple_words`. It rescued 0/20 F2-P1 outputs and 0/2 F3-P1 outputs, leaving
+both scores and the 11.15-point primary difference unchanged. See
+[`../results/f2_f3_first_token_sensitivity_audit.md`](../results/f2_f3_first_token_sensitivity_audit.md).
+The audit did not change the parser, rerun inference, or publish record-level
+content. Its authorization is consumed; do not rerun it.
+
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
 `0c34d1846cebc81ea847d8c2c352c353f8988d46`. It produced 89/511 exact
