@@ -1,5 +1,20 @@
 # Active implementation plan
 
+## Issue #181 — audit and close the MPS path
+
+- [x] Preserve the issue-#179 terminal Job without retry or replacement.
+- [x] Audit only its corpus-free worker summaries and error/MPS logs through
+  one CPU-only, read-only temporary Pod.
+- [x] Establish the common five-worker failure and verify clean MPS shutdown.
+- [x] Delete the temporary audit Pod.
+- [x] Reject MPS for the frozen evaluation and freeze the unfinished
+  multi-seed extension for this submission.
+- [x] Prepare and validate the narrow terminal audit for review.
+
+No further GPU canary or evaluation continuation is planned before submission.
+The completed primary single-seed experiment remains the paper's evidentiary
+base; no partial multi-seed accuracy or variance claim is allowed.
+
 ## Issue #179 — enable NVIDIA MPS for batch-16 workers
 
 - [x] Preserve the terminal issue-#177 utilization failure without retry.
@@ -10,13 +25,12 @@
   batch-16 outputs, and the existing durability/resource gates.
 - [x] Complete focused/full validation and Kubernetes client/server dry-runs
   with zero persisted objects.
-- [ ] Review and merge a narrow PR.
-- [ ] Obtain a fresh exact-commit owner GO before one MPS canary; real
-  evaluation remains separately gated.
+- [x] Review and merge a narrow PR.
+- [x] Obtain a fresh exact-commit owner GO and preserve the single terminal
+  MPS canary without retry.
 
-Issue #179 is repository-only repair work. It authorizes no Kubernetes object,
-GPU allocation, model load, test access, inference, prediction, metric,
-training, retry, continuation, QALB test, or XG.
+Issue #179 is terminal. Its MPS strategy failed repeated batch-16 output
+equivalence in all five workers and is rejected.
 
 ## Issue #177 — use concurrent batch-16 evaluation workers
 

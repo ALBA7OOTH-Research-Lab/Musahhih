@@ -269,11 +269,18 @@ across 974 valid samples, with zero sampler failures, 52.6697% peak GPU memory,
 that check only after worker equivalence/durability validation, but the parent
 failure summary did not duplicate those worker fields; treat that statement as
 a code-path inference. No test input or metric was used and no retry occurred.
-Issue #179 prepares an NVIDIA MPS version of the same synthetic gate so the
-five processes share GPU scheduling resources instead of ordinary context
-time-slicing. See `docs/f2_f3_nautilus_evaluation_mps_protocol.md`. Merge
-authorizes no execution. One MPS canary requires a fresh exact-commit issue-#179
-GO; real evaluation and aggregation remain separately unauthorized.
+Issue #179's single authorized NVIDIA MPS canary subsequently started one MPS
+server and five 20%-thread clients on an 80 GB A100. All five workers failed
+the same repeated batch-16 output-equivalence check; their logs were
+byte-identical. The run observed 27.748% mean utilization across 631 valid
+samples, zero sampler failures, 50.3723% peak GPU memory, and 30.5003% peak
+host memory. MPS shut down cleanly, and no test input, metric, training, retry,
+or continuation occurred. Issue #181's separately authorized CPU-only,
+read-only audit confirmed the common error and deleted its temporary Pod. See
+`results/f2_f3_nautilus_mps_canary_repair_audit.md`. Reject MPS for the frozen
+evaluation. The unfinished multi-seed evaluation is frozen for submission and
+supports no accuracy or variance claim; do not launch another canary or
+continuation before submission.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
