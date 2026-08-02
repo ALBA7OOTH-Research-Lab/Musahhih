@@ -290,6 +290,13 @@ prepares the same canary under NVIDIA MPS, which allows independent CUDA
 processes to overlap work through one server context. See
 [`f2_f3_nautilus_evaluation_mps_protocol.md`](f2_f3_nautilus_evaluation_mps_protocol.md).
 No MPS canary or real continuation is authorized by preparation or merge.
+The separately authorized MPS canary later attached all five clients but every
+worker failed the same repeated batch-16 output-equivalence check. Its observed
+mean utilization was 27.748%, still below the 40% gate, while both memory
+guards remained safe. A CPU-only read-only audit confirmed byte-identical
+worker logs and clean MPS shutdown. MPS is therefore rejected for the frozen
+evaluation. With no complete multi-seed metric, the extension is frozen for
+this submission and no robustness claim is allowed.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
