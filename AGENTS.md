@@ -281,6 +281,17 @@ read-only audit confirmed the common error and deleted its temporary Pod. See
 evaluation. The unfinished multi-seed evaluation is frozen for submission and
 supports no accuracy or variance claim; do not launch another canary or
 continuation before submission.
+At the owner's explicit direction, issue #183 supersedes that submission freeze
+with a clean recovery plan: five independent Jobs, seeds 3407–3411, each on one
+exact 24 GB RTX 3090 and each re-evaluating both arms from record zero. The old
+3,739 A100-prefix rows remain private and must not be reused or mixed. Every
+real Job must pass an inline synthetic single/batch-16/repeated-batch
+equivalence gate before opening the frozen test input, then retain per-row
+`fsync`, an 11-hour safe stop, a 20-minute no-progress guard, and no automatic
+retry. See `docs/f2_f3_nautilus_rtx3090_recovery_protocol.md`. Preparation and
+merge authorize no execution. The five-Job wave needs one fresh exact-commit
+issue-#183 GO; aggregation needs a separate GO. Until all five and aggregation
+complete, no partial multi-seed claim is allowed.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

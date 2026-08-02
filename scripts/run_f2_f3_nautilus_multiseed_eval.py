@@ -11,7 +11,6 @@ import json
 import os
 from pathlib import Path
 import shutil
-import time
 
 from scripts.f1_eval_utils import (
     BOOTSTRAP_SAMPLES,
@@ -22,7 +21,6 @@ from scripts.f1_eval_utils import (
     sha256_file,
 )
 from scripts.f2_f3_multiseed_eval_utils import (
-    EVALUATION_CONFIRMATION,
     TEST_FILENAME,
     validate_activation,
     validate_training_pair,
@@ -37,6 +35,14 @@ from scripts.f2_f3_eval_repair_utils import (
 from scripts.f2_f3_eval_concurrency_utils import (
     CONCURRENT_BATCH_SIZE,
     validate_concurrency_activation,
+)
+from scripts.f2_f3_eval_rtx3090_utils import (
+    BATCH_SIZE as RTX3090_BATCH_SIZE,
+    GPU_NAME as RTX3090_GPU_NAME,
+    OUTPUT_ROOT as RTX3090_OUTPUT_ROOT,
+    SAFE_STOP_ELAPSED_SECONDS as RTX3090_SAFE_STOP_ELAPSED_SECONDS,
+    rtx3090_preflight,
+    validate_activation as validate_rtx3090_activation,
 )
 from scripts.f2_f3_nautilus_utils import a100_preflight, arm_order
 from scripts.nahw_baseline_utils import parse_model_response, summarize_predictions
@@ -115,6 +121,7 @@ def _progress_payload(
         "test_sha256": EXPECTED_TEST_SHA256,
         "elapsed_seconds": budget.elapsed_seconds(),
         "resume_source": activation.get("resume_source"),
+        "pretest_gate": activation.get("pretest_gate"),
         "contains_corpus_text": False,
     }
 
@@ -226,6 +233,45 @@ def _failure_digest(error: BaseException) -> str:
     ).hexdigest()
 
 
+def synthetic_equivalence_gate(
+    adapter: Path,
+    *,
+    required_gpu: str,
+    generator_factory=AdapterGenerator,
+) -> dict:
+    """Require stable single/batch-16 greedy decoding before test access."""
+
+    base = "synthetic validation token "
+    prompts = [
+        (
+            "This is synthetic non-corpus load testing. Return only TOKEN. Context: "
+            + base * (80 + (index % 16) * 8)
+        )
+        for index in range(16)
+    ]
+    generator = generator_factory(adapter, required_gpu=required_gpu)
+    try:
+        generator.load()
+        single = [generator(prompt) for prompt in prompts]
+        first_batch = generator.generate_batch(prompts)
+        second_batch = generator.generate_batch(prompts)
+        if single != first_batch or first_batch != second_batch:
+            raise MultiSeedRunError("RTX 3090 synthetic output equivalence failed")
+        digest = hashlib.sha256(
+            json.dumps(first_batch, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
+        return {
+            "status": "passed",
+            "synthetic_records": 16,
+            "single_equals_batch16": True,
+            "repeated_batch16_equal": True,
+            "output_sha256": digest,
+            "contains_corpus_text": False,
+        }
+    finally:
+        _release_generator(generator)
+
+
 def _generate_arm_batched(
     *,
     arm: str,
@@ -295,12 +341,14 @@ def execute(
     resume_source_commit: str | None = None,
     interrupted_source: dict | None = None,
     batch_size: int = 1,
+    required_gpu: str = "A100",
+    safe_stop_elapsed_seconds: int = SAFE_STOP_ELAPSED_SECONDS,
 ) -> dict:
     seed = activation["seed"]
     seed_root = Path(output_root) / f"seed-{seed}"
     budget = KernelTimeBudget(
         kernel_start_epoch_seconds,
-        safe_stop_elapsed_seconds=SAFE_STOP_ELAPSED_SECONDS,
+        safe_stop_elapsed_seconds=safe_stop_elapsed_seconds,
     )
     public_adapter_meta = _public_adapter_meta(adapter_meta)
     prefixes, runtimes = _load_resume(
@@ -357,7 +405,7 @@ def execute(
                 "budget": budget,
                 "progress_callback": on_progress,
                 "generator_factory": lambda adapter: AdapterGenerator(
-                    adapter, required_gpu="A100"
+                    adapter, required_gpu=required_gpu
                 ),
             }
             if batch_size != 1:
@@ -437,6 +485,8 @@ def execute(
             "automatic_retry": False,
             "batch_size": batch_size,
             "batch_equivalence_canary_required": batch_size > 1,
+            "pretest_gate": activation.get("pretest_gate"),
+            "inference_gpu_required": required_gpu,
         }
         _write_json_atomic(summary_path, summary)
         return summary
@@ -450,7 +500,7 @@ def execute(
             "attempt_id": activation["attempt_id"],
             "completed_records": completed,
             "elapsed_seconds": budget.elapsed_seconds(),
-            "safe_stop_elapsed_seconds": SAFE_STOP_ELAPSED_SECONDS,
+            "safe_stop_elapsed_seconds": safe_stop_elapsed_seconds,
             "metrics_reported": False,
             "resume_requires_fresh_authorization": True,
             "batch_size": batch_size,
@@ -508,6 +558,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--confirmation", required=True)
     parser.add_argument("--repair-continuation", action="store_true")
     parser.add_argument("--concurrent-continuation", action="store_true")
+    parser.add_argument("--rtx3090-recovery", action="store_true")
     parser.add_argument("--resume-source-attempt-id")
     parser.add_argument("--resume-source-commit")
     parser.add_argument("--batch-size", type=int, default=1)
@@ -518,9 +569,34 @@ def main() -> None:
     args = parse_args()
     commit = actual_commit()
     interrupted_source = None
-    if args.repair_continuation and args.concurrent_continuation:
-        raise MultiSeedRunError("only one continuation contract may be active")
-    if args.concurrent_continuation:
+    modes = sum(
+        bool(value)
+        for value in (
+            args.repair_continuation,
+            args.concurrent_continuation,
+            args.rtx3090_recovery,
+        )
+    )
+    if modes > 1:
+        raise MultiSeedRunError("only one evaluation recovery mode may be active")
+    if args.rtx3090_recovery:
+        activation = validate_rtx3090_activation(
+            seed=args.seed,
+            approved_commit=args.approved_commit,
+            actual_commit=commit,
+            approval_reference=args.approval_reference,
+            confirmation=args.confirmation,
+        )
+        if (
+            args.batch_size != RTX3090_BATCH_SIZE
+            or args.resume_root is not None
+            or args.resume_source_attempt_id is not None
+            or args.resume_source_commit is not None
+        ):
+            raise MultiSeedRunError(
+                "RTX 3090 recovery requires fresh batch-16 evaluation"
+            )
+    elif args.concurrent_continuation:
         activation = validate_concurrency_activation(
             stage="continuation",
             seed=args.seed,
@@ -604,13 +680,12 @@ def main() -> None:
     os.environ["UNSLOTH_COMPILE_DISABLE"] = "1"
     import torch
 
-    gpu = a100_preflight(torch)
+    gpu = rtx3090_preflight(torch) if args.rtx3090_recovery else a100_preflight(torch)
     runtime_summary(torch, gpu)
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
 
     training_root = _require_private_absolute_path(args.training_root, "training root")
-    test_root = _require_private_absolute_path(args.test_input_root, "test input root")
     output_root = _require_private_absolute_path(args.output_root, "output root")
     resume_root = (
         _require_private_absolute_path(args.resume_root, "resume root")
@@ -628,10 +703,22 @@ def main() -> None:
         or resume_root.parent.parent.name != f"seed-{args.seed}"
     ):
         raise MultiSeedRunError("repair resume path does not match frozen source")
+    if args.rtx3090_recovery and output_root.as_posix() != RTX3090_OUTPUT_ROOT:
+        raise MultiSeedRunError("RTX 3090 recovery output root mismatch")
 
     seed_root = training_root / f"seed-{args.seed}"
     validated = validate_training_pair(seed_root, args.seed)
     adapter_meta = _public_adapter_meta(validated)
+    required_gpu = "A100"
+    safe_stop_elapsed_seconds = SAFE_STOP_ELAPSED_SECONDS
+    if args.rtx3090_recovery:
+        activation["pretest_gate"] = synthetic_equivalence_gate(
+            validated[arm_order(args.seed)[0]]["adapter_path"],
+            required_gpu=RTX3090_GPU_NAME,
+        )
+        required_gpu = RTX3090_GPU_NAME
+        safe_stop_elapsed_seconds = RTX3090_SAFE_STOP_ELAPSED_SECONDS
+    test_root = _require_private_absolute_path(args.test_input_root, "test input root")
     validate_test_staging(test_root)
     records = load_and_validate_nahw_records(test_root / TEST_FILENAME)
     summary = execute(
@@ -647,6 +734,8 @@ def main() -> None:
         resume_source_commit=args.resume_source_commit,
         interrupted_source=interrupted_source,
         batch_size=args.batch_size,
+        required_gpu=required_gpu,
+        safe_stop_elapsed_seconds=safe_stop_elapsed_seconds,
     )
     print(
         json.dumps(
