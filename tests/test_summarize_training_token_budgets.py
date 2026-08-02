@@ -1,6 +1,5 @@
 import json
-
-import pytest
+import unittest
 
 from scripts.summarize_training_token_budgets import (
     TokenBudgetError,
@@ -31,23 +30,30 @@ def row(record_id, source="QALB-2014-L1"):
     }
 
 
-def test_summarize_arm_is_corpus_text_free():
-    summary = summarize_arm(
-        [row("one"), row("two", source="Tibyan-corpus")], FakeTokenizer()
-    )
-    serialized = json.dumps(summary)
-    assert summary["records"] == 2
-    assert summary["formatted_tokens"] == 6
-    assert "private prompt" not in serialized
-    assert "private completion" not in serialized
-    assert summary["source_totals"]["QALB-2014-L1"]["records"] == 1
-    assert summary["source_totals"]["Tibyan-corpus"]["records"] == 1
+class TrainingTokenBudgetTests(unittest.TestCase):
+    def test_summarize_arm_is_corpus_text_free(self):
+        summary = summarize_arm(
+            [row("one"), row("two", source="Tibyan-corpus")], FakeTokenizer()
+        )
+        serialized = json.dumps(summary)
+        self.assertEqual(summary["records"], 2)
+        self.assertEqual(summary["formatted_tokens"], 6)
+        self.assertNotIn("private prompt", serialized)
+        self.assertNotIn("private completion", serialized)
+        self.assertEqual(
+            summary["source_totals"]["QALB-2014-L1"]["records"], 1
+        )
+        self.assertEqual(
+            summary["source_totals"]["Tibyan-corpus"]["records"], 1
+        )
+
+    def test_percentile_nearest_rank_matches_frozen_convention(self):
+        self.assertEqual(percentile_nearest_rank([1, 2, 3, 4], 0.95), 3)
+
+    def test_percentile_rejects_empty_input(self):
+        with self.assertRaises(TokenBudgetError):
+            percentile_nearest_rank([], 0.95)
 
 
-def test_percentile_nearest_rank_matches_frozen_convention():
-    assert percentile_nearest_rank([1, 2, 3, 4], 0.95) == 3
-
-
-def test_percentile_rejects_empty_input():
-    with pytest.raises(TokenBudgetError):
-        percentile_nearest_rank([], 0.95)
+if __name__ == "__main__":
+    unittest.main()
