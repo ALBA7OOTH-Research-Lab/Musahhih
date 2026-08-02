@@ -1,5 +1,22 @@
 # Active implementation plan
 
+## Issue #194 — repair fixed-checkpoint batch-stability gate
+
+- [x] Preserve the five issue-#192 terminal states without retry.
+- [x] Audit the two failed logs through corpus-free hashes and fixed signatures.
+- [x] Establish that both failures occurred before test access at the
+  single-versus-batch synthetic equivalence criterion.
+- [x] Retain batch 16 and require repeated stability of the actual batch-16
+  execution path.
+- [x] Limit replacement eligibility to failed seeds 3407 and 3409 from record
+  zero; never rerun completed seeds.
+- [x] Complete focused/full validation and Kubernetes dry-runs.
+- [ ] Review and merge before any fresh exact-commit replacement GO.
+
+Issue #194 is repository-only preparation. It authorizes no Kubernetes object,
+GPU use, private-test access, model load, inference, prediction, metric,
+training, retry, continuation, aggregation, QALB test, or XG.
+
 ## Issue #192 — prepare fixed-checkpoint sensitivity evaluation
 
 - [x] Verify that the seed-3407 robustness result is an independent A100
