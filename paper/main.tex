@@ -413,6 +413,17 @@ are not redistributed.  This boundary limits independent end-to-end
 replication but respects current dataset and artifact restrictions.  The
 upstream Tibyan release remains available under its own license.
 
+\section{Conclusion}
+
+In a frozen equal-record comparison, a 50:50 natural--synthetic mixture
+substantially outperforms synthetic-only supervision for Gemma 3 4B Arabic
+highlighted-token GEC, and a post-hoc five-seed cohort preserves this direction
+in every seed.  Natural-only supervision also exceeds synthetic-only
+supervision in a staged comparison, while mixed supervision is not established
+as better than natural-only.  Together with prompt baselines, the results
+indicate that data composition---not fine-tuning alone---is a central
+experimental variable for open-weight Arabic GEC.
+
 \section{Limitations}
 
 Our evidence is limited to one 4B model, one equal-record training size, and
@@ -455,17 +466,6 @@ MSA highlighted-token correction only.  ``Expert-style'' refers solely to a
 prompt design, and we make no claim of expert linguistic validation.  Adapters
 trained on restricted natural data remain private pending legal,
 institutional, and model-license review.
-
-\section{Conclusion}
-
-In a frozen equal-record comparison, a 50:50 natural--synthetic mixture
-substantially outperforms synthetic-only supervision for Gemma 3 4B Arabic
-highlighted-token GEC, and a post-hoc five-seed cohort preserves this direction
-in every seed.  Natural-only supervision also exceeds
-synthetic-only supervision in a staged comparison, while mixed supervision is
-not established as better than natural-only.  Together with prompt baselines,
-the results indicate that data composition---not fine-tuning alone---is a
-central experimental variable for open-weight Arabic GEC.
 
 \bibliography{references}
 

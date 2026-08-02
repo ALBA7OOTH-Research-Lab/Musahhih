@@ -24,6 +24,10 @@ checkpoints, adapters, or credentials.
 
 ## Format checks
 
+- The MRL 2026 call requires the EMNLP 2025 paper format, anonymized research
+  papers of either four or eight content pages excluding references, and one
+  additional content page only for accepted camera-ready papers. The draft is
+  prepared as a long research paper.
 - Official ACL style files were pinned from `acl-org/acl-style-files` commit
   `d5adc823ff0f80f98c80405ca0ab66c68e684409`.
 - Two behavior-neutral trailing spaces were removed from the upstream
@@ -37,10 +41,40 @@ checkpoints, adapters, or credentials.
 - All seven pages were rendered to PNG and visually checked for clipped text,
   overlap, broken tables, unreadable labels, missing glyphs, and float-layout
   defects.
+- The required `Limitations` section and optional `Ethical Considerations`
+  section occur after the conclusion and before the references, following the
+  EMNLP/ARR page-count convention.
+- The paper contains no author names, affiliations, acknowledgements,
+  deanonymizing repository links, or identifying self-references.
 
 The draft remains below the MRL long-paper limit of eight content pages plus
 references. The final workshop template and submission form must be rechecked
 before upload because venue instructions may change.
+
+## MRL 2026 submission compliance review
+
+The official workshop call and live OpenReview configuration were rechecked on
+2026-08-02.
+
+| Requirement | Status | Evidence |
+|---|---|---|
+| Research-paper track | Pass | The draft reports completed, original experimental work and is prepared as a long paper rather than a two-page extended abstract. |
+| Workshop scope | Pass | The study evaluates adaptation of an open multilingual model to an under-studied, morphologically rich language and directly studies training data composition. |
+| Content length | Pass | The conclusion ends on page 6, below the eight-page long-paper limit; Limitations, Ethical Considerations, and references follow. |
+| Review template | Pass | The PDF uses the pinned official ACL review style in A4, two-column, line-numbered form. |
+| Anonymity | Pass | The PDF and metadata contain no author, affiliation, acknowledgement, lab name, deanonymizing link, or identifying self-reference. |
+| Abstract | Pass | 172 words, below the ACL 200-word maximum. |
+| Required Limitations section | Pass | A dedicated section titled `Limitations` occurs after the conclusion and before the references. |
+| Ethical discussion | Pass | The optional `Ethical Considerations` section follows Limitations and precedes the references. |
+| PDF upload constraint | Pass | The rebuilt PDF is approximately 141 KiB, below the live form's 50 MB maximum. |
+| Submission deadline | Recorded | The workshop states 2026-08-10 at 23:59 AoE; the live OpenReview deadline encodes 2026-08-11 11:59 UTC. |
+| Camera-ready allowance | Not yet applicable | Accepted research papers receive one additional content page. |
+
+The current regular-paper OpenReview form requests title, author profiles,
+keywords, an optional TL;DR, abstract, and one PDF, and assigns CC BY 4.0. It
+does not currently expose a supplementary-material upload field. Recheck the
+live form immediately before submission rather than assuming a separate
+anonymous archive can be attached.
 
 ## Evidence and claim checks
 
@@ -146,7 +180,8 @@ primary-source verification.
 
 - author and affiliation decisions;
 - substantive author review of framing and interpretation;
-- final artifact-availability wording and anonymous supplementary package;
+- final artifact-availability wording, with an anonymous supplement only if
+  the live workshop form later exposes a permitted upload field;
 - final ACL policy and MRL OpenReview form review;
 - camera-ready AI-assistance disclosure if the paper is accepted; and
 - final proofreading by every listed author.
