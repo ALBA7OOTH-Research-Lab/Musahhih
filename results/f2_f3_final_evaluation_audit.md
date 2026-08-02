@@ -20,6 +20,13 @@ were retained exactly as produced. This is an executed frozen-test result, not
 an estimate. No prompt, parser, checkpoint, decoding setting, training data, or
 experiment decision changed after test access.
 
+A separately authorized post-hoc sensitivity later applied the first
+whitespace-delimited token only to those already flagged outputs, symmetrically
+for both arms. It rescued 0/20 F2-P1 outputs and 0/2 F3-P1 outputs, leaving both
+scores and the 11.15-point difference unchanged. See
+`results/f2_f3_first_token_sensitivity_audit.md`. This did not alter the frozen
+parser or primary result.
+
 ## Frozen primary comparison
 
 Among the 511 aligned records, F3-P1 corrected 89 records that F2-P1 missed,
