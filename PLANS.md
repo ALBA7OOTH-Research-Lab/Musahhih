@@ -822,3 +822,20 @@ metric, retry, continuation, training, QALB-test access, or XG.
 Issue #175 authorizes repository preparation only. It authorizes no Kubernetes
 submission, GPU allocation, model loading, private-input access, inference,
 metric, retry, continuation, training, QALB-test access, or XG.
+
+## Issue #188 — prepare F2/F3 first-token sensitivity audit
+
+- [x] Freeze a symmetric first-whitespace-token counterfactual for only outputs
+  already flagged `multiple_words`.
+- [x] Gate the accepted F2-P1/F3-P1 prediction hashes, row counts, original
+  scores, warning counts, identities, and ordered alignment.
+- [x] Limit public output to aggregate rescue/harm counts and adjusted scores.
+- [x] Add synthetic tests without opening any private prediction artifact.
+- [ ] Pass focused and repository validation.
+- [ ] Merge the preparation and record its exact executable commit.
+- [ ] Obtain a fresh exact-commit owner GO before one local CPU-only audit.
+
+Issue #188 authorizes repository preparation only. It authorizes no private
+prediction access, metric computation, model loading, GPU use, inference,
+training, repeat evaluation, parser change, QALB-test access, safety diagnostic,
+or XG.
