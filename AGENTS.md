@@ -333,6 +333,17 @@ record-zero replacements after review, merge, and a new exact-commit owner GO.
 The successful seeds must not be rerun, and aggregation remains separately
 unauthorized. See
 `docs/f2_f3_fixed_checkpoint_batch_stability_repair.md`.
+The separately authorized issue-#194 replacements then completed seeds 3407
+and 3409 with exit code zero and zero restarts. Together with the three
+issue-#192 completions, all five unselected-checkpoint seed pairs are now
+available privately. No aggregate was computed during monitoring. Issue #196
+prepares one separately gated CPU-only audit that will validate the 20 unique
+selected/unselected prediction files and retained checkpoint identities before
+assembling fixed-epoch-1, fixed-epoch-2, and dev-selected policy statistics.
+Preparation and merge authorize no Kubernetes object, PVC or prediction read,
+metric, inference, training, checkpoint selection or reselection, retry,
+QALB-test access, diagnostic, prompt/parser change, or XG. One aggregate Job
+requires a fresh owner GO naming the exact merged commit.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
