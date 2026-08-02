@@ -144,10 +144,13 @@ seven exact matches above the original 162/511 (31.70%); its F2 result is
 cross-platform bitwise determinism was not required or achieved, and does not
 attribute the difference to a single unmeasured cause.
 
-Both epoch checkpoints remain preserved for all five robustness seeds. A
-fixed-epoch checkpoint-policy sensitivity would require new test inference on
-the unselected adapters and therefore remains unauthorized until a separate
-reviewed gate and fresh exact-commit owner GO.
+The separately authorized fixed-checkpoint sensitivity validated both epoch
+predictions for every seed-arm. F3-P1 remained higher at fixed epoch 1 (+6.11
+points on average) and fixed epoch 2 (+6.58). The frozen natural-development
+rule selected F2 epoch 1 and F3 epoch 2 for all five replicas, producing the
+larger +10.29-point dev-selected gap. The manuscript therefore states that
+checkpoint selection amplifies the estimated magnitude but does not create
+the mixed-over-synthetic direction. This is post-hoc sensitivity evidence.
 
 The separately authorized first-token audit used the accepted private
 seed-3407 prediction hashes and published only corpus-text-free aggregate
@@ -161,9 +164,9 @@ inference, and emitted only aggregate counts, distributions, and hashes. F2-P1
 contains 25.4% more formatted tokens than F3-P1, so greater token exposure
 cannot explain the primary F3-P1 advantage.
 
-`results/research_results_consolidated.json` was updated to include the
-accepted B1-P1 and B2-P1 final results and the reviewed staged comparisons used
-by the manuscript figure.
+`results/research_results_consolidated.json` includes the accepted B1-P1 and
+B2-P1 results, the five-seed cohort, the fixed-checkpoint sensitivity, and the
+reviewed staged comparisons used by the manuscript figure and tables.
 
 ## Citation checks
 
@@ -181,14 +184,20 @@ primary-source verification.
 
 ## Validation
 
-- `python -m pytest -q`: 304 tests, 78 subtests, and 2 expected skips passed
-  after merging the current main branch.
+- full repository suite: 316 tests passed with 2 optional data skips.
 - `python -m compileall scripts`: passed.
 - pinned-tokenizer aggregate generation and idempotent rerun: passed.
-- JSON parse of `results/research_results_consolidated.json`: passed.
+- JSON parsing and fixed-checkpoint metric consistency: passed.
 - `git diff --check`: passed.
 - Manuscript identifier/credential scan: no match.
-- Final LaTeX compilation with Tectonic: passed.
+- Final LaTeX compilation with Tectonic 0.16.9: passed.
+- Rendered PDF: 8 A4 pages; all pages visually inspected with no clipping,
+  overlap, broken table, or illegible content.
+- Official MRL 2026 call rechecked on 2026-08-02: anonymized EMNLP 2025 format
+  and a 4- or 8-page research-paper limit excluding references. The draft has
+  fewer than 8 content pages; references end on PDF page 8.
+- final PDF SHA-256:
+  `9b5d21a454d4080d46e3df72b3148042e9395ac9998fedacf072c5dbdf44aee5`.
 
 ## Remaining work before submission
 

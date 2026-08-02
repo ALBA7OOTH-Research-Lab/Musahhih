@@ -918,10 +918,24 @@ the result to change the primary parser, predictions, or score.
 - [x] Require exact training checkpoint, prediction, count, schema, and alignment gates.
 - [x] Prepare one CPU-only, write-once, no-retry aggregate Job.
 - [x] Pass focused and full repository validation plus Kubernetes dry-runs.
-- [ ] Obtain review and merge the repository-only preparation.
-- [ ] Obtain a fresh exact-commit owner GO before one aggregate Job.
+- [x] Obtain review and merge the repository-only preparation.
+- [x] Obtain a fresh exact-commit owner GO before one aggregate Job.
+- [x] Complete one CPU-only aggregate with exit code zero and zero restarts.
 
 Issue #196 authorizes repository preparation only. It authorizes no Kubernetes
 object, PVC or prediction read, metric, inference, training, checkpoint
 selection or reselection, retry, QALB-test access, diagnostics, prompt/parser
 change, or XG.
+
+## Issue #198 — publish fixed-checkpoint sensitivity results
+
+- [x] Preserve the terminal issue-#196 corpus-free aggregate.
+- [x] Record fixed epoch 1, fixed epoch 2, and dev-selected statistics.
+- [x] State that selection amplifies magnitude but does not create direction.
+- [x] Update the manuscript and research status documents.
+- [x] Rebuild and visually verify the anonymous PDF.
+- [ ] Pass repository validation, review, and merge.
+
+Issue #196's authorization is consumed. Issue #198 is publication-only work;
+it authorizes no private prediction read, Kubernetes object, metric rerun,
+inference, training, reselection, QALB-test access, diagnostics, or XG.

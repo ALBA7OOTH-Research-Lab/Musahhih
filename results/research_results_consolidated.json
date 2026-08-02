@@ -132,6 +132,39 @@
     "f3_exceeded_f2_in_every_seed": true,
     "original_seed_3407_result_remains_primary": true
   },
+  "f2_f3_fixed_checkpoint_sensitivity": {
+    "status": "complete_post_hoc",
+    "seeds": [3407, 3408, 3409, 3410, 3411],
+    "fixed_epoch_1": {
+      "f2_mean_accuracy": 0.21682974559686888,
+      "f2_sample_sd": 0.007109942123125225,
+      "f3_mean_accuracy": 0.27788649706457924,
+      "f3_sample_sd": 0.004151311826926894,
+      "paired_difference_mean": 0.06105675146771037,
+      "paired_difference_sample_sd": 0.009116097611625922,
+      "paired_difference_range": [0.05283757338551859, 0.07436399217221135]
+    },
+    "fixed_epoch_2": {
+      "f2_mean_accuracy": 0.2540117416829745,
+      "f2_sample_sd": 0.008116024013044117,
+      "f3_mean_accuracy": 0.3197651663405088,
+      "f3_sample_sd": 0.0115443297093954,
+      "paired_difference_mean": 0.06575342465753424,
+      "paired_difference_sample_sd": 0.015259169228663738,
+      "paired_difference_range": [0.04500978473581213, 0.08806262230919765]
+    },
+    "dev_selected": {
+      "f2_mean_accuracy": 0.21682974559686888,
+      "f3_mean_accuracy": 0.3197651663405088,
+      "paired_difference_mean": 0.10293542074363991,
+      "f2_checkpoint": "checkpoint-125",
+      "f3_checkpoint": "checkpoint-250",
+      "same_selection_for_all_five_seeds": true
+    },
+    "f3_exceeded_f2_at_both_fixed_epochs_in_every_seed": true,
+    "checkpoint_selection_amplified_but_did_not_create_the_difference": true,
+    "original_seed_3407_result_remains_primary": true
+  },
   "f2_f3_first_token_sensitivity": {
     "status": "complete_post_hoc",
     "f2_multiple_word_outputs": 20,
@@ -193,7 +226,7 @@
     "f2_f3_safety_diagnostics": "proposed only; requires protocol review, implementation, merge, and fresh authorization",
     "qualified_linguistic_error_analysis": "blocked on a qualified Arabic linguist and an approved private-review procedure",
     "adapter_release": "blocked on software, base-model, dataset-license, and institutional review",
-    "manuscript": "anonymous ACL-format draft prepared; five-seed robustness revision in progress"
+    "manuscript": "anonymous ACL-format draft prepared with five-seed and fixed-checkpoint sensitivity results"
   },
   "safeguards": {
     "contains_corpus_text": false,

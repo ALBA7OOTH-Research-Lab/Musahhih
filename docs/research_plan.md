@@ -325,6 +325,18 @@ both scores and the 11.15-point primary difference unchanged. See
 The audit did not change the parser, rerun inference, or publish record-level
 content. Its authorization is consumed; do not rerun it.
 
+A separately gated post-hoc fixed-checkpoint sensitivity then reused the five
+selected-checkpoint results and evaluated only the retained unselected epoch
+for each seed-arm. The CPU-only issue-#196 aggregate validated all 20 unique
+prediction files and checkpoint identities. F3-P1 exceeded F2-P1 in every seed
+under both matched policies: the mean gap was +6.11 points at fixed epoch 1
+and +6.58 at fixed epoch 2. The frozen natural-development rule selected F2
+epoch 1 and F3 epoch 2 for all five replicas, producing the larger +10.29-point
+dev-selected gap. This shows that selection amplifies the estimated magnitude
+but does not create the direction. The analysis remains post-hoc and the
+original seed-3407 P100 comparison remains primary. See
+[`../results/f2_f3_fixed_checkpoint_sensitivity_audit.md`](../results/f2_f3_fixed_checkpoint_sensitivity_audit.md).
+
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
 `0c34d1846cebc81ea847d8c2c352c353f8988d46`. It produced 89/511 exact

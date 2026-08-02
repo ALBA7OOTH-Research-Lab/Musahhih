@@ -59,13 +59,15 @@ Do not claim publicly released adapters until the release audit is resolved.
    11.15 points with a 7.05–15.26-point interval.
 5. Robustness: in a post-hoc five-seed cohort, F3-P1 exceeded F2-P1 in every
    seed; the mean paired advantage was 10.29 points (sample SD 1.45).
-6. Format sensitivity: a post-hoc first-token rule rescued 0/20 flagged F2-P1
+6. Checkpoint sensitivity: F3-P1 remained higher under fixed epoch 1 (+6.11
+   points) and fixed epoch 2 (+6.58); dev selection enlarged the gap to +10.29.
+7. Format sensitivity: a post-hoc first-token rule rescued 0/20 flagged F2-P1
    outputs and 0/2 flagged F3-P1 outputs, leaving the primary gap unchanged.
-7. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
+8. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
    F1-P1.
-8. Auxiliary diagnostics: F1-P1 reduced the selected overcorrection diagnostic and showed no
+9. Auxiliary diagnostics: F1-P1 reduced the selected overcorrection diagnostic and showed no
    established ArabicMMLU change.
-9. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
+10. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
    expert linguistic error analysis, and private restricted artifacts.
 
 ## Main results table
@@ -97,6 +99,19 @@ Training used the completed A100 five-seed wave; recovery inference used one
 RTX 3090 per seed. Treat this as post-hoc robustness evidence. It supports the
 stability of the mixed-over-synthetic direction but does not replace the
 preregistered seed-3407 primary comparison.
+
+## Post-hoc fixed-checkpoint sensitivity table
+
+| Checkpoint policy | F2-P1 | F3-P1 | F3 minus F2 |
+| --- | ---: | ---: | ---: |
+| Fixed epoch 1 | 21.68% | 27.79% | +6.11 points |
+| Fixed epoch 2 | 25.40% | 31.98% | +6.58 points |
+| Dev-selected | 21.68% | 31.98% | +10.29 points |
+
+F3-P1 is higher in every seed at both fixed epochs. The natural-development
+rule selects epoch 1 for F2 and epoch 2 for F3 across all five replicas, so it
+amplifies the measured gap without creating its direction. Treat this as
+post-hoc sensitivity evidence, not a replacement primary analysis.
 
 ## Paired-comparison table
 
