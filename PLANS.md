@@ -910,3 +910,18 @@ or XG.
 
 Issue #190's single authorization is consumed. Do not rerun the audit or use
 the result to change the primary parser, predictions, or score.
+
+## Issue #196 — prepare fixed-checkpoint sensitivity aggregation
+
+- [x] Freeze the three completed source attempts and executable commits.
+- [x] Reuse 20 unique selected/unselected prediction files across three policies.
+- [x] Require exact training checkpoint, prediction, count, schema, and alignment gates.
+- [x] Prepare one CPU-only, write-once, no-retry aggregate Job.
+- [x] Pass focused and full repository validation plus Kubernetes dry-runs.
+- [ ] Obtain review and merge the repository-only preparation.
+- [ ] Obtain a fresh exact-commit owner GO before one aggregate Job.
+
+Issue #196 authorizes repository preparation only. It authorizes no Kubernetes
+object, PVC or prediction read, metric, inference, training, checkpoint
+selection or reselection, retry, QALB-test access, diagnostics, prompt/parser
+change, or XG.
