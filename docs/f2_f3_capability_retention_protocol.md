@@ -1,6 +1,7 @@
-# Proposed F2-P1/F3-P1 capability-retention and overcorrection protocol
+# F2-P1/F3-P1 capability-retention and overcorrection protocol
 
-Status: issue-#104 planning draft. Not frozen, implemented, or authorized.
+Status: frozen design for issue #200 repository preparation. Not implemented,
+merged, or authorized for execution.
 
 ## Purpose
 
@@ -39,7 +40,9 @@ memory before the next arm.
 
 Do not rerun B0 or F1-P1. Their accepted record-level safety predictions remain
 private immutable staged references. Repeating F1-P1 is prohibited by its
-completed protocol.
+completed protocol. This extension also does not rerun any Nahw-Passage system:
+a post-hoc common-date rerun could not convert already observed comparisons into
+a preregistered simultaneous experiment.
 
 ## Frozen diagnostic inputs proposed for reuse
 
@@ -70,7 +73,7 @@ designing this extension.
 QALB test, Nahw-Passage, ArabicMMLU development demonstrations, new sampling,
 new thresholds, and new prompt variants are prohibited.
 
-## Proposed run order and timeout safety
+## Frozen run order and timeout safety
 
 Use one private P100 workflow with this fixed order:
 
@@ -101,7 +104,7 @@ validation must verify the candidate set, candidate-token identities, stored
 finite logits, selected answer, correctness boolean, task, and ordered record
 identity without printing question text or answers.
 
-## Proposed outcomes and comparisons
+## Frozen outcomes and comparisons
 
 ### Overcorrection endpoint
 
@@ -139,6 +142,12 @@ Use the same staged secondary systems as the overcorrection endpoint. Report
 discordant counts, exact two-sided McNemar p-value, and the existing
 40-task-stratified 10,000-sample paired-bootstrap interval with seed 3407.
 
+The public paper and corpus-free audit report only the 1,000-record micro
+accuracy and paired comparisons. The fixed per-task results remain private by
+default: they are descriptive, each has only 25 selected questions, they add
+little to the paper's main claim, and withholding them minimizes release risk
+under ArabicMMLU's CC BY-NC 4.0 terms.
+
 The two endpoints answer different safety questions. Do not combine them into
 one score, select an adapter from them, or represent the diagnostic as a formal
 non-inferiority trial.
@@ -174,16 +183,17 @@ ignored local/Kaggle private paths. Public artifacts may contain only:
 ArabicMMLU remains CC BY-NC 4.0. QALB remains research-restricted. Preserve
 their existing attribution and privacy controls.
 
-## Required review decisions before implementation
+## Issue #200 decisions and authorization boundary
 
-1. Confirm that the paper needs F2/F3 safety diagnostics.
-2. Approve or revise the proposed F3-minus-F2 primary comparisons.
-3. Decide whether staged comparisons to both accepted B0 and F1-P1 are useful
-   enough to justify their runtime/package caveat.
-4. Review the multi-segment ordering and safe-stop threshold.
-5. Approve the public per-task reporting policy for ArabicMMLU.
+The owner requested both diagnostics for the submission. The frozen primary
+comparisons are F3-minus-F2. Staged B0/F1 comparisons are retained because they
+reuse immutable predictions and require no additional GPU inference. The
+ordered, timeout-safe P100 workflow and 34,200-second safe stop are approved for
+implementation. Public ArabicMMLU reporting is limited to micro aggregates.
 
-Only after those decisions may a dedicated implementation issue add code and
-synthetic tests. Implementation must merge before an independent exact-commit
-GO. This draft authorizes no data access, model loading, inference, or Kaggle
-submission.
+Issue #200 may now add code, synthetic tests, and read-only local identity checks
+that hash already prepared private artifacts without displaying or interpreting
+their contents. Implementation must merge before an independent exact-commit
+owner GO. This protocol authorizes no model-facing private-record processing,
+model loading, inference, metric computation, Kaggle submission, retry, or
+continuation.
