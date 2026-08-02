@@ -132,6 +132,17 @@
     "f3_exceeded_f2_in_every_seed": true,
     "original_seed_3407_result_remains_primary": true
   },
+  "f2_f3_first_token_sensitivity": {
+    "status": "complete_post_hoc",
+    "f2_multiple_word_outputs": 20,
+    "f2_rescued_by_first_token": 0,
+    "f3_multiple_word_outputs": 2,
+    "f3_rescued_by_first_token": 0,
+    "original_f3_minus_f2": 0.11154598825831702,
+    "counterfactual_f3_minus_f2": 0.11154598825831702,
+    "primary_parser_changed": false,
+    "primary_result_changed": false
+  },
   "prompt_baseline_development_gate": {
     "dataset": "QALB-2014 L1 development",
     "records": 25,

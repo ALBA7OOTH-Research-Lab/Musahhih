@@ -305,6 +305,14 @@ F3-minus-F2 difference averaged +10.29 points (sample SD 1.45, range +8.61 to
 robustness evidence; the original seed-3407 result remains primary. Private
 predictions and logs remain on the PVC. The aggregate authorization is consumed;
 do not rerun, retry, or tune from this result.
+Issue #190's separately authorized local CPU-only first-token sensitivity audit
+then verified the exact accepted seed-3407 F2/F3 prediction hashes, counts,
+warnings, scores, and alignment. First-token extraction rescued 0/20 flagged
+F2-P1 outputs and 0/2 flagged F3-P1 outputs, so both arm scores and the
+11.15-point primary difference remained unchanged. See
+`results/f2_f3_first_token_sensitivity_audit.md`. No GPU, model loading,
+inference, training, parser change, or record-level publication occurred. The
+authorization is consumed; do not rerun or replace the frozen primary parser.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

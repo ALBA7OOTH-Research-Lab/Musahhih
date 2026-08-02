@@ -831,11 +831,27 @@ metric, retry, continuation, training, QALB-test access, or XG.
   scores, warning counts, identities, and ordered alignment.
 - [x] Limit public output to aggregate rescue/harm counts and adjusted scores.
 - [x] Add synthetic tests without opening any private prediction artifact.
-- [ ] Pass focused and repository validation.
-- [ ] Merge the preparation and record its exact executable commit.
-- [ ] Obtain a fresh exact-commit owner GO before one local CPU-only audit.
+- [x] Pass focused and repository validation.
+- [x] Merge the preparation at exact commit
+  `9117d692e7f58810dbe6d974e50dddeed83bd70b`.
+- [x] Obtain a fresh exact-commit owner GO before one local CPU-only audit.
 
 Issue #188 authorizes repository preparation only. It authorizes no private
 prediction access, metric computation, model loading, GPU use, inference,
 training, repeat evaluation, parser change, QALB-test access, safety diagnostic,
 or XG.
+
+## Issue #190 — run one F2/F3 first-token sensitivity audit
+
+- [x] Record the exact owner GO and consume it on one local CPU attempt.
+- [x] Verify both accepted prediction hashes, 511-row contracts, original
+  scores, warning counts, identities, and ordered alignment.
+- [x] Apply the frozen first-token counterfactual symmetrically to only flagged
+  outputs.
+- [x] Preserve the ignored corpus-free summary and its SHA-256.
+- [x] Establish that the counterfactual rescues 0/20 F2 and 0/2 F3 outputs.
+- [x] Prepare the narrow public aggregate audit without record-level text.
+- [ ] Review, merge, and update the manuscript draft.
+
+Issue #190's single authorization is consumed. Do not rerun the audit or use
+the result to change the primary parser, predictions, or score.

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "protocol_id": "F2-F3-FIRST-TOKEN-SENSITIVITY",
+  "recorded_date": "2026-08-02",
+  "analysis_status": "complete",
+  "analysis_class": "post_hoc_sensitivity",
+  "execution": {
+    "repository_commit": "9117d692e7f58810dbe6d974e50dddeed83bd70b",
+    "approval_reference": "https://github.com/ALBA7OOTH-Research-Lab/Musahhih/issues/190#issuecomment-5156944153",
+    "hardware": "local CPU only",
+    "private_summary_sha256": "6eec6a4fd2c6b5ca87ce94af29631e8d2e67b1b5418f7f9f85dea6ba0f225586"
+  },
+  "counterfactual": {
+    "scope": "only_outputs_already_flagged_multiple_words",
+    "operation": "first_whitespace_token_of_existing_parsed_correction",
+    "applied_symmetrically": true,
+    "primary_parser_changed": false,
+    "primary_metric_changed": false
+  },
+  "arms": {
+    "F2-P1": {
+      "prediction_sha256": "ca4a6eb2f5e40a60be14f59cdc7365a0f327b41ab0b8f46c8a08c43cfb442753",
+      "number_of_records": 511,
+      "original_correct": 105,
+      "original_accuracy": 0.2054794520547945,
+      "multiple_word_outputs": 20,
+      "rescued_by_first_token": 0,
+      "harmed_by_first_token": 0,
+      "counterfactual_correct": 105,
+      "counterfactual_accuracy": 0.2054794520547945,
+      "counterfactual_change_percentage_points": 0.0
+    },
+    "F3-P1": {
+      "prediction_sha256": "ccb296e0f091bf28ebe4d7c8b9ed454934f4dade0b5793dcf1b3a5706379c35c",
+      "number_of_records": 511,
+      "original_correct": 162,
+      "original_accuracy": 0.31702544031311153,
+      "multiple_word_outputs": 2,
+      "rescued_by_first_token": 0,
+      "harmed_by_first_token": 0,
+      "counterfactual_correct": 162,
+      "counterfactual_accuracy": 0.31702544031311153,
+      "counterfactual_change_percentage_points": 0.0
+    }
+  },
+  "comparison": {
+    "original_f3_minus_f2_percentage_points": 11.154598825831702,
+    "counterfactual_f3_minus_f2_percentage_points": 11.154598825831702
+  },
+  "audit": {
+    "hashes_verified": true,
+    "row_counts_verified": true,
+    "unique_record_ids_verified": true,
+    "ordered_alignment_verified": true,
+    "stored_scores_verified": true,
+    "warning_contract_verified": true,
+    "contains_corpus_text": false
+  },
+  "safeguards": {
+    "training_executed": false,
+    "model_loaded": false,
+    "inference_executed": false,
+    "gpu_used": false,
+    "predictions_modified": false,
+    "prompt_changed": false,
+    "parser_changed": false,
+    "checkpoint_changed": false,
+    "record_level_output_published": false,
+    "authorization_consumed": true
+  }
+}

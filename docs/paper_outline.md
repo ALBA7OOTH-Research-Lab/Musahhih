@@ -57,11 +57,13 @@ Do not claim publicly released adapters until the release audit is resolved.
    11.15 points with a 7.05–15.26-point interval.
 5. Robustness: in a post-hoc five-seed cohort, F3-P1 exceeded F2-P1 in every
    seed; the mean paired advantage was 10.29 points (sample SD 1.45).
-6. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
+6. Format sensitivity: a post-hoc first-token rule rescued 0/20 flagged F2-P1
+   outputs and 0/2 flagged F3-P1 outputs, leaving the primary gap unchanged.
+7. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
    F1-P1.
-7. Safety: F1-P1 reduced the selected overcorrection diagnostic and showed no
+8. Auxiliary diagnostics: F1-P1 reduced the selected overcorrection diagnostic and showed no
    established ArabicMMLU change.
-8. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
+9. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
    expert linguistic error analysis, and private restricted artifacts.
 
 ## Main results table
@@ -180,6 +182,8 @@ numeric prior-work claim against the primary paper before submission.
 - one model, one training size, and one principal benchmark;
 - the primary comparison uses one seed, partly addressed by a separately
   executed post-hoc five-seed robustness cohort;
+- the F2 multi-token anomaly is mechanically resolved: first-token extraction
+  changes neither arm's score and rescues none of the flagged outputs;
 - possible alternate valid corrections;
 - no independent expert linguistic labeling;
 - staged rather than simultaneous B0/F1/F2/F3 timing;
