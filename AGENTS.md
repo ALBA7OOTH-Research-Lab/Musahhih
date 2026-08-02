@@ -337,13 +337,15 @@ The separately authorized issue-#194 replacements then completed seeds 3407
 and 3409 with exit code zero and zero restarts. Together with the three
 issue-#192 completions, all five unselected-checkpoint seed pairs are now
 available privately. No aggregate was computed during monitoring. Issue #196
-prepares one separately gated CPU-only audit that will validate the 20 unique
+then ran one separately authorized CPU-only audit. It validated the 20 unique
 selected/unselected prediction files and retained checkpoint identities before
 assembling fixed-epoch-1, fixed-epoch-2, and dev-selected policy statistics.
-Preparation and merge authorize no Kubernetes object, PVC or prediction read,
-metric, inference, training, checkpoint selection or reselection, retry,
-QALB-test access, diagnostic, prompt/parser change, or XG. One aggregate Job
-requires a fresh owner GO naming the exact merged commit.
+F3-P1 exceeded F2-P1 in every seed at both fixed policies: mean differences
+were +6.11 points at epoch 1 and +6.58 at epoch 2, versus +10.29 under the
+development-selected policy. The rule selected F2 epoch 1 and F3 epoch 2 for
+all five replicas, so it amplified but did not create the mixed-over-synthetic
+direction. See `results/f2_f3_fixed_checkpoint_sensitivity_audit.md`. The
+authorization is consumed; do not rerun, reselect, or tune from this result.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

@@ -28,7 +28,9 @@ accessing the 511-record Nahw-Passage test set.  Mixed supervision obtains
 paired difference is 11.15 percentage points (95\% paired-bootstrap interval:
 7.05--15.26; exact McNemar $p=2.15\times10^{-7}$).  A post-hoc five-seed
 cohort preserves the direction in every seed (mean difference 10.29 points,
-SD 1.45).  Natural-only reaches 28.38\%; the observed 3.33-point mixed
+SD 1.45).  Matched fixed-epoch gaps remain positive (6.11--6.58 points),
+although development selection enlarges the mean separation.  Natural-only
+reaches 28.38\%; the observed 3.33-point mixed
 advantage is not established by the frozen interval.  Natural-only and mixed
 also outperform prompt baselines in staged comparisons.  These results show
 that supervision composition materially affects this task, while strict
@@ -75,8 +77,8 @@ Our contributions are:
     mixed supervision with deterministic data selection and overlap controls;
     \item a frozen 511-record paired evaluation showing a large mixed-over-
     synthetic-only advantage;
-    \item a post-hoc five-seed robustness cohort in which the mixed arm
-    exceeds the synthetic-only arm in every seed; and
+    \item a post-hoc five-seed cohort in which the mixed arm exceeds the
+    synthetic-only arm under dev-selected and matched fixed checkpoints; and
     \item an auditable, privacy-conscious protocol that records exact model,
     data, checkpoint, decoding, and artifact identities without publishing
     restricted corpus text or model responses.
@@ -247,6 +249,12 @@ The seed-3407 replica does not reuse either original P100 adapter.  This cohort
 was run after the primary result and is therefore robustness evidence rather
 than a second pre-specified analysis.
 
+Both epoch checkpoints are retained for every replica.  In a further post-hoc
+sensitivity, we reuse the selected-checkpoint predictions and evaluate only
+the other checkpoint, then compare all arms at fixed epoch 1, fixed epoch 2,
+and the frozen dev-selected policy.  This isolates whether selection on the
+common natural development view determines the direction of the result.
+
 \section{Results}
 
 \begin{table}[t]
@@ -361,6 +369,30 @@ aggregate audits.  Cross-platform bitwise determinism was neither required nor
 achieved, so this row is a replication rather than a reproduction of the
 original adapter.
 
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Checkpoint policy & F2 & F3 & F3 $-$ F2 \\
+\midrule
+Fixed epoch 1 & 21.68 & 27.79 & +6.11 \\
+Fixed epoch 2 & 25.40 & 31.98 & +6.58 \\
+Dev-selected & 21.68 & 31.98 & +10.29 \\
+\bottomrule
+\end{tabular}
+\caption{Post-hoc five-seed checkpoint sensitivity. Values are mean exact-
+match percentages. F3 exceeds F2 in every seed under both fixed policies.}
+\label{tab:checkpoints}
+\end{table}
+
+Table~\ref{tab:checkpoints} shows that the mixed-over-synthetic direction is
+not created by the natural-development selection rule: the mean gap remains
+6.11 points at fixed epoch 1 and 6.58 points at fixed epoch 2.  However, the
+rule selects epoch 1 for every F2 replica and epoch 2 for every F3 replica,
+expanding the dev-selected gap to 10.29 points.  The selection policy therefore
+affects effect magnitude even though both matched policies preserve its sign.
+
 \section{Auxiliary Behavioral Diagnostics}
 
 Before the F1 diagnostic was run, we froze two matched checks and regenerated
@@ -426,7 +458,8 @@ upstream Tibyan release remains available under its own license.
 In a frozen equal-record comparison, a 50:50 natural--synthetic mixture
 substantially outperforms synthetic-only supervision for Gemma 3 4B Arabic
 highlighted-token GEC, and a post-hoc five-seed cohort preserves this direction
-in every seed.  Natural-only supervision also exceeds synthetic-only
+in every seed and at both matched epoch checkpoints.  Development selection
+amplifies the mean separation but does not create it.  Natural-only supervision also exceeds synthetic-only
 supervision in a staged comparison, while mixed supervision is not established
 as better than natural-only.  Together with prompt baselines, the results
 indicate that data composition---not fine-tuning alone---is a central
@@ -445,9 +478,11 @@ scores.
 
 Every trainable arm selects between epoch 1 and epoch 2 using loss on the same
 natural QALB development view.  The rule was frozen before test access, but a
-natural development distribution could still favor F3 over F2.  We do not yet
-report a fixed-epoch sensitivity, so the multi-seed cohort addresses training
-randomness but not this checkpoint-policy concern.
+natural development distribution could still favor F3 over F2.  In the
+post-hoc fixed-epoch sensitivity, F3 remains higher under both matched policies,
+but the rule selects F2 epoch 1 and F3 epoch 2 for all five replicas and expands
+the mean gap from roughly 6 points to 10.29.  Thus checkpoint selection does
+not determine the sign here, but it materially affects the estimated magnitude.
 
 Exact single-reference matching is intentionally strict.  A linguistically
 valid alternative receives no credit unless it equals the supplied token.
