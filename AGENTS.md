@@ -207,6 +207,104 @@ empty outputs and no demonstration bundle. See
 F1-P1 and F3-P1 exceeded B2-P1; F2-P1 was not established as different from
 B2-P1. Private record-level artifacts remain ignored. The authorization is
 consumed; do not rerun or tune from B2-P1.
+Issue #155's authorized five-seed A100 robustness wave failed before its first
+optimizer step. Retained logs for seeds 3408, 3409, and 3411 showed that Gemma
+loaded as BF16 on A100 while the frozen trainer requested FP16; Unsloth rejected
+the mismatch during `SFTTrainer` construction. No checkpoint, inference,
+prediction, or metric was produced, and no retry occurred. The authorization
+is consumed. Issue #167's repository repair forces an explicit FP16 model
+configuration, adds a no-private zero-step model/trainer smoke, writes durable
+private logs and corpus-free failure records, and retains 25-step recovery
+checkpoints for fresh-GO continuation. The separately authorized A100 smoke
+then completed model, LoRA, collator, and `SFTTrainer` construction in 138
+seconds with zero optimizer steps. Unsloth used float32 master weights for
+Gemma 3 while retaining the frozen FP16 trainer path; the prior
+BF16-model/FP16-trainer construction failure did not recur. See
+`results/f2_f3_nautilus_fp16_trainer_smoke_audit.md`. No PVC, corpus, private
+record, training, inference, prediction, or metric was used. The smoke
+authorization is consumed. A separately authorized replacement wave then ran
+seeds 3407–3411 as five unique A100 Jobs. All five Pods completed both frozen
+two-epoch arms and the common-development checkpoint-selection workflow with
+exit code zero and zero restarts. See
+`results/f2_f3_nautilus_multiseed_training_audit.md`. Private adapters,
+checkpoints, losses, and logs remain on the retained PVC. No Nahw-Passage,
+QALB test, inference, prediction, or final metric was used. The training
+authorization is consumed. Do not repeat or tune the training; any private
+artifact audit or multi-seed evaluation requires a separately reviewed gate
+and fresh exact-commit owner GO.
+Issue #171 prepares that gate as three separately authorized stages: one
+CPU-only frozen-test staging Pod, five timeout-safe A100 selected-adapter
+evaluation Jobs, and one CPU-only aggregate audit. See
+`docs/f2_f3_nautilus_multiseed_evaluation_protocol.md` and
+`results/f2_f3_nautilus_multiseed_evaluation_gate_audit.md`. Preparation
+authorizes no Kubernetes object, private-input access, model loading,
+inference, prediction, metric, retry, or continuation. Each stage requires a
+fresh exact-commit owner GO after merge; training must not be repeated.
+The separately authorized staging Pod completed the frozen 511-record hash
+gate. The five evaluation Jobs then preserved 3,739/5,110 record-arm outputs
+without computing a metric before seeds 3407, 3409, and 3411 were OOM-killed
+and seeds 3408 and 3410 were owner-suspended after prolonged no-progress GPU
+idling. The source attempt `5144097114` is immutable; do not restart or alter
+it. Issue #173 prepared a repository-only repair with fresh worker processes,
+batch-16 decoding, external no-progress and memory guards, 64 GiB RAM, two
+CPUs, and at most two A100 continuation lanes. Its single authorized non-test
+canary completed synthetic equivalence and the full soak without OOM, then
+failed closed because mean A100 utilization was below 40%. The failure path did
+not persist the exact mean, so no value may be inferred. The authorization is
+consumed; no retry or continuation occurred. Issue #175's single authorized
+batch-64 canary then failed closed before its soak because batch-64 and
+single-record synthetic outputs differed. It accessed no test input or metric
+and was not retried. Issue #177 prepares a repository-only repair using five
+isolated concurrent batch-16 workers on one 80 GB A100, which retains the
+already proven batch-16 equivalence and follows the official NRP utilization
+policy without changing decoding. See
+`docs/f2_f3_nautilus_evaluation_concurrency_protocol.md`. No canary or
+continuation is authorized before merge and a fresh exact-commit owner GO; the
+two stages require separate GOs. No partial multi-seed metric or robustness
+claim is allowed.
+The single subsequently authorized issue-#177 canary ran all five batch-16
+workers but failed its final utilization gate: 11.762% mean A100 utilization
+across 974 valid samples, with zero sampler failures, 52.6697% peak GPU memory,
+32.2968% peak host memory, exit one, and zero restarts. Control flow reached
+that check only after worker equivalence/durability validation, but the parent
+failure summary did not duplicate those worker fields; treat that statement as
+a code-path inference. No test input or metric was used and no retry occurred.
+Issue #179's single authorized NVIDIA MPS canary subsequently started one MPS
+server and five 20%-thread clients on an 80 GB A100. All five workers failed
+the same repeated batch-16 output-equivalence check; their logs were
+byte-identical. The run observed 27.748% mean utilization across 631 valid
+samples, zero sampler failures, 50.3723% peak GPU memory, and 30.5003% peak
+host memory. MPS shut down cleanly, and no test input, metric, training, retry,
+or continuation occurred. Issue #181's separately authorized CPU-only,
+read-only audit confirmed the common error and deleted its temporary Pod. See
+`results/f2_f3_nautilus_mps_canary_repair_audit.md`. Reject MPS for the frozen
+evaluation. The unfinished multi-seed evaluation is frozen for submission and
+supports no accuracy or variance claim; do not launch another canary or
+continuation before submission.
+At the owner's explicit direction, issue #183 supersedes that submission freeze
+with a clean recovery plan: five independent Jobs, seeds 3407–3411, each on one
+exact 24 GB RTX 3090 and each re-evaluating both arms from record zero. The old
+3,739 A100-prefix rows remain private and must not be reused or mixed. Every
+real Job must pass an inline synthetic single/batch-16/repeated-batch
+equivalence gate before opening the frozen test input, then retain per-row
+`fsync`, an 11-hour safe stop, a 20-minute no-progress guard, and no automatic
+retry. See `docs/f2_f3_nautilus_rtx3090_recovery_protocol.md`. Preparation and
+merge authorize no execution. The five-Job wave needs one fresh exact-commit
+issue-#183 GO; aggregation needs a separate GO. Until all five and aggregation
+complete, no partial multi-seed claim is allowed.
+The separately authorized issue-#183 wave then ran all five seeds from record
+zero on five RTX 3090 Jobs. Every Job completed both arms with exit code zero
+and zero restarts; no A100 prefix, retry, replacement, or continuation was
+used. The wave authorization is consumed. Issue #185's separately authorized
+CPU-only aggregate audit then validated all ten private files, record alignment,
+hashes, counts, and paired statistics. F2-P1 averaged 21.68% (sample SD 0.71
+percentage points); F3-P1 averaged 31.98% (sample SD 1.15); the paired
+F3-minus-F2 difference averaged +10.29 points (sample SD 1.45, range +8.61 to
++12.52), with F3 higher in all five seeds. See
+`results/f2_f3_rtx3090_multiseed_aggregate_audit.md`. This is post-hoc
+robustness evidence; the original seed-3407 result remains primary. Private
+predictions and logs remain on the PVC. The aggregate authorization is consumed;
+do not rerun, retry, or tune from this result.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

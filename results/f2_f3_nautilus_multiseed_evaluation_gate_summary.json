@@ -1,0 +1,58 @@
+{
+  "issue": 171,
+  "status": "repository_gate_prepared",
+  "training_commit": "108888dcf0ad34c49157b47e2561c406c5463bf8",
+  "seeds": [3407, 3408, 3409, 3410, 3411],
+  "test": {
+    "records": 511,
+    "sha256": "acb3cfd204b35d5415532fbd32a4a5231b553fae329ab8f48e8454609e10279b"
+  },
+  "stages": {
+    "test_staging": {
+      "objects": 1,
+      "gpu": false,
+      "creates_pvc": false
+    },
+    "paired_evaluation": {
+      "objects": 5,
+      "a100_per_job": 1,
+      "automatic_retry": false,
+      "safe_stop_seconds": 64800,
+      "per_record_fsync": true,
+      "atomic_progress": true,
+      "fresh_go_resume_only": true
+    },
+    "aggregate_evaluation": {
+      "objects": 1,
+      "gpu": false,
+      "validates_private_prediction_hashes": true
+    }
+  },
+  "reporting": {
+    "every_seed": true,
+    "per_arm_mean": true,
+    "per_arm_sample_sd": true,
+    "paired_difference_mean": true,
+    "paired_difference_sample_sd": true,
+    "paired_difference_range": true,
+    "sd_denominator": "n-1",
+    "post_hoc_robustness_evidence": true,
+    "original_seed_3407_result_remains_primary": true
+  },
+  "validation": {
+    "compileall_passed": true,
+    "focused_tests": 9,
+    "full_tests": 274,
+    "client_dry_run_objects": 7,
+    "server_dry_run_objects": 7,
+    "server_dry_run_persisted_objects": 0
+  },
+  "execution_authorized": false,
+  "private_input_accessed": false,
+  "model_loaded": false,
+  "inference_executed": false,
+  "prediction_produced": false,
+  "metric_computed": false,
+  "training_executed": false,
+  "contains_corpus_text": false
+}

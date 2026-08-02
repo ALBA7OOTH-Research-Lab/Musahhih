@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "issue": 185,
+  "status": "repository_preparation",
+  "source_issue": 183,
+  "source_attempt_id": "5155890101",
+  "evaluation_commit": "e004e625a00c9c1c6fac7e2dbc0e7bc450fbad17",
+  "seeds": [3407, 3408, 3409, 3410, 3411],
+  "private_prediction_files_planned": 10,
+  "records_per_file": 511,
+  "gpu": false,
+  "jobs": 1,
+  "automatic_retry": false,
+  "validation": {
+    "unit_tests_passed": 298,
+    "focused_ruff_passed": true,
+    "compileall_passed": true,
+    "diff_check_passed": true,
+    "json_parse_passed": true,
+    "client_dry_run_jobs": 1,
+    "server_dry_run_jobs": 1,
+    "persisted_jobs": 0
+  },
+  "execution_authorized": false,
+  "kubernetes_objects_created": 0,
+  "private_prediction_accessed": false,
+  "metric_computed": false,
+  "inference_run": false,
+  "training_run": false,
+  "contains_corpus_text": false
+}

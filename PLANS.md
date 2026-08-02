@@ -14,10 +14,229 @@
 - [x] Compile and audit the review PDF for page limits, anonymity, private-data
   boundaries, and artifact-release language.
 - [x] Complete repository checks and open draft PR #150 for manuscript review.
+- [ ] Incorporate the completed five-seed post-hoc robustness evidence and the
+  separately authorized first-token sensitivity result.
 
 Issue #149 authorizes manuscript preparation only. It authorizes no training,
 inference, test access, diagnostic execution, checkpoint selection,
 prompt/parser change, adapter release, or publication of private artifacts.
+
+## Issue #185 — audit the completed five-seed RTX 3090 results
+
+- [x] Preserve all five successful issue-#183 terminal Jobs without retry.
+- [x] Bind the audit to source attempt `5155890101` and evaluation commit
+  `e004e625a00c9c1c6fac7e2dbc0e7bc450fbad17`.
+- [x] Add independent ten-file hash/count/schema/alignment validation and
+  recomputation of every per-seed paired statistic.
+- [x] Complete full tests, lint, compile, JSON checks, and Kubernetes dry-runs.
+- [x] Review and merge the CPU-only gate.
+- [x] Obtain one fresh exact-commit GO, run exactly one aggregate Job, and
+  publish the reviewed corpus-free results.
+
+The aggregate completed without retry. F3-P1 exceeded F2-P1 in every seed;
+the mean paired difference was +10.29 percentage points (sample SD 1.45).
+Training, inference, and aggregate authorizations are consumed.
+
+## Issue #183 — clean five-seed RTX 3090 evaluation recovery
+
+- [x] Preserve all A100/MPS attempts and reject prefix mixing.
+- [x] Select one exact 24 GB RTX 3090 per seed from the available generic-GPU
+  pool rather than another A100 packing strategy.
+- [x] Add an inline, pre-test single/batch-16/repeated-batch equivalence gate.
+- [x] Run each seed from record zero on uniform hardware with per-row `fsync`,
+  an 11-hour safe stop, a 20-minute no-progress guard, and no automatic retry.
+- [x] Complete full validation and five-Job Kubernetes dry-runs with zero
+  persisted issue-#183 objects.
+- [x] Review and merge the narrow gate.
+- [x] Obtain one fresh exact-commit GO and complete all five Jobs with zero
+  restarts. Aggregate only under issue #185's separate GO.
+
+Preparation authorizes no cluster object, private-input access, model load,
+inference, prediction, metric, training, retry, continuation, QALB test, or XG.
+
+## Issue #181 — audit and close the MPS path
+
+- [x] Preserve the issue-#179 terminal Job without retry or replacement.
+- [x] Audit only its corpus-free worker summaries and error/MPS logs through
+  one CPU-only, read-only temporary Pod.
+- [x] Establish the common five-worker failure and verify clean MPS shutdown.
+- [x] Delete the temporary audit Pod.
+- [x] Reject MPS for the frozen evaluation and freeze the unfinished
+  multi-seed extension for this submission.
+- [x] Prepare and validate the narrow terminal audit for review.
+
+No MPS or A100 continuation is planned. Issue #183 supersedes the temporary
+submission freeze with a clean, uniform-RTX-3090 recovery from record zero.
+Until all five Jobs and the separate aggregate gate complete, no partial
+multi-seed accuracy or variance claim is allowed.
+
+## Issue #179 — enable NVIDIA MPS for batch-16 workers
+
+- [x] Preserve the terminal issue-#177 utilization failure without retry.
+- [x] Review official NVIDIA MPS architecture, activation, client, and cleanup
+  guidance.
+- [x] Add issue-#179-only activation and an MPS synthetic canary manifest.
+- [x] Require one MPS server, five clients, 20% active threads each, unchanged
+  batch-16 outputs, and the existing durability/resource gates.
+- [x] Complete focused/full validation and Kubernetes client/server dry-runs
+  with zero persisted objects.
+- [x] Review and merge a narrow PR.
+- [x] Obtain a fresh exact-commit owner GO and preserve the single terminal
+  MPS canary without retry.
+
+Issue #179 is terminal. Its MPS strategy failed repeated batch-16 output
+equivalence in all five workers and is rejected.
+
+## Issue #177 — use concurrent batch-16 evaluation workers
+
+- [x] Preserve the terminal issue-#175 batch-64 equivalence failure without
+  retry or test access.
+- [x] Read the official Nautilus resource, GPU, monitoring, and batch-Job
+  guidance and inspect the namespace/cluster capabilities read-only.
+- [x] Restore the already validated batch size 16 and run isolated workers
+  concurrently on one 80 GB A100.
+- [x] Add a synthetic-only concurrency/equivalence/utilization canary with
+  exact host/GPU-memory and failure telemetry.
+- [x] Replace sequential lanes with one fail-closed supervisor for exactly the
+  five incomplete seed-arms while preserving all 3,739 durable source rows.
+- [x] Complete focused/full validation and Kubernetes client/server dry-runs
+  with zero persisted objects.
+- [x] Review and merge a narrow PR.
+- [ ] Obtain a fresh exact-commit owner GO before one synthetic canary; obtain
+  a separate later GO before any private-test continuation.
+
+Issue #177 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, model load, private-input access, inference, prediction,
+metric, training, retry, continuation, QALB test, or XG.
+
+## Issue #171 — prepare five-seed evaluation and aggregation
+
+- [x] Register and claim a dedicated repository-only issue and branch.
+- [x] Freeze the five selected-checkpoint pairs, test identity, A100 runtime,
+  decoding, statistics, and post-hoc interpretation.
+- [x] Add a separate CPU-only, write-once test staging gate.
+- [x] Add five unique timeout-safe evaluation Jobs with per-row persistence,
+  metric-free handoff, and exact fresh-GO continuation.
+- [x] Add a CPU-only aggregate gate that validates five summaries and ten
+  private prediction artifacts before reporting the frozen statistics.
+- [x] Complete focused and full local validation and Kubernetes client dry-run.
+- [x] Complete Kubernetes server dry-run with zero persisted objects.
+- [ ] Open and merge a review PR.
+- [ ] Obtain separate fresh exact-commit owner GOs for test staging, five
+  evaluations, and final aggregation.
+
+Issue #171 is preparation only. It authorizes no cluster object, private-input
+access, model load, inference, prediction, metric, training, retry, or
+continuation.
+
+## Issue #165 — use proven RWX storage for private staging
+
+- [x] Preserve issue #163's unbound-PVC failure without retry or private upload.
+- [x] Delete the unscheduled Pod and unbound, data-free PVC after evidence
+  capture.
+- [x] Switch from the waiting `cephfs` provisioner to the namespace's proven
+  `rook-cephfs` RWX class.
+- [x] Retain the exact PVC, no-GPU Pod, write-once upload, hash/count, and
+  training-separation contracts.
+- [x] Complete focused and full local validation.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before replacement staging.
+
+Issue #165 is repository-only repair work. It authorizes no PVC, Pod, private
+upload, GPU allocation, model load, training, inference, metric, retry, or
+continuation.
+
+## Issue #163 — finalize import order and private staging gate
+
+- [x] Preserve issue #161's passing no-input A100/compiler/import preflight.
+- [x] Assemble the three frozen ignored local files with exact expected hashes
+  and counts without printing corpus text.
+- [x] Import Unsloth before bitsandbytes, datasets, and TRL.
+- [x] Separate one CPU-only PVC/staging Pod from the five A100 training Jobs.
+- [x] Make staging write-once, hash/count gated, and corpus-text-free.
+- [x] Require the exact staging completion manifest before training opens the
+  three private record files.
+- [x] Complete focused and full local validation.
+- [x] Complete Kubernetes dry-run validation at the preparation commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain separate fresh exact-commit owner GOs for staging, a final
+  import-order preflight, and the five-Job training wave.
+
+Issue #163 is repository-only preparation. It authorizes no Kubernetes object,
+private upload, GPU allocation, model load, training, inference, metric, retry,
+or continuation.
+
+## Issue #161 — use a compiler-capable pinned Nautilus runtime
+
+- [x] Preserve issue #159's failed compiler import gate without retry.
+- [x] Release the terminal failed Job after recording aggregate diagnostics.
+- [x] Retain PyTorch 2.6.0, CUDA 12.4, and cuDNN 9 while switching from the
+  official `runtime` image to its matching official `devel` image.
+- [x] Pin the full published Linux/AMD64 image digest.
+- [x] Require a discoverable C compiler before the bitsandbytes/Unsloth import
+  gate and add focused regression coverage.
+- [x] Complete focused and full local validation.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
+
+Issue #161 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, private-input access, model load, training, inference, metric,
+retry, or replacement preflight.
+
+## Issue #159 — remove Nautilus main-runtime git dependency
+
+- [x] Preserve issue #157's failed replacement preflight without retry.
+- [x] Release the terminal failed Job after recording aggregate diagnostics.
+- [x] Replace the main container's `git rev-parse` call with strict detached
+  `.git/HEAD` verification from the init container's validated checkout.
+- [x] Add regression coverage for an empty runtime `PATH`, symbolic HEAD,
+  malformed commit IDs, and missing metadata.
+- [x] Complete focused and full local validation.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
+
+Issue #159 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, private-input access, model load, training, inference, metric,
+retry, or replacement preflight.
+
+## Issue #157 — repair Nautilus checkout-image digest validation
+
+- [x] Preserve issue #155's failed first preflight state without retry.
+- [x] Release the failed pod's scheduled A100 after recording its diagnostics.
+- [x] Replace the malformed 62-character checkout-image checksum with the
+  authoritative 64-character Linux/AMD64 digest for the same image tag.
+- [x] Reject unpinned or malformed container-image digests before manifest
+  generation.
+- [x] Complete focused and full local validation.
+- [x] Complete Kubernetes dry-run validation at the repair commit.
+- [ ] Open and merge a review PR.
+- [ ] Obtain a fresh exact-commit owner GO before one replacement preflight.
+
+Issue #157 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, private-input access, model load, training, inference, metric,
+retry, or replacement preflight.
+
+## Issue #155 — prepare five-seed F2/F3 Nautilus replication
+
+- [x] Register a dedicated preparation issue and branch.
+- [x] Confirm the namespace can create Jobs/PVCs and has quota for five A100s.
+- [x] Freeze five paired seeds, balanced arm order, A100 runtime, and post-hoc
+  interpretation.
+- [x] Add fail-closed Nautilus activation, A100 preflight, paired training, and
+  write-once private output handling.
+- [x] Generate five Job manifests with no Nahw-Passage mount and no automatic
+  retry.
+- [x] Add focused tests and corpus-text-free preparation evidence.
+- [ ] Open a review PR and record the exact merged executable commit.
+- [ ] Obtain a separate GO for one no-input/no-model A100 smoke.
+- [ ] Obtain another exact-commit GO before the five-job training wave.
+
+Issue #155 is preparation only. It authorizes no cluster resource creation,
+private-input access, model loading, optimizer step, training, inference,
+Nahw-Passage access, metric, retry, or continuation.
 
 ## Issue #122 — classify the B1/B2 global package conflict
 
@@ -568,3 +787,76 @@ mount-discovery repair and a fresh exact-commit owner GO.
 - [x] Publish only corpus-text-free evidence.
 
 Issue #147's authorization is consumed. Do not rerun or tune from B2-P1.
+
+## Issue #167 — repair A100 FP16 initialization and crash safety
+
+- [x] Preserve and report issue #155's five terminal failures without retry.
+- [x] Force the frozen FP16 dtype during Gemma model loading on A100.
+- [x] Add a no-private, zero-step exact model/collator/trainer smoke stage.
+- [x] Give every fresh GO a unique write-once Job, log, exit, and attempt ID.
+- [x] Persist complete stdout/stderr and corpus-free failure records on the PVC.
+- [x] Retain recovery checkpoints every 25 steps without changing selection.
+- [x] Permit only fresh-GO, identity-verified checkpoint/arm continuation.
+- [ ] Pass focused and full validation.
+- [ ] Obtain review and merge the repository-only repair.
+- [ ] Obtain a fresh exact-commit GO before one FP16 trainer smoke.
+- [ ] Obtain a later separate GO before any replacement training wave.
+
+Issue #167 authorizes repository preparation only. It authorizes no GPU
+execution, private-input access, training, retry, continuation, inference,
+prediction, metric, Nahw-Passage access, or QALB-test access.
+
+## Issue #173 — repair multi-seed evaluation memory and utilization safety
+
+- [x] Preserve issue #171 terminal/suspended states and exact durable prefixes.
+- [x] Isolate unfinished-arm inference in fresh worker processes.
+- [x] Add a parent-side no-progress timeout and cgroup-memory watchdog.
+- [x] Preserve exact-prefix validation, per-row `fsync`, and metric-free handoff.
+- [x] Right-size CPU/RAM and limit the repair canary to one A100 Job.
+- [x] Add a non-test synthetic utilization and memory-soak canary gate.
+- [x] Add focused tests and run the complete repository suite.
+- [x] Pass Kubernetes client/server dry-runs with zero persisted objects.
+- [ ] Merge the preparation and record the exact executable commit.
+- [ ] Obtain a fresh exact-commit owner GO before any canary or continuation.
+
+Issue #173 authorizes repository preparation only. It authorizes no Kubernetes
+submission, GPU allocation, model loading, private-input access, inference,
+metric, retry, continuation, training, QALB-test access, or XG.
+
+## Issue #175 — repair A100 utilization canary failure
+
+- [x] Preserve the single issue-#173 canary terminal failure without retry.
+- [x] Keep the total synthetic workload fixed at 1,024 generations.
+- [x] Increase the repaired inference batch from 16 to 64.
+- [x] Include 1,024 per-row synthetic durability writes in the utilization
+  sampling window.
+- [x] Persist exact corpus-free telemetry on both pass and failure paths.
+- [x] Require new issue-#175 approval URLs and confirmation strings.
+- [x] Pass compilation, focused tests, and the full 281-test suite.
+- [x] Generate and parse one-canary and two-lane continuation manifests.
+- [x] Pass Kubernetes client/server dry-runs for one canary and two
+  continuation-lane Jobs; zero objects were persisted.
+- [x] Create and reconcile GitHub issue #175.
+- [ ] Push the branch, open the PR, and merge.
+- [ ] Obtain a fresh exact-commit owner GO before exactly one canary.
+
+Issue #175 authorizes repository preparation only. It authorizes no Kubernetes
+submission, GPU allocation, model loading, private-input access, inference,
+metric, retry, continuation, training, QALB-test access, or XG.
+
+## Issue #188 — prepare F2/F3 first-token sensitivity audit
+
+- [x] Freeze a symmetric first-whitespace-token counterfactual for only outputs
+  already flagged `multiple_words`.
+- [x] Gate the accepted F2-P1/F3-P1 prediction hashes, row counts, original
+  scores, warning counts, identities, and ordered alignment.
+- [x] Limit public output to aggregate rescue/harm counts and adjusted scores.
+- [x] Add synthetic tests without opening any private prediction artifact.
+- [ ] Pass focused and repository validation.
+- [ ] Merge the preparation and record its exact executable commit.
+- [ ] Obtain a fresh exact-commit owner GO before one local CPU-only audit.
+
+Issue #188 authorizes repository preparation only. It authorizes no private
+prediction access, metric computation, model loading, GPU use, inference,
+training, repeat evaluation, parser change, QALB-test access, safety diagnostic,
+or XG.

@@ -1,0 +1,44 @@
+{
+  "issue": 167,
+  "status": "repository_repair_prepared",
+  "failed_wave": {
+    "issue": 155,
+    "jobs": 5,
+    "optimizer_steps": 0,
+    "confirmed_common_failure_seeds": [
+      3408,
+      3409,
+      3411
+    ],
+    "failure_stage": "sft_trainer_construction",
+    "failure_class": "fp16_bf16_model_trainer_mismatch"
+  },
+  "repair": {
+    "model_load_dtype": "float16",
+    "trainer_fp16": true,
+    "trainer_bf16": false,
+    "tf32": false,
+    "recovery_checkpoint_steps": 25,
+    "checkpoint_identity_sidecar": true,
+    "automatic_retry": false,
+    "fresh_go_required_for_resume": true,
+    "persistent_private_log": true,
+    "corpus_free_failure_record": true,
+    "zero_step_model_trainer_smoke": true
+  },
+  "validation": {
+    "focused_tests": 22,
+    "full_tests": 265,
+    "compileall_passed": true,
+    "smoke_manifest_jobs": 1,
+    "training_manifest_jobs": 5,
+    "client_dry_run_passed": true
+  },
+  "execution_authorized": false,
+  "private_input_accessed": false,
+  "model_loaded": false,
+  "training_executed": false,
+  "inference_executed": false,
+  "metric_computed": false,
+  "contains_corpus_text": false
+}

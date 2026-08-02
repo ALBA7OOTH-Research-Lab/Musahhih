@@ -271,8 +271,9 @@ def validate_outputs_root(path: Path) -> Path:
 class AdapterGenerator:
     """Pinned 4-bit base plus one verified, unmerged private adapter."""
 
-    def __init__(self, adapter: Path) -> None:
+    def __init__(self, adapter: Path, *, required_gpu: str = "P100") -> None:
         self.adapter = Path(adapter)
+        self.required_gpu = required_gpu
         self.model = None
         self.processor = None
         self.runtime = _versions()
@@ -287,8 +288,10 @@ class AdapterGenerator:
         if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
             raise EvaluationSafetyError("exactly one CUDA GPU is required")
         properties = torch.cuda.get_device_properties(0)
-        if "P100" not in properties.name:
-            raise EvaluationSafetyError("matched final evaluation requires a P100")
+        if self.required_gpu not in properties.name:
+            raise EvaluationSafetyError(
+                f"matched final evaluation requires a {self.required_gpu}"
+            )
         try:
             base, self.processor = FastModel.from_pretrained(
                 model_name=BASE_MODEL_ID,
@@ -338,6 +341,46 @@ class AdapterGenerator:
             outputs[0][input_length:], skip_special_tokens=True
         )
 
+    def generate_batch(self, prompts: list[str]) -> list[str]:
+        """Greedily decode a padded prompt batch without changing prompt text."""
+
+        if not prompts or not all(isinstance(prompt, str) for prompt in prompts):
+            raise EvaluationSafetyError("inference batch must contain prompt strings")
+        if self.model is None or self.processor is None:
+            self.load()
+        conversations = [
+            [{"role": "user", "content": [{"type": "text", "text": prompt}]}]
+            for prompt in prompts
+        ]
+        tokenizer = getattr(self.processor, "tokenizer", self.processor)
+        if hasattr(tokenizer, "padding_side"):
+            tokenizer.padding_side = "left"
+        inputs = self.processor.apply_chat_template(
+            conversations,
+            add_generation_prompt=True,
+            tokenize=True,
+            padding=True,
+            return_dict=True,
+            return_tensors="pt",
+        ).to(self.model.device)
+        attention_mask = inputs.get("attention_mask")
+        if attention_mask is None:
+            lengths = [int(inputs["input_ids"].shape[-1])] * len(prompts)
+        else:
+            lengths = [int(value) for value in attention_mask.sum(dim=-1).tolist()]
+        if any(length > 2048 for length in lengths):
+            raise EvaluationSafetyError("Nahw prompt exceeds 2048 tokens; no truncation")
+        input_width = int(inputs["input_ids"].shape[-1])
+        outputs = self.model.generate(
+            **inputs, do_sample=False, max_new_tokens=MAX_NEW_TOKENS
+        )
+        decoded = self.processor.batch_decode(
+            outputs[:, input_width:], skip_special_tokens=True
+        )
+        if len(decoded) != len(prompts):
+            raise EvaluationSafetyError("batched generation output count mismatch")
+        return list(decoded)
+
 
 def _release_generator(generator: AdapterGenerator) -> None:
     generator.model = None
@@ -363,12 +406,13 @@ def _generate_arm(
     prefix_rows: list[dict],
     budget: KernelTimeBudget,
     progress_callback,
+    generator_factory=AdapterGenerator,
 ) -> tuple[list[dict], dict]:
     rows = list(prefix_rows)
     if len(rows) < len(records):
         budget.require_next_record_budget()
     mode = "a" if predictions_path.is_file() else "x"
-    generator = AdapterGenerator(adapter)
+    generator = generator_factory(adapter)
     try:
         with predictions_path.open(mode, encoding="utf-8", newline="\n") as stream:
             for record in records[len(rows) :]:

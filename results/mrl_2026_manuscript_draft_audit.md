@@ -29,12 +29,12 @@ checkpoints, adapters, or credentials.
 - Two behavior-neutral trailing spaces were removed from the upstream
   bibliography style for repository diff hygiene.
 - Review mode produces A4, two-column output with line numbers.
-- The abstract contains 180 words, below the 200-word limit.
-- The compiled PDF contains six pages; references begin on page six.
+- The abstract contains 172 words, below the 200-word limit.
+- The compiled PDF contains seven pages; references begin on page six.
 - No overfull box, undefined control sequence, unresolved citation, unresolved
   reference, or LaTeX error appears in the final build log.
 - PDF metadata contains no author or lab identity.
-- All six pages were rendered to PNG and visually checked for clipped text,
+- All seven pages were rendered to PNG and visually checked for clipped text,
   overlap, broken tables, unreadable labels, missing glyphs, and float-layout
   defects.
 
@@ -65,10 +65,11 @@ displayed final-evaluation system now used P100 hardware. The B0 control in the
 retained F1 safety section is a separate artifact regenerated beside F1-P1
 within one matched P100 run; it is not the excluded T4 result.
 
-The reviewer-response revision adds five corpus-text-free clarifications:
+The reviewer-response revisions add corpus-text-free clarifications:
 
-- the paired interval is conditional on the one executed training seed and
-  does not estimate retraining variance;
+- the primary paired interval remains conditional on seed 3407, while the
+  completed post-hoc five-seed cohort reports every seed, arm means and sample
+  standard deviations, and paired-difference mean, spread, and range;
 - a worst-case format-warning bound credits all 20 flagged F2-P1 outputs and
   still leaves F3-P1 7.24 percentage points ahead;
 - the frozen common-development rule selected F2-P1 epoch 1 after loss
@@ -78,6 +79,13 @@ The reviewer-response revision adds five corpus-text-free clarifications:
   416,746 for F3-P1 per epoch; and
 - corresponding F2/F3 safety diagnostics remain absent and no comparison is
   claimed.
+
+Across seeds 3407--3411, the post-hoc cohort gives F2-P1 mean 21.68% (sample
+SD 0.71 points), F3-P1 mean 31.98% (SD 1.15), and mean paired difference
++10.29 points (SD 1.45; range +8.61 to +12.52). F3-P1 exceeds F2-P1 in every
+seed. The manuscript keeps the original seed-3407 P100 run as primary and
+labels the A100-training/RTX-3090-evaluation cohort as post-hoc robustness
+evidence.
 
 The token totals were computed from the byte-identical frozen private training
 records with Transformers 4.56.2 and the pinned Gemma tokenizer revision.
@@ -105,7 +113,8 @@ primary-source verification.
 
 ## Validation
 
-- `python -m pytest -q`: 246 tests and 65 subtests passed.
+- `python -m pytest -q`: 304 tests, 78 subtests, and 2 expected skips passed
+  after merging the current main branch.
 - `python -m compileall scripts`: passed.
 - pinned-tokenizer aggregate generation and idempotent rerun: passed.
 - JSON parse of `results/research_results_consolidated.json`: passed.

@@ -1,0 +1,36 @@
+{
+  "issue": 173,
+  "status": "repository_repair_prepared",
+  "source_attempt_id": "5144097114",
+  "source_commit": "30290dd3a8bde5054555cc37ac422f3d1512d3ba",
+  "durable_outputs": 3739,
+  "required_outputs": 5110,
+  "metrics_computed": false,
+  "repair": {
+    "batch_size": 16,
+    "no_progress_timeout_seconds": 900,
+    "worker_wallclock_seconds": 21600,
+    "memory_high_water_fraction": 0.85,
+    "cpu_per_pod": 2,
+    "memory_per_pod": "64Gi",
+    "a100_per_pod": 1,
+    "continuation_lanes": 2,
+    "automatic_retry": false
+  },
+  "canary": {
+    "objects": 1,
+    "uses_test_input": false,
+    "requires_single_batch_equivalence": true,
+    "minimum_mean_gpu_utilization_percent": 40,
+    "maximum_memory_fraction": 0.8
+  },
+  "validation": {
+    "focused_tests": 15,
+    "full_tests": 280,
+    "client_dry_run_objects": 3,
+    "server_dry_run_objects": 3,
+    "persisted_objects": 0
+  },
+  "execution_authorized": false,
+  "contains_corpus_text": false
+}

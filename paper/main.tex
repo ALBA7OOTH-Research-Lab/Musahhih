@@ -20,21 +20,20 @@ Modern Standard Arabic grammatical error correction (GEC) remains
 underexplored for open-weight instruction models, and prior work does not
 isolate supervision source while holding model, task, and training size fixed.
 We fine-tune Gemma 3 4B with QLoRA on three 2,000-record views: natural
-QALB supervision, a deterministic highlighted-token view of the released
-synthetic Tibyan corpus, and a fixed 50:50 mixture.  We freeze data
+QALB, a deterministic highlighted-token view of synthetic Tibyan, and a
+50:50 mixture.  We freeze data
 composition, checkpoint selection, prompting, parsing, and evaluation before
 accessing the 511-record Nahw-Passage test set.  Mixed supervision obtains
-31.70\% exact correction accuracy, compared with 20.55\% for synthetic-only
-supervision.  The preregistered paired difference is 11.15 percentage points
-(95\% paired-bootstrap interval: 7.05--15.26; exact McNemar
-$p=2.15\times10^{-7}$).  Natural-only supervision reaches 28.38\%; the
-observed 3.33-point mixed advantage over natural-only is not established by
-the frozen interval.  Natural-only and mixed fine-tuning also outperform
-five-shot and expert-style prompt baselines in staged
-comparisons.  These results show that, at fixed record count, supervision
-composition materially affects open-weight Arabic GEC, while also exposing
-limits from strict single-reference scoring, one model, and absent expert
-error analysis.
+31.70\% exact accuracy versus 20.55\% for synthetic-only.  The preregistered
+paired difference is 11.15 percentage points (95\% paired-bootstrap interval:
+7.05--15.26; exact McNemar $p=2.15\times10^{-7}$).  A post-hoc five-seed
+cohort preserves the direction in every seed (mean difference 10.29 points,
+SD 1.45).  Natural-only reaches 28.38\%; the observed 3.33-point mixed
+advantage is not established by the frozen interval.  Natural-only and mixed
+also outperform prompt baselines in staged comparisons.  These results show
+that supervision composition materially affects this task, while strict
+single-reference scoring, one model, and absent expert error analysis limit
+generality.
 \end{abstract}
 
 \section{Introduction}
@@ -75,7 +74,9 @@ Our contributions are:
     \item an equal-record comparison of natural, released-synthetic, and fixed
     mixed supervision with deterministic data selection and overlap controls;
     \item a frozen 511-record paired evaluation showing a large mixed-over-
-    synthetic-only advantage; and
+    synthetic-only advantage;
+    \item a post-hoc five-seed robustness cohort in which the mixed arm
+    exceeds the synthetic-only arm in every seed; and
     \item an auditable, privacy-conscious protocol that records exact model,
     data, checkpoint, decoding, and artifact identities without publishing
     restricted corpus text or model responses.
@@ -195,8 +196,9 @@ $2\times10^{-4}$, a linear schedule, 3\% warmup, weight decay 0.01, and seed
 3407.  Packing is disabled.  Training runs on free Kaggle Tesla P100 GPUs.
 Using the pinned Gemma tokenizer on the complete formatted conversations, the
 per-epoch views contain 312,644 tokens for F1, 522,756 for F2, and 416,746 for
-F3.  F2 has 25.4\% more than F3; record matching therefore does not match token
-budgets, and greater exposure cannot explain F3's advantage.
+F3 (156.32, 261.38, and 208.37 tokens per record).  F2 has 25.4\% more than
+F3; record matching therefore does not match token budgets, and greater
+exposure cannot explain F3's advantage.
 
 We evaluate checkpoints after each epoch on the same frozen 975-record natural
 development view.  The rule chooses the lowest mean assistant-token
@@ -221,6 +223,13 @@ training seed and excludes retraining variance.  Comparisons involving B1, B2,
 or F1 were executed or consolidated at different stages and are secondary.
 Their intervals and tests are descriptive and are not treated as a
 simultaneous preregistered five-arm family.
+
+We additionally report a post-hoc training-seed robustness cohort.  Five
+paired F2/F3 replicas use seeds 3407--3411, the frozen training recipe, and the
+same checkpoint rule.  Training uses A100 GPUs, and all ten selected adapters
+are evaluated from record zero on uniform RTX 3090 GPUs.  This cohort was run
+after the primary result and is therefore robustness evidence rather than a
+second preregistered analysis.
 
 \section{Results}
 
@@ -297,7 +306,37 @@ We do not introduce a post-hoc first-token parser.  Even crediting all 20
 flagged F2 outputs would raise F2 only to 125/511 (24.46\%), leaving F3 ahead
 by 7.24 points; format warnings cannot explain the full primary difference.
 
-\section{Safety Diagnostics}
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrr}
+\toprule
+Seed & F2 & F3 & F3 $-$ F2 \\
+\midrule
+3407 & 20.55 & 33.07 & +12.52 \\
+3408 & 21.92 & 31.51 & +9.59 \\
+3409 & 21.72 & 30.33 & +8.61 \\
+3410 & 22.50 & 33.07 & +10.57 \\
+3411 & 21.72 & 31.90 & +10.18 \\
+\midrule
+Mean (SD) & 21.68 (0.71) & 31.98 (1.15) & +10.29 (1.45) \\
+\bottomrule
+\end{tabular}
+\caption{Post-hoc five-seed robustness cohort. Values are exact-match
+percentages; SD is the sample standard deviation across seeds. These adapters
+were trained on A100s and evaluated uniformly on RTX 3090s.}
+\label{tab:multiseed}
+\end{table}
+
+Table~\ref{tab:multiseed} directly addresses training-seed sensitivity.  F3
+exceeds F2 in all five seeds; the paired difference ranges from 8.61 to 12.52
+points.  The mean difference of 10.29 points (SD 1.45) is close to the
+11.15-point primary estimate.  Because this cohort is post-hoc and uses a
+different but internally uniform hardware path, it supports robustness of the
+direction and magnitude without replacing the primary analysis.
+
+\section{Auxiliary Behavioral Diagnostics}
 
 Before the F1 diagnostic was run, we froze two matched checks and regenerated
 a fresh untouched-base control (\textbf{B0}) beside F1 within one P100 run.
@@ -358,13 +397,15 @@ upstream Tibyan release remains available under its own license.
 
 \section{Limitations}
 
-Our evidence is limited to one 4B model, one seed per trainable arm, one
-equal-record training size, and one principal test set.  Record matching does
-not equalize tokens, domains, or error categories.  The paired interval is
-conditional on seed 3407; training-seed variance is unmeasured and cannot be
-separated from the observed effect.  Although F2 contains more tokens than F3,
-totals do not control length, domain, or source quality.  We do not run QALB
-test, so our accuracy is not comparable to full-sentence M2 scores.
+Our evidence is limited to one 4B model, one equal-record training size, and
+one principal test set.  Record matching does not equalize tokens, domains, or
+error categories.  The primary interval remains conditional on seed 3407, but
+the post-hoc five-seed cohort partly addresses training randomness: every
+paired difference is positive.  Because the primary and robustness cohorts
+use different hardware paths, this extension does not decompose every runtime
+or hardware contribution.  Although F2 contains more tokens than F3, totals
+do not control length, domain, or source quality.  We do not run QALB test, so
+our accuracy is not comparable to full-sentence M2 scores.
 
 Exact single-reference matching is intentionally strict.  A linguistically
 valid alternative receives no credit unless it equals the supplied token.
@@ -403,7 +444,8 @@ institutional, and model-license review.
 
 In a frozen equal-record comparison, a 50:50 natural--synthetic mixture
 substantially outperforms synthetic-only supervision for Gemma 3 4B Arabic
-highlighted-token GEC.  Natural-only supervision also exceeds
+highlighted-token GEC, and a post-hoc five-seed cohort preserves this direction
+in every seed.  Natural-only supervision also exceeds
 synthetic-only supervision in a staged comparison, while mixed supervision is
 not established as better than natural-only.  Together with prompt baselines,
 the results indicate that data composition---not fine-tuning alone---is a
