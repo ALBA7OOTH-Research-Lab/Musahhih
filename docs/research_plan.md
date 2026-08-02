@@ -304,6 +304,12 @@ reused. An inline synthetic equivalence gate must pass before test access in
 each Job. This hardware recovery is not preregistered and must be disclosed as
 post-hoc. No result is reportable until all five Jobs and the separately gated
 aggregate audit complete.
+The separately authorized issue-#183 recovery later completed all five seeds,
+both arms per seed, with exit code zero and zero restarts. Issue #185 now
+prepares the final CPU-only audit of all ten private prediction artifacts. It
+recomputes hashes, counts, record alignment, exact-match values, paired
+statistics, and the frozen across-seed summaries before any number is released.
+The five-seed outcome remains unread until that separately authorized audit.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

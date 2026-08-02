@@ -1,5 +1,20 @@
 # Active implementation plan
 
+## Issue #185 — audit the completed five-seed RTX 3090 results
+
+- [x] Preserve all five successful issue-#183 terminal Jobs without retry.
+- [x] Bind the audit to source attempt `5155890101` and evaluation commit
+  `e004e625a00c9c1c6fac7e2dbc0e7bc450fbad17`.
+- [x] Add independent ten-file hash/count/schema/alignment validation and
+  recomputation of every per-seed paired statistic.
+- [x] Complete full tests, lint, compile, JSON checks, and Kubernetes dry-runs.
+- [ ] Review and merge the CPU-only gate.
+- [ ] Obtain one fresh exact-commit GO, run exactly one aggregate Job, and
+  publish the reviewed corpus-free results.
+
+Preparation authorizes no Kubernetes object, PVC read, prediction access,
+metric, inference, training, retry, QALB test, or XG.
+
 ## Issue #183 — clean five-seed RTX 3090 evaluation recovery
 
 - [x] Preserve all A100/MPS attempts and reject prefix mixing.
@@ -10,9 +25,9 @@
   an 11-hour safe stop, a 20-minute no-progress guard, and no automatic retry.
 - [x] Complete full validation and five-Job Kubernetes dry-runs with zero
   persisted issue-#183 objects.
-- [ ] Review and merge the narrow gate.
-- [ ] Obtain one fresh exact-commit GO for the five-Job wave; aggregate only
-  after all five complete under a separate GO.
+- [x] Review and merge the narrow gate.
+- [x] Obtain one fresh exact-commit GO and complete all five Jobs with zero
+  restarts. Aggregate only under issue #185's separate GO.
 
 Preparation authorizes no cluster object, private-input access, model load,
 inference, prediction, metric, training, retry, continuation, QALB test, or XG.

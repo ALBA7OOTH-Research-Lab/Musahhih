@@ -292,6 +292,15 @@ retry. See `docs/f2_f3_nautilus_rtx3090_recovery_protocol.md`. Preparation and
 merge authorize no execution. The five-Job wave needs one fresh exact-commit
 issue-#183 GO; aggregation needs a separate GO. Until all five and aggregation
 complete, no partial multi-seed claim is allowed.
+The separately authorized issue-#183 wave then ran all five seeds from record
+zero on five RTX 3090 Jobs. Every Job completed both arms with exit code zero
+and zero restarts; no A100 prefix, retry, replacement, or continuation was
+used. Private predictions and per-seed summaries remain on the PVC and no
+metric has been read or reported. The wave authorization is consumed. Issue
+#185 prepares one CPU-only aggregate audit that validates all ten private files,
+record alignment, hashes, counts, and paired statistics before releasing only
+corpus-text-free results. Preparation and merge authorize no PVC access or
+metric; one fresh exact-commit issue-#185 GO is required.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
