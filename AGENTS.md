@@ -295,12 +295,16 @@ complete, no partial multi-seed claim is allowed.
 The separately authorized issue-#183 wave then ran all five seeds from record
 zero on five RTX 3090 Jobs. Every Job completed both arms with exit code zero
 and zero restarts; no A100 prefix, retry, replacement, or continuation was
-used. Private predictions and per-seed summaries remain on the PVC and no
-metric has been read or reported. The wave authorization is consumed. Issue
-#185 prepares one CPU-only aggregate audit that validates all ten private files,
-record alignment, hashes, counts, and paired statistics before releasing only
-corpus-text-free results. Preparation and merge authorize no PVC access or
-metric; one fresh exact-commit issue-#185 GO is required.
+used. The wave authorization is consumed. Issue #185's separately authorized
+CPU-only aggregate audit then validated all ten private files, record alignment,
+hashes, counts, and paired statistics. F2-P1 averaged 21.68% (sample SD 0.71
+percentage points); F3-P1 averaged 31.98% (sample SD 1.15); the paired
+F3-minus-F2 difference averaged +10.29 points (sample SD 1.45, range +8.61 to
++12.52), with F3 higher in all five seeds. See
+`results/f2_f3_rtx3090_multiseed_aggregate_audit.md`. This is post-hoc
+robustness evidence; the original seed-3407 result remains primary. Private
+predictions and logs remain on the PVC. The aggregate authorization is consumed;
+do not rerun, retry, or tune from this result.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
