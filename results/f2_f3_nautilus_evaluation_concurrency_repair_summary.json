@@ -32,7 +32,21 @@
     "server_dry_run_jobs": 2,
     "persisted_jobs": 0
   },
-  "kubernetes_objects_created": 0,
+  "preparation_kubernetes_objects_created": 0,
+  "subsequent_canary": {
+    "attempt_id": "5152443845",
+    "terminal_status": "failed",
+    "exit_code": 1,
+    "restarts": 0,
+    "gpu_samples": 974,
+    "gpu_sampler_failures": 0,
+    "mean_gpu_utilization_percent": 11.762,
+    "peak_gpu_memory_fraction": 0.526697,
+    "peak_host_memory_fraction": 0.322968,
+    "nahw_passage_used": false,
+    "metric_computed": false,
+    "automatic_retry": false
+  },
   "private_test_accessed": false,
   "model_loaded": false,
   "inference_run": false,

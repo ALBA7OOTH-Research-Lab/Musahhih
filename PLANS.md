@@ -1,5 +1,23 @@
 # Active implementation plan
 
+## Issue #179 — enable NVIDIA MPS for batch-16 workers
+
+- [x] Preserve the terminal issue-#177 utilization failure without retry.
+- [x] Review official NVIDIA MPS architecture, activation, client, and cleanup
+  guidance.
+- [x] Add issue-#179-only activation and an MPS synthetic canary manifest.
+- [x] Require one MPS server, five clients, 20% active threads each, unchanged
+  batch-16 outputs, and the existing durability/resource gates.
+- [x] Complete focused/full validation and Kubernetes client/server dry-runs
+  with zero persisted objects.
+- [ ] Review and merge a narrow PR.
+- [ ] Obtain a fresh exact-commit owner GO before one MPS canary; real
+  evaluation remains separately gated.
+
+Issue #179 is repository-only repair work. It authorizes no Kubernetes object,
+GPU allocation, model load, test access, inference, prediction, metric,
+training, retry, continuation, QALB test, or XG.
+
 ## Issue #177 — use concurrent batch-16 evaluation workers
 
 - [x] Preserve the terminal issue-#175 batch-64 equivalence failure without

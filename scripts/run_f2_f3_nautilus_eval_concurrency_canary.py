@@ -20,6 +20,7 @@ from scripts.f2_f3_eval_concurrency_utils import (
     validate_concurrency_activation,
 )
 from scripts.f2_f3_multiseed_eval_utils import validate_training_pair
+from scripts.f2_f3_eval_mps_utils import validate_mps_activation
 from scripts.f2_f3_nautilus_utils import a100_preflight
 from scripts.run_f2_f3_final_eval import AdapterGenerator, _fsync_stream, _write_json_atomic
 from scripts.run_f2_f3_nautilus_multiseed_eval import _require_private_absolute_path
@@ -40,6 +41,48 @@ SOAK_TIMEOUT_SECONDS = 3_600
 
 class ConcurrencyCanaryError(RuntimeError):
     """Raised when concurrent batch-16 execution is not safe to continue."""
+
+
+def _mps_topology() -> dict:
+    if not os.environ.get("CUDA_MPS_PIPE_DIRECTORY"):
+        raise ConcurrencyCanaryError("CUDA MPS pipe directory is not configured")
+    server_result = subprocess.run(
+        ["nvidia-cuda-mps-control"],
+        input="get_server_list\n",
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    servers = [
+        int(line.strip())
+        for line in server_result.stdout.splitlines()
+        if line.strip().isdigit()
+    ]
+    if len(servers) != 1:
+        raise ConcurrencyCanaryError("expected exactly one CUDA MPS server")
+    client_result = subprocess.run(
+        ["nvidia-cuda-mps-control"],
+        input=f"get_client_list {servers[0]}\n",
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    clients = [
+        int(line.strip())
+        for line in client_result.stdout.splitlines()
+        if line.strip().isdigit()
+    ]
+    if len(set(clients)) != WORKER_COUNT:
+        raise ConcurrencyCanaryError("all five workers must attach to CUDA MPS")
+    return {
+        "mps_server_count": 1,
+        "mps_client_count": len(set(clients)),
+        "mps_active_thread_percentage": int(
+            os.environ.get("CUDA_MPS_ACTIVE_THREAD_PERCENTAGE", "0")
+        ),
+    }
 
 
 def synthetic_prompts() -> list[str]:
@@ -148,6 +191,12 @@ def _worker(args: argparse.Namespace) -> None:
                 "reference_output_sha256": reference_digest,
                 "durability_rows": durability_rows,
                 "per_row_fsync": True,
+                "mps_pipe_configured": bool(
+                    os.environ.get("CUDA_MPS_PIPE_DIRECTORY")
+                ),
+                "mps_active_thread_percentage": int(
+                    os.environ.get("CUDA_MPS_ACTIVE_THREAD_PERCENTAGE", "0")
+                ),
                 "runtime": generator.runtime,
                 "contains_corpus_text": False,
             },
@@ -168,7 +217,9 @@ def _worker(args: argparse.Namespace) -> None:
         raise
 
 
-def validate_worker_summaries(summaries: list[dict]) -> dict:
+def validate_worker_summaries(
+    summaries: list[dict], *, mps_required: bool = False
+) -> dict:
     expected_rows = CONCURRENT_BATCH_SIZE * SOAK_BATCHES
     if len(summaries) != WORKER_COUNT:
         raise ConcurrencyCanaryError("worker summary count mismatch")
@@ -182,6 +233,13 @@ def validate_worker_summaries(summaries: list[dict]) -> dict:
             or summary.get("durability_rows") != expected_rows
             or summary.get("per_row_fsync") is not True
             or summary.get("contains_corpus_text") is not False
+            or (
+                mps_required
+                and (
+                    summary.get("mps_pipe_configured") is not True
+                    or summary.get("mps_active_thread_percentage") != 20
+                )
+            )
         ):
             raise ConcurrencyCanaryError("worker summary contract mismatch")
         digest = summary.get("reference_output_sha256")
@@ -216,14 +274,22 @@ def _terminate(processes: list[subprocess.Popen]) -> None:
 
 
 def _parent(args: argparse.Namespace) -> None:
-    activation = validate_concurrency_activation(
-        stage="concurrency-canary",
-        seed=None,
-        approved_commit=args.approved_commit,
-        actual_commit=actual_commit(),
-        approval_reference=args.approval_reference,
-        confirmation=args.confirmation,
-    )
+    if args.mps_canary:
+        activation = validate_mps_activation(
+            approved_commit=args.approved_commit,
+            actual_commit=actual_commit(),
+            approval_reference=args.approval_reference,
+            confirmation=args.confirmation,
+        )
+    else:
+        activation = validate_concurrency_activation(
+            stage="concurrency-canary",
+            seed=None,
+            approved_commit=args.approved_commit,
+            actual_commit=actual_commit(),
+            approval_reference=args.approval_reference,
+            confirmation=args.confirmation,
+        )
     training_root = _require_private_absolute_path(args.training_root, "training root")
     output_root = _require_private_absolute_path(args.output_root, "output root")
     selected = validate_training_pair(
@@ -237,6 +303,7 @@ def _parent(args: argparse.Namespace) -> None:
     samples: list[tuple[int, int, int]] = []
     host_samples: list[tuple[int, int]] = []
     sampler_failures = 0
+    mps_evidence: dict = {}
     started = time.monotonic()
     common = {
         "schema_version": 1,
@@ -246,6 +313,7 @@ def _parent(args: argparse.Namespace) -> None:
         "attempt_id": activation["attempt_id"],
         "worker_count": WORKER_COUNT,
         "batch_size": CONCURRENT_BATCH_SIZE,
+        "mps_required": args.mps_canary,
         "nahw_passage_used": False,
         "qalb_test_used": False,
         "private_prediction_used": False,
@@ -293,6 +361,12 @@ def _parent(args: argparse.Namespace) -> None:
             if time.monotonic() >= ready_deadline:
                 raise ConcurrencyCanaryError("workers did not become ready in time")
             time.sleep(1)
+        if args.mps_canary:
+            mps_evidence = _mps_topology()
+            if mps_evidence["mps_active_thread_percentage"] != 20:
+                raise ConcurrencyCanaryError(
+                    "CUDA MPS active thread percentage must equal 20"
+                )
         start_marker.write_text("start\n", encoding="ascii")
         soak_deadline = time.monotonic() + SOAK_TIMEOUT_SECONDS
         while any(process.poll() is None for process in processes):
@@ -317,7 +391,9 @@ def _parent(args: argparse.Namespace) -> None:
             )
             for worker in range(WORKER_COUNT)
         ]
-        evidence = validate_worker_summaries(summaries)
+        evidence = validate_worker_summaries(
+            summaries, mps_required=args.mps_canary
+        )
         if sampler_failures or len(samples) < MINIMUM_SAMPLES:
             raise ConcurrencyCanaryError("GPU telemetry sampling was incomplete")
         if not host_samples:
@@ -341,7 +417,7 @@ def _parent(args: argparse.Namespace) -> None:
             raise ConcurrencyCanaryError("GPU memory reached the 85 percent guard")
         if peak_host_memory >= MAXIMUM_HOST_MEMORY_FRACTION:
             raise ConcurrencyCanaryError("host memory reached the 80 percent guard")
-        summary = {**common, "status": "complete", **evidence}
+        summary = {**common, "status": "complete", **mps_evidence, **evidence}
         _write_json_atomic(attempt_root / "public_summary.json", summary)
         print(json.dumps(summary, indent=2, sort_keys=True))
     except BaseException as error:
@@ -356,6 +432,7 @@ def _parent(args: argparse.Namespace) -> None:
             "gpu_samples": len(samples),
             "gpu_sampler_failures": sampler_failures,
             "elapsed_seconds": round(time.monotonic() - started, 3),
+            **mps_evidence,
         }
         if samples:
             summary["mean_gpu_utilization_percent"] = round(
@@ -387,6 +464,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--approved-commit")
     parser.add_argument("--approval-reference")
     parser.add_argument("--confirmation")
+    parser.add_argument("--mps-canary", action="store_true")
     return parser.parse_args()
 
 
