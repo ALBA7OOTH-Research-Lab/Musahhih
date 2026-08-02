@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_date": "2026-07-26",
+  "recorded_date": "2026-08-02",
   "research_status": {
     "core_natural_synthetic_mixed_comparison": "complete",
     "original_full_research_plan": "partially_complete",
@@ -43,11 +43,15 @@
       },
       "B1-P1": {
         "training": "none; frozen five-shot prompting",
-        "result_status": "final_not_executed"
+        "correct": 89,
+        "accuracy": 0.17416829745596868,
+        "result_status": "accepted"
       },
       "B2-P1": {
         "training": "none; frozen expert-style prompting",
-        "result_status": "final_not_executed"
+        "correct": 108,
+        "accuracy": 0.21135029354207435,
+        "result_status": "accepted"
       }
     },
     "comparisons": {
@@ -107,6 +111,27 @@
       }
     }
   },
+  "f2_f3_multiseed_robustness": {
+    "status": "complete_post_hoc",
+    "seeds": [3407, 3408, 3409, 3410, 3411],
+    "evaluation_hardware": "one NVIDIA GeForce RTX 3090 per seed",
+    "per_seed": [
+      {"seed": 3407, "f2_accuracy": 0.2054794520547945, "f3_accuracy": 0.33072407045009783, "f3_minus_f2": 0.12524461839530332},
+      {"seed": 3408, "f2_accuracy": 0.2191780821917808, "f3_accuracy": 0.3150684931506849, "f3_minus_f2": 0.0958904109589041},
+      {"seed": 3409, "f2_accuracy": 0.2172211350293542, "f3_accuracy": 0.30332681017612523, "f3_minus_f2": 0.08610567514677103},
+      {"seed": 3410, "f2_accuracy": 0.22504892367906065, "f3_accuracy": 0.33072407045009783, "f3_minus_f2": 0.10567514677103718},
+      {"seed": 3411, "f2_accuracy": 0.2172211350293542, "f3_accuracy": 0.31898238747553814, "f3_minus_f2": 0.10176125244618395}
+    ],
+    "f2_mean_accuracy": 0.21682974559686888,
+    "f2_sample_sd": 0.007109942123125225,
+    "f3_mean_accuracy": 0.3197651663405088,
+    "f3_sample_sd": 0.0115443297093954,
+    "paired_difference_mean": 0.10293542074363991,
+    "paired_difference_sample_sd": 0.014486697082835027,
+    "paired_difference_range": [0.08610567514677103, 0.12524461839530332],
+    "f3_exceeded_f2_in_every_seed": true,
+    "original_seed_3407_result_remains_primary": true
+  },
   "prompt_baseline_development_gate": {
     "dataset": "QALB-2014 L1 development",
     "records": 25,
@@ -153,7 +178,7 @@
     }
   },
   "unresolved_research_components": {
-    "b1_b2_nahw_final": "timeout-safe implementation prepared but not executed; requires merge, exact-commit review, and fresh per-segment authorization",
+    "b1_b2_nahw_final": "complete",
     "f2_f3_safety_diagnostics": "proposed only; requires protocol review, implementation, merge, and fresh authorization",
     "qualified_linguistic_error_analysis": "blocked on a qualified Arabic linguist and an approved private-review procedure",
     "adapter_release": "blocked on software, base-model, dataset-license, and institutional review",

@@ -55,11 +55,13 @@ Do not claim publicly released adapters until the release audit is resolved.
    frozen 511-record Nahw-Passage exact correction evaluation.
 4. Primary result: F3-P1 31.70% versus F2-P1 20.55%, a paired difference of
    11.15 points with a 7.05–15.26-point interval.
-5. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
+5. Robustness: in a post-hoc five-seed cohort, F3-P1 exceeded F2-P1 in every
+   seed; the mean paired advantage was 10.29 points (sample SD 1.45).
+6. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
    F1-P1.
-6. Safety: F1-P1 reduced the selected overcorrection diagnostic and showed no
+7. Safety: F1-P1 reduced the selected overcorrection diagnostic and showed no
    established ArabicMMLU change.
-7. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
+8. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
    expert linguistic error analysis, and private restricted artifacts.
 
 ## Main results table
@@ -75,6 +77,22 @@ Do not claim publicly released adapters until the release audit is resolved.
 
 The earlier 25-record QALB development values remain technical gate
 diagnostics and must not replace these Nahw-Passage final results.
+
+## Post-hoc five-seed robustness table
+
+| Seed | F2-P1 | F3-P1 | F3 minus F2 |
+| ---: | ---: | ---: | ---: |
+| 3407 | 20.55% | 33.07% | +12.52 points |
+| 3408 | 21.92% | 31.51% | +9.59 points |
+| 3409 | 21.72% | 30.33% | +8.61 points |
+| 3410 | 22.50% | 33.07% | +10.57 points |
+| 3411 | 21.72% | 31.90% | +10.18 points |
+| Mean (sample SD) | 21.68% (0.71) | 31.98% (1.15) | +10.29 (1.45) |
+
+Training used the completed A100 five-seed wave; recovery inference used one
+RTX 3090 per seed. Treat this as post-hoc robustness evidence. It supports the
+stability of the mixed-over-synthetic direction but does not replace the
+preregistered seed-3407 primary comparison.
 
 ## Paired-comparison table
 
@@ -160,6 +178,8 @@ numeric prior-work claim against the primary paper before submission.
 
 - strict single-gold exact match;
 - one model, one training size, and one principal benchmark;
+- the primary comparison uses one seed, partly addressed by a separately
+  executed post-hoc five-seed robustness cohort;
 - possible alternate valid corrections;
 - no independent expert linguistic labeling;
 - staged rather than simultaneous B0/F1/F2/F3 timing;

@@ -309,7 +309,13 @@ both arms per seed, with exit code zero and zero restarts. Issue #185 now
 prepares the final CPU-only audit of all ten private prediction artifacts. It
 recomputes hashes, counts, record alignment, exact-match values, paired
 statistics, and the frozen across-seed summaries before any number is released.
-The five-seed outcome remains unread until that separately authorized audit.
+The separately authorized audit completed and validated all ten private files,
+their hashes, 511-row counts, record alignment, exact-match recounts, and every
+paired statistic. F2-P1 averaged 21.68% (sample SD 0.71 percentage points),
+F3-P1 averaged 31.98% (sample SD 1.15), and paired F3-minus-F2 averaged +10.29
+points (sample SD 1.45; range +8.61 to +12.52). F3 exceeded F2 in all five
+seeds. This is post-hoc robustness evidence; the original seed-3407 result
+remains primary.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit

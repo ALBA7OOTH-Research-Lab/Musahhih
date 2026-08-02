@@ -8,12 +8,13 @@
 - [x] Add independent ten-file hash/count/schema/alignment validation and
   recomputation of every per-seed paired statistic.
 - [x] Complete full tests, lint, compile, JSON checks, and Kubernetes dry-runs.
-- [ ] Review and merge the CPU-only gate.
-- [ ] Obtain one fresh exact-commit GO, run exactly one aggregate Job, and
+- [x] Review and merge the CPU-only gate.
+- [x] Obtain one fresh exact-commit GO, run exactly one aggregate Job, and
   publish the reviewed corpus-free results.
 
-Preparation authorizes no Kubernetes object, PVC read, prediction access,
-metric, inference, training, retry, QALB test, or XG.
+The aggregate completed without retry. F3-P1 exceeded F2-P1 in every seed;
+the mean paired difference was +10.29 percentage points (sample SD 1.45).
+Training, inference, and aggregate authorizations are consumed.
 
 ## Issue #183 — clean five-seed RTX 3090 evaluation recovery
 
