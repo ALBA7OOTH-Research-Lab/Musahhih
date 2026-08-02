@@ -346,6 +346,13 @@ development-selected policy. The rule selected F2 epoch 1 and F3 epoch 2 for
 all five replicas, so it amplified but did not create the mixed-over-synthetic
 direction. See `results/f2_f3_fixed_checkpoint_sensitivity_audit.md`. The
 authorization is consumed; do not rerun, reselect, or tune from this result.
+Issue #200 prepares a matched, timeout-safe F2-P1/F3-P1 extension of the
+completed F1 overcorrection and ArabicMMLU diagnostics. It reuses the exact
+frozen inputs and original selected adapters, with immutable B0/F1 predictions
+as staged references and no Nahw-Passage rerun. See
+`results/f2_f3_safety_diagnostics_gate_audit.md`. Preparation authorizes no
+model load, inference, metric, Kaggle submission, retry, or continuation. A
+private P100 run requires review, merge, and a fresh exact-commit owner GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

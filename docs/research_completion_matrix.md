@@ -1,6 +1,6 @@
 # Research completion matrix
 
-Status reviewed: 2026-08-01
+Status reviewed: 2026-08-02
 
 ## Overall decision
 
@@ -26,7 +26,7 @@ This distinction must remain visible in project status and any paper.
 | Fine-tuning versus expert-style B2-P1 | Complete, staged comparisons | `results/b2_p1_final_evaluation_audit.md` | B2-P1 achieved 108/511. F1-P1 and F3-P1 exceeded B2-P1; no difference was established for F2-P1 versus B2-P1. | Do not rerun or tune from B2-P1. |
 | F1-P1 overcorrection | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | F1-P1 preserved already-correct selected tokens more often than B0. | Do not generalize to all correct Arabic text. |
 | F1-P1 general Arabic capability retention | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | No measured ArabicMMLU difference was established; the interval was −3.2 to +1.9 points. | This is not a formal non-inferiority result. |
-| F2-P1/F3-P1 overcorrection and capability retention | Not executed | Proposed issue-#104 protocol | No claim is currently allowed. | Review, freeze, implement, merge, and separately authorize a matched diagnostic. |
+| F2-P1/F3-P1 overcorrection and capability retention | Gate prepared; not executed | `results/f2_f3_safety_diagnostics_gate_audit.md` | No result claim is currently allowed. | Review and merge issue #200, then obtain a fresh exact-commit GO for the matched private diagnostic. |
 | F2-P1/F3-P1 multi-seed robustness | Complete, post-hoc robustness evidence | `results/f2_f3_rtx3090_multiseed_aggregate_audit.md` | Across five seeds, F2-P1 averaged 21.68% (SD 0.71 pp), F3-P1 31.98% (SD 1.15 pp), and paired F3−F2 averaged +10.29 pp (SD 1.45; range +8.61 to +12.52). F3 was higher in every seed. | Keep the original seed-3407 comparison primary; disclose A100 training, uniform RTX 3090 recovery inference, and the post-hoc status. Do not rerun or tune. |
 | F2-P1/F3-P1 fixed-checkpoint sensitivity | Complete, post-hoc sensitivity evidence | `results/f2_f3_fixed_checkpoint_sensitivity_audit.md` | F3−F2 averaged +6.11 pp at fixed epoch 1 and +6.58 pp at fixed epoch 2, with F3 higher in all five seeds under both policies. The dev-selected gap was +10.29 pp. | State that natural-development selection amplifies the measured gap but does not create its direction; do not claim policy neutrality or replace the primary comparison. |
 | F2-P1/F3-P1 first-token sensitivity | Complete, post-hoc robustness evidence | `results/f2_f3_first_token_sensitivity_audit.md` | First-token extraction rescued 0/20 flagged F2-P1 outputs and 0/2 flagged F3-P1 outputs; both scores and the 11.15-point gap were unchanged. | Keep the frozen parser and primary scores unchanged; do not rerun or treat this as a new primary metric. |
@@ -59,8 +59,9 @@ versus F2-P1's 105/511, with a positive paired-bootstrap interval.
 ### H4: targeted GEC fine-tuning may affect overcorrection or capability
 
 Answered only for F1-P1. F1-P1 reduced the measured overcorrection diagnostic
-and showed no established ArabicMMLU change. No corresponding F2-P1/F3-P1
-claim is allowed until a separately reviewed diagnostic is completed.
+and showed no established ArabicMMLU change. The corresponding F2-P1/F3-P1
+gate is prepared under issue #200, but no claim is allowed until its separately
+reviewed diagnostic is completed.
 
 ## Submission-scope decision
 

@@ -939,3 +939,30 @@ change, or XG.
 Issue #196's authorization is consumed. Issue #198 is publication-only work;
 it authorizes no private prediction read, Kubernetes object, metric rerun,
 inference, training, reselection, QALB-test access, diagnostics, or XG.
+
+## Issue #200 — prepare matched F2/F3 behavioral diagnostics
+
+- [x] Confirm that the paper should add F2/F3 overcorrection and capability
+  diagnostics.
+- [x] Verify the frozen original seed-3407 F2 checkpoint-125 and F3
+  checkpoint-250 adapter identities without printing private content.
+- [x] Reuse the exact 154-record QALB-development unchanged-token input and
+  1,000-record balanced ArabicMMLU subset; do not select new records.
+- [x] Freeze F3-minus-F2 as the primary new comparison and retain B0/F1 only as
+  immutable staged references.
+- [x] Reject a six-system Nahw rerun: it would be post-hoc, repeat frozen test
+  access, and would not make the original comparisons preregistered.
+- [x] Implement per-row durable persistence, exact-prefix continuation, a
+  34,200-second safe stop, and metric-free incomplete handoff.
+- [x] Add strict adapter, input, runtime, authorization, schema, hash,
+  non-overwrite, stage-order, and privacy gates.
+- [x] Prepare a private P100 Kaggle package builder without executing it.
+- [x] Pass focused and full repository validation.
+- [ ] Open, review, and merge one PR.
+- [ ] Obtain a fresh exact-commit owner GO before any private input access,
+  model loading, inference, metric, retry, or continuation.
+
+Issue #200 is repository preparation only. It authorizes no GPU execution,
+private-input access, model loading, inference, metric computation, retry,
+continuation, Nahw-Passage, QALB test, training, checkpoint reselection,
+prompt/parser change, linguistic labeling, or XG.
