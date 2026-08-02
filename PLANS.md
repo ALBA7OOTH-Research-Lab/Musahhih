@@ -10,12 +10,33 @@
 - [x] Add exact identity, RTX 3090 equivalence, timeout, per-row durability,
   no-progress, write-once, and no-retry gates.
 - [x] Complete focused/full validation and review the five generated Jobs.
-- [ ] Merge preparation before any fresh exact-commit execution GO.
+- [x] Merge preparation before any fresh exact-commit execution GO.
 - [ ] Prepare and separately authorize a CPU-only aggregate after completion.
 
 Issue #192 is preparation only. It authorizes no Kubernetes object, GPU use,
 private-test access, model load, inference, prediction, metric, training,
 retry, continuation, QALB test, prompt/parser change, or XG.
+
+## Issue #149 — prepare the MRL 2026 anonymous manuscript
+
+- [x] Register and claim a dedicated manuscript issue and branch.
+- [x] Add the official ACL/EMNLP paper template and reproducible build entry
+  point.
+- [x] Draft the anonymous archival paper from reviewed corpus-text-free
+  evidence.
+- [x] Verify every citation and numeric claim against a primary source or
+  accepted repository audit.
+- [x] Generate publication tables and figures from consolidated aggregate
+  results.
+- [x] Compile and audit the review PDF for page limits, anonymity, private-data
+  boundaries, and artifact-release language.
+- [x] Complete repository checks and open draft PR #150 for manuscript review.
+- [x] Incorporate the completed five-seed post-hoc robustness evidence and the
+  separately authorized first-token sensitivity result.
+
+Issue #149 authorizes manuscript preparation only. It authorizes no training,
+inference, test access, diagnostic execution, checkpoint selection,
+prompt/parser change, adapter release, or publication of private artifacts.
 
 ## Issue #185 — audit the completed five-seed RTX 3090 results
 

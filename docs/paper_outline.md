@@ -1,6 +1,8 @@
 # Musahhih paper outline
 
-Status: publication-synthesis draft. This is not a submission manuscript.
+Status: publication synthesis implemented as the anonymous manuscript draft in
+`paper/main.tex`. This outline remains the claim-control source map, not the
+submission file.
 
 ## Working title
 

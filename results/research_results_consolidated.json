@@ -189,11 +189,11 @@
     }
   },
   "unresolved_research_components": {
-    "b1_b2_nahw_final": "complete",
+    "b1_b2_nahw_final": "complete; accepted frozen results must not be rerun or tuned",
     "f2_f3_safety_diagnostics": "proposed only; requires protocol review, implementation, merge, and fresh authorization",
     "qualified_linguistic_error_analysis": "blocked on a qualified Arabic linguist and an approved private-review procedure",
     "adapter_release": "blocked on software, base-model, dataset-license, and institutional review",
-    "manuscript": "not yet drafted"
+    "manuscript": "anonymous ACL-format draft prepared; five-seed robustness revision in progress"
   },
   "safeguards": {
     "contains_corpus_text": false,
