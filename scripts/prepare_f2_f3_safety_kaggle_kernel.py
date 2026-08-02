@@ -235,24 +235,52 @@ print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
 def build_metadata(
     *,
     kernel_id: str,
-    safety_dataset_source: str,
-    f1_safety_kernel_source: str,
-    f2_kernel_source: str,
-    f3_kernel_source: str,
+    artifact_dataset_sources: list[str] | None = None,
+    safety_dataset_source: str | None = None,
+    f1_safety_kernel_source: str | None = None,
+    f2_kernel_source: str | None = None,
+    f3_kernel_source: str | None = None,
     resume_kernel_source: str | None = None,
 ) -> dict:
-    for label, value in (
-        ("kernel id", kernel_id),
-        ("safety dataset source", safety_dataset_source),
-        ("F1 safety kernel source", f1_safety_kernel_source),
-        ("F2 kernel source", f2_kernel_source),
-        ("F3 kernel source", f3_kernel_source),
-    ):
-        _validate_source(value, label)
+    _validate_source(kernel_id, "kernel id")
+    artifact_dataset_sources = list(artifact_dataset_sources or [])
+    legacy_sources = (
+        safety_dataset_source,
+        f1_safety_kernel_source,
+        f2_kernel_source,
+        f3_kernel_source,
+    )
+    if artifact_dataset_sources:
+        if any(source is not None for source in legacy_sources):
+            raise KernelPreparationError(
+                "combined artifact datasets and legacy sources are mutually exclusive"
+            )
+        if len(set(artifact_dataset_sources)) != len(artifact_dataset_sources):
+            raise KernelPreparationError("artifact dataset sources must be unique")
+        for source in artifact_dataset_sources:
+            _validate_source(source, "artifact dataset source")
+        dataset_sources = artifact_dataset_sources
+        kernel_sources = []
+    else:
+        if any(source is None for source in legacy_sources):
+            raise KernelPreparationError(
+                "either artifact datasets or all legacy sources are required"
+            )
+        for label, value in (
+            ("safety dataset source", safety_dataset_source),
+            ("F1 safety kernel source", f1_safety_kernel_source),
+            ("F2 kernel source", f2_kernel_source),
+            ("F3 kernel source", f3_kernel_source),
+        ):
+            _validate_source(value, label)
+        dataset_sources = [safety_dataset_source]
+        kernel_sources = [
+            f1_safety_kernel_source,
+            f2_kernel_source,
+            f3_kernel_source,
+        ]
     if resume_kernel_source is not None:
         _validate_source(resume_kernel_source, "resume kernel source")
-    kernel_sources = [f1_safety_kernel_source, f2_kernel_source, f3_kernel_source]
-    if resume_kernel_source is not None:
         kernel_sources.append(resume_kernel_source)
     return {
         "id": kernel_id,
@@ -265,7 +293,7 @@ def build_metadata(
         "enable_internet": True,
         "machine_shape": "NvidiaTeslaP100",
         "docker_image_pinning_type": "original",
-        "dataset_sources": [safety_dataset_source],
+        "dataset_sources": dataset_sources,
         "kernel_sources": kernel_sources,
         "competition_sources": [],
         "model_sources": [],
@@ -288,10 +316,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--approved-commit", required=True)
     parser.add_argument("--approval-reference", required=True)
     parser.add_argument("--kernel-id", required=True)
-    parser.add_argument("--safety-dataset-source", required=True)
-    parser.add_argument("--f1-safety-kernel-source", required=True)
-    parser.add_argument("--f2-kernel-source", required=True)
-    parser.add_argument("--f3-kernel-source", required=True)
+    parser.add_argument("--artifact-dataset-source", action="append", default=[])
+    parser.add_argument("--safety-dataset-source")
+    parser.add_argument("--f1-safety-kernel-source")
+    parser.add_argument("--f2-kernel-source")
+    parser.add_argument("--f3-kernel-source")
     parser.add_argument("--replicate", type=int, default=1)
     parser.add_argument("--resume-kernel-source")
     parser.add_argument("--resume-summary-sha256")
@@ -309,6 +338,7 @@ def main() -> None:
     )
     metadata = build_metadata(
         kernel_id=args.kernel_id,
+        artifact_dataset_sources=args.artifact_dataset_source,
         safety_dataset_source=args.safety_dataset_source,
         f1_safety_kernel_source=args.f1_safety_kernel_source,
         f2_kernel_source=args.f2_kernel_source,

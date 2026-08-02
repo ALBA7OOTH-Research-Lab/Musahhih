@@ -353,6 +353,14 @@ as staged references and no Nahw-Passage rerun. See
 `results/f2_f3_safety_diagnostics_gate_audit.md`. Preparation authorizes no
 model load, inference, metric, Kaggle submission, retry, or continuation. A
 private P100 run requires review, merge, and a fresh exact-commit owner GO.
+The active `thgh15` Kaggle account then returned HTTP 403 for the three private
+`univverssal` source kernels before submission; no kernel or GPU was created.
+Issue #202 prepares a transport-only repair: assemble the same 12 hash-verified
+private artifacts into one new private `thgh15` dataset and attach that dataset
+without changing the evaluator or scientific contract. See
+`results/f2_f3_safety_dataset_source_repair_audit.md`. The repair authorizes no
+private copy/upload or execution. After merge, both one private dataset upload
+and one initial kernel require a fresh exact-commit issue-#200 owner GO.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

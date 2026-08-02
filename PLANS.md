@@ -966,3 +966,22 @@ Issue #200 is repository preparation only. It authorizes no GPU execution,
 private-input access, model loading, inference, metric computation, retry,
 continuation, Nahw-Passage, QALB test, training, checkpoint reselection,
 prompt/parser change, linguistic labeling, or XG.
+
+## Issue #202 — repair current-account diagnostic source topology
+
+- [x] Preserve the pre-submission HTTP 403 finding without launching a kernel.
+- [x] Add a disabled-by-default, write-once private artifact-bundle preparer.
+- [x] Reuse every frozen input, adapter, selection, and B0/F1 prediction hash.
+- [x] Allow one combined private Kaggle dataset instead of inaccessible
+  cross-account kernel sources.
+- [x] Keep legacy and combined-dataset source topologies mutually exclusive.
+- [x] Retain exact-hash continuation support.
+- [x] Pass focused and full validation.
+- [ ] Review and merge the repair.
+- [ ] Obtain a fresh exact-commit issue-#200 GO before private bundle creation,
+  private upload, or one initial diagnostic kernel.
+
+Issue #202 is repository repair only. It authorizes no private artifact read or
+copy, dataset creation/upload, Kaggle kernel, GPU, model loading, inference,
+metric, training, checkpoint change, Nahw-Passage, QALB test, prompt/parser
+change, retry, continuation, linguistic labeling, or XG.
