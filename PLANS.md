@@ -1,5 +1,22 @@
 # Active implementation plan
 
+## Issue #183 — clean five-seed RTX 3090 evaluation recovery
+
+- [x] Preserve all A100/MPS attempts and reject prefix mixing.
+- [x] Select one exact 24 GB RTX 3090 per seed from the available generic-GPU
+  pool rather than another A100 packing strategy.
+- [x] Add an inline, pre-test single/batch-16/repeated-batch equivalence gate.
+- [x] Run each seed from record zero on uniform hardware with per-row `fsync`,
+  an 11-hour safe stop, a 20-minute no-progress guard, and no automatic retry.
+- [x] Complete full validation and five-Job Kubernetes dry-runs with zero
+  persisted issue-#183 objects.
+- [ ] Review and merge the narrow gate.
+- [ ] Obtain one fresh exact-commit GO for the five-Job wave; aggregate only
+  after all five complete under a separate GO.
+
+Preparation authorizes no cluster object, private-input access, model load,
+inference, prediction, metric, training, retry, continuation, QALB test, or XG.
+
 ## Issue #181 — audit and close the MPS path
 
 - [x] Preserve the issue-#179 terminal Job without retry or replacement.
@@ -11,9 +28,10 @@
   multi-seed extension for this submission.
 - [x] Prepare and validate the narrow terminal audit for review.
 
-No further GPU canary or evaluation continuation is planned before submission.
-The completed primary single-seed experiment remains the paper's evidentiary
-base; no partial multi-seed accuracy or variance claim is allowed.
+No MPS or A100 continuation is planned. Issue #183 supersedes the temporary
+submission freeze with a clean, uniform-RTX-3090 recovery from record zero.
+Until all five Jobs and the separate aggregate gate complete, no partial
+multi-seed accuracy or variance claim is allowed.
 
 ## Issue #179 — enable NVIDIA MPS for batch-16 workers
 

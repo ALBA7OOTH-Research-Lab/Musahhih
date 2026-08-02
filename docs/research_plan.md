@@ -297,6 +297,13 @@ guards remained safe. A CPU-only read-only audit confirmed byte-identical
 worker logs and clean MPS shutdown. MPS is therefore rejected for the frozen
 evaluation. With no complete multi-seed metric, the extension is frozen for
 this submission and no robustness claim is allowed.
+The owner subsequently required completion before submission. Issue #183
+therefore prepares a clean post-hoc infrastructure recovery on five uniform
+RTX 3090 GPUs. Each seed restarts both arms from record zero; no A100 prefix is
+reused. An inline synthetic equivalence gate must pass before test access in
+each Job. This hardware recovery is not preregistered and must be disclosed as
+post-hoc. No result is reportable until all five Jobs and the separately gated
+aggregate audit complete.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
