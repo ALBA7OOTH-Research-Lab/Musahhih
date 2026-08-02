@@ -302,9 +302,11 @@ comparisons.  F2 and B2 differ by only $-0.59$ points, with an interval
 spanning zero.  All arms produce 511 aligned parsed predictions with no empty
 output or parsing failure.  Suspicious or multi-token outputs number 2 for F1,
 20 for F2, 2 for F3, and 6 for B2; they are retained unchanged when scoring.
-We do not introduce a post-hoc first-token parser.  Even crediting all 20
-flagged F2 outputs would raise F2 only to 125/511 (24.46\%), leaving F3 ahead
-by 7.24 points; format warnings cannot explain the full primary difference.
+A post-hoc sensitivity takes the first whitespace-delimited token only for
+already flagged outputs and applies the rule symmetrically.  It rescues 0/20
+F2 outputs and 0/2 F3 outputs, leaving both scores and the 11.15-point gap
+unchanged.  Format compliance therefore explains none of the primary
+difference under this sensitivity; the frozen parser remains primary.
 
 \begin{table}[t]
 \centering

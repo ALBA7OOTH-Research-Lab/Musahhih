@@ -70,8 +70,9 @@ The reviewer-response revisions add corpus-text-free clarifications:
 - the primary paired interval remains conditional on seed 3407, while the
   completed post-hoc five-seed cohort reports every seed, arm means and sample
   standard deviations, and paired-difference mean, spread, and range;
-- a worst-case format-warning bound credits all 20 flagged F2-P1 outputs and
-  still leaves F3-P1 7.24 percentage points ahead;
+- the exact post-hoc first-token sensitivity rescues 0/20 flagged F2-P1
+  outputs and 0/2 flagged F3-P1 outputs, leaving both scores and the primary
+  difference unchanged;
 - the frozen common-development rule selected F2-P1 epoch 1 after loss
   increased from 0.5975 to 0.6116 and F3-P1 epoch 2 after loss decreased from
   0.3730 to 0.3441;
@@ -86,6 +87,11 @@ SD 0.71 points), F3-P1 mean 31.98% (SD 1.15), and mean paired difference
 seed. The manuscript keeps the original seed-3407 P100 run as primary and
 labels the A100-training/RTX-3090-evaluation cohort as post-hoc robustness
 evidence.
+
+The separately authorized first-token audit used the accepted private
+seed-3407 prediction hashes and published only corpus-text-free aggregate
+counts. It loaded no model, ran no inference, and did not change the parser or
+primary result.
 
 The token totals were computed from the byte-identical frozen private training
 records with Transformers 4.56.2 and the pinned Gemma tokenizer revision.

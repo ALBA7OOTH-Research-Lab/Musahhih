@@ -14,7 +14,7 @@
 - [x] Compile and audit the review PDF for page limits, anonymity, private-data
   boundaries, and artifact-release language.
 - [x] Complete repository checks and open draft PR #150 for manuscript review.
-- [ ] Incorporate the completed five-seed post-hoc robustness evidence and the
+- [x] Incorporate the completed five-seed post-hoc robustness evidence and the
   separately authorized first-token sensitivity result.
 
 Issue #149 authorizes manuscript preparation only. It authorizes no training,
