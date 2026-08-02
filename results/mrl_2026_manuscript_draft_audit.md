@@ -53,7 +53,7 @@ The manuscript's empirical values are traceable to:
 - `results/f1_safety_diagnostics_audit.md`; and
 - the F1/F2/F3 corpus-text-free training summaries.
 
-The manuscript presents F3-P1 minus F2-P1 as the sole preregistered primary
+The manuscript presents F3-P1 minus F2-P1 as the sole pre-specified primary
 contrast. It labels comparisons involving B1, B2, or F1 as staged, does
 not claim F3-P1 superiority over F1-P1, does not claim general capability
 retention, and does not claim expert linguistic validation or state of the
@@ -80,6 +80,19 @@ The reviewer-response revisions add corpus-text-free clarifications:
   416,746 for F3-P1 per epoch; and
 - corresponding F2/F3 safety diagnostics remain absent and no comparison is
   claimed.
+
+The related-work revision adds two primary-source-verified references: recent
+Arabic data-derived text editing, whose method contribution is complementary
+to this study's supervision-composition question, and contextual synthetic GEC
+augmentation work documenting error-distribution mismatch and noisy labels.
+The discussion now leads with the empirical result and consolidates repeated
+protocol caveats without weakening the distinction between the primary and
+secondary comparisons.
+
+The paper uses ``pre-specified'' rather than ``preregistered'' for the primary
+contrast. The protocol was committed and frozen before test access, but the
+manuscript does not rely on a public registration record that anonymous
+reviewers can independently inspect.
 
 Across seeds 3407--3411, the post-hoc cohort gives F2-P1 mean 21.68% (sample
 SD 0.71 points), F3-P1 mean 31.98% (SD 1.15), and mean paired difference
@@ -109,7 +122,8 @@ by the manuscript figure.
 Every current bibliography entry was verified against a primary source:
 
 - ACL Anthology records and DOIs for Nahw, Beyond English, the Arabic GED/GEC
-  investigation, both QALB shared tasks, ARETA, ArabicMMLU, and AraT5;
+  investigation, Arabic data-derived text editing, contextual GEC data
+  augmentation, both QALB shared tasks, ARETA, ArabicMMLU, and AraT5;
 - the official NeurIPS proceedings record and DOI for QLoRA; and
 - official arXiv records and DataCite DOIs for Tibyan and Gemma 3.
 
@@ -132,7 +146,6 @@ primary-source verification.
 
 - author and affiliation decisions;
 - substantive author review of framing and interpretation;
-- related-work expansion where it materially sharpens the contribution;
 - final artifact-availability wording and anonymous supplementary package;
 - final ACL policy and MRL OpenReview form review;
 - camera-ready AI-assistance disclosure if the paper is accepted; and

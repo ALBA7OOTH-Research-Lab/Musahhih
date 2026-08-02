@@ -24,7 +24,7 @@ QALB, a deterministic highlighted-token view of synthetic Tibyan, and a
 50:50 mixture.  We freeze data
 composition, checkpoint selection, prompting, parsing, and evaluation before
 accessing the 511-record Nahw-Passage test set.  Mixed supervision obtains
-31.70\% exact accuracy versus 20.55\% for synthetic-only.  The preregistered
+31.70\% exact accuracy versus 20.55\% for synthetic-only.  The pre-specified
 paired difference is 11.15 percentage points (95\% paired-bootstrap interval:
 7.05--15.26; exact McNemar $p=2.15\times10^{-7}$).  A post-hoc five-seed
 cohort preserves the direction in every seed (mean difference 10.29 points,
@@ -60,8 +60,8 @@ natural-only, synthetic-only, and mixed training views while holding the
 training and evaluation interfaces fixed.
 
 Our primary question is whether a fixed natural--synthetic mixture improves
-over size-matched synthetic-only supervision.  We preregister this comparison
-before either adapter accesses Nahw-Passage, retain row-level outputs
+over size-matched synthetic-only supervision.  We specify and freeze this
+comparison before either adapter accesses Nahw-Passage, retain row-level outputs
 privately, and reproduce the paired statistics from aligned predictions.  We
 also report the earlier natural-only result and later prompt-only baselines as
 explicitly staged comparisons rather than presenting all five systems as one
@@ -94,12 +94,27 @@ models, morphology-aware components, and multitask learning
 Arabic-focused text-to-text pretraining for generation tasks, including GEC
 \citep{nagoudi-etal-2022-arat5}.
 
+Recent Arabic text-editing work derives language-independent edit tags from
+training data, improving both correction quality and decoding efficiency
+\citep{alhafni-habash-2025-enhancing}.  That work advances the editing
+formulation.  Our question is complementary: with one model revision,
+fine-tuning recipe, record count, task interface, and evaluation fixed, how
+does the source composition of supervision affect correction?
+
 \citet{kwon-etal-2023-beyond} compare prompted instruction-following models
 with fully fine-tuned Arabic GEC systems and explore synthetic augmentation.
 Their results motivate both prompt-only baselines and synthetic supervision.
 However, their systems differ in architecture, training scale, and data
 source, so they do not provide a matched causal contrast between natural,
 synthetic, and mixed data.
+
+More broadly, synthetic GEC data can be valuable but is not automatically
+equivalent to human-annotated supervision.  Prior work identifies mismatched
+error distributions and noisy labels as obstacles to using synthetic data in
+data-limited fine-tuning, and improves results through contextual generation
+and relabeling \citep{wang-etal-2024-improving-grammatical}.  This motivates
+testing composition directly rather than treating all training pairs as
+exchangeable.
 
 \paragraph{Arabic grammar benchmarks and synthetic data.}
 Nahw evaluates grammar understanding, detection, correction, and explanation
@@ -215,21 +230,21 @@ tokens, and seed 3407.  We retain raw responses before applying a conservative
 parser.  Empty outputs, parsing failures, and suspicious multi-token outputs
 are recorded rather than repaired.
 
-For the preregistered F3--F2 comparison, we report the accuracy difference,
+For the pre-specified F3--F2 comparison, we report the accuracy difference,
 an exact two-sided McNemar test, and a deterministic 10,000-sample paired
 bootstrap percentile interval with seed 3407.  Both systems are aligned by
 the 511 frozen record identifiers.  The interval is conditional on the single
 training seed and excludes retraining variance.  Comparisons involving B1, B2,
 or F1 were executed or consolidated at different stages and are secondary.
-Their intervals and tests are descriptive and are not treated as a
-simultaneous preregistered five-arm family.
+Their intervals and tests are descriptive rather than a simultaneous
+five-arm family.
 
 We additionally report a post-hoc training-seed robustness cohort.  Five
 paired F2/F3 replicas use seeds 3407--3411, the frozen training recipe, and the
 same checkpoint rule.  Training uses A100 GPUs, and all ten selected adapters
 are evaluated from record zero on uniform RTX 3090 GPUs.  This cohort was run
 after the primary result and is therefore robustness evidence rather than a
-second preregistered analysis.
+second pre-specified analysis.
 
 \section{Results}
 
@@ -286,7 +301,7 @@ F1 $-$ B2 & +7.24 & [3.33, 10.96] \\
 \bottomrule
 \end{tabular}
 \caption{Paired accuracy differences in percentage points. Only F3--F2 is the
-preregistered primary comparison; the remaining rows are staged secondary
+pre-specified primary comparison; the remaining rows are staged secondary
 comparisons.}
 \label{tab:paired}
 \end{table}
@@ -360,14 +375,15 @@ executed, so no safety comparison among supervision compositions is claimed.
 \section{Discussion}
 
 The primary result shows that synthetic examples are not interchangeable with
-natural supervision at fixed record count.  The mixed arm's gain over F2 is
-consistent with natural examples grounding the task interface or correction
-distribution while synthetic examples contribute complementary coverage.
-However, the experiment does not identify which mechanism is responsible:
-record lengths, token counts, domain, error distribution, and correction
-quality all differ between QALB and Tibyan.
+natural supervision at fixed record count.  Adding natural data to the
+synthetic view closes a large performance deficit and does so across all five
+post-hoc seeds.  This is consistent with natural examples better matching the
+task interface or correction distribution while synthetic examples provide
+complementary coverage.  The experiment cannot distinguish those mechanisms:
+QALB and Tibyan differ in record length, token count, domain, error
+distribution, and correction quality.
 
-The staged F1--F2 result also favors natural supervision, while the F3--F1
+The F1--F2 secondary result also favors natural supervision, while the F3--F1
 interval includes zero.  The appropriate conclusion is therefore not that
 mixing is universally optimal.  Rather, mixing substantially repairs the
 deficit of the synthetic-only view and reaches performance statistically
@@ -376,10 +392,10 @@ sizes, languages, and independently licensed test sets are required to
 separate a general mixture effect from a dataset-specific interaction.
 
 The prompt baselines sharpen this interpretation.  A more explicit
-expert-style instruction improves the untouched model, but F1 and F3 retain
-large staged advantages over it.  Conversely, F2 is statistically compatible
-with B2.  Fine-tuning is therefore not sufficient by itself; supervision
-source remains consequential.
+expert-style instruction improves the untouched model, but F1 and F3 remain
+well above it in secondary comparisons.  Conversely, F2 is statistically
+compatible with B2.  Fine-tuning alone is therefore not sufficient;
+supervision source remains consequential.
 
 \section{Reproducibility and Artifact Boundaries}
 
@@ -401,13 +417,12 @@ upstream Tibyan release remains available under its own license.
 
 Our evidence is limited to one 4B model, one equal-record training size, and
 one principal test set.  Record matching does not equalize tokens, domains, or
-error categories.  The primary interval remains conditional on seed 3407, but
-the post-hoc five-seed cohort partly addresses training randomness: every
-paired difference is positive.  Because the primary and robustness cohorts
-use different hardware paths, this extension does not decompose every runtime
-or hardware contribution.  Although F2 contains more tokens than F3, totals
-do not control length, domain, or source quality.  We do not run QALB test, so
-our accuracy is not comparable to full-sentence M2 scores.
+error categories.  The primary interval is conditional on seed 3407; the
+post-hoc cohort finds a positive paired difference in every seed but uses a
+different, internally uniform hardware path.  Although F2 contains more
+tokens than F3, token totals do not control length, domain, or source quality.
+We do not run QALB test, so our accuracy is not comparable to full-sentence M2
+scores.
 
 Exact single-reference matching is intentionally strict.  A linguistically
 valid alternative receives no credit unless it equals the supplied token.
@@ -415,11 +430,10 @@ No qualified linguist reviewed the private predictions, so we provide no
 error-type or expert-quality claims.  ARETA-derived aggregate evidence in the
 source literature does not substitute for expert labels on our outputs.
 
-The F1, F2/F3, and prompt-baseline evaluations were frozen and executed at
-different stages.  The historical T4 Nahw baseline and every comparison
-derived from it are excluded; every displayed final-evaluation system ran on
-P100 hardware.  Only F3--F2 is a simultaneously executed, preregistered
-primary comparison.
+F1, F2/F3, and the prompt baselines were executed at different stages, so only
+the simultaneously executed F3--F2 contrast is primary.  We exclude the
+historical T4 Nahw baseline and all comparisons derived from it; every
+displayed final-evaluation system ran on P100 hardware.
 
 Our exact-hash overlap checks do not detect paraphrases, shared upstream
 sources, or unknown pretraining contamination.  F2/F3 capability and
