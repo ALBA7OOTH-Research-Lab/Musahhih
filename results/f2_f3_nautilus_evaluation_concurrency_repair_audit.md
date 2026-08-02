@@ -45,3 +45,19 @@ retried.
 - the same two Jobs passed Kubernetes server dry-run, including the 80 GB A100
   node affinity and equal resource requests/limits.
 - a post-dry-run label query returned zero persisted issue-#177 Jobs.
+
+## Subsequent terminal canary
+
+The separately authorized canary at merged commit
+`12f0aacad99f9d18445de746809ab64eb923f32b` used one
+`NVIDIA-A100-SXM4-80GB` and reached terminal `Failed` with exit one and zero
+restarts. Its sampling window lasted 1,201.278 seconds and recorded 974 valid
+GPU samples, zero sampler failures, 11.762% mean GPU utilization, 0.526697 peak
+GPU-memory fraction, and 0.322968 peak host-memory fraction. It therefore
+failed only the required 40% utilization threshold.
+
+The utilization check followed five-worker output-equivalence and durability
+validation in control flow, but the failure summary did not duplicate those
+worker fields. That fact is a code-path inference. No test input, prediction,
+metric, training, retry, continuation, or XG occurred. The authorization is
+consumed and issue #179 supersedes this execution strategy.

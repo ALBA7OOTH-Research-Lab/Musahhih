@@ -262,6 +262,18 @@ policy without changing decoding. See
 continuation is authorized before merge and a fresh exact-commit owner GO; the
 two stages require separate GOs. No partial multi-seed metric or robustness
 claim is allowed.
+The single subsequently authorized issue-#177 canary ran all five batch-16
+workers but failed its final utilization gate: 11.762% mean A100 utilization
+across 974 valid samples, with zero sampler failures, 52.6697% peak GPU memory,
+32.2968% peak host memory, exit one, and zero restarts. Control flow reached
+that check only after worker equivalence/durability validation, but the parent
+failure summary did not duplicate those worker fields; treat that statement as
+a code-path inference. No test input or metric was used and no retry occurred.
+Issue #179 prepares an NVIDIA MPS version of the same synthetic gate so the
+five processes share GPU scheduling resources instead of ordinary context
+time-slicing. See `docs/f2_f3_nautilus_evaluation_mps_protocol.md`. Merge
+authorizes no execution. One MPS canary requires a fresh exact-commit issue-#179
+GO; real evaluation and aggregation remain separately unauthorized.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

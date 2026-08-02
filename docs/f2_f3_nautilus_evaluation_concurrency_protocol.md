@@ -1,6 +1,11 @@
 # F2/F3 Nautilus concurrent batch-16 evaluation repair
 
-Status: issue #177 repository preparation only; no execution authorized.
+Status: superseded after its single authorized canary failed utilization.
+
+> Execution note (2026-08-01): all five batch-16 workers reached the final
+> utilization gate, but mean A100 utilization was 11.762%. Memory remained
+> safe and no test input or metric was used. The Job was not retried. See
+> `f2_f3_nautilus_evaluation_mps_protocol.md` for the issue #179 repair.
 
 ## Preserved evidence
 

@@ -283,6 +283,13 @@ through workload packing rather than a decoding change. See
 [`f2_f3_nautilus_evaluation_concurrency_protocol.md`](f2_f3_nautilus_evaluation_concurrency_protocol.md).
 The source prefixes remain immutable. The synthetic canary, private
 continuation, and aggregation each require separate fresh exact-commit GOs.
+The single issue-#177 canary later reached the final utilization check with all
+five batch-16 workers but averaged only 11.762% A100 utilization; memory stayed
+within both guards and no test input or metric was used. Issue #179 therefore
+prepares the same canary under NVIDIA MPS, which allows independent CUDA
+processes to overlap work through one server context. See
+[`f2_f3_nautilus_evaluation_mps_protocol.md`](f2_f3_nautilus_evaluation_mps_protocol.md).
+No MPS canary or real continuation is authorized by preparation or merge.
 
 One separately authorized B1-P1 five-shot final run subsequently completed all
 511 frozen Nahw-Passage records at exact executable commit
