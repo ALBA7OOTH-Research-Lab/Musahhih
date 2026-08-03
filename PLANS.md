@@ -966,7 +966,7 @@ inference, training, reselection, QALB-test access, diagnostics, or XG.
   verify hashes, alignment, counts, statistics, runtime, and safeguards.
 - [x] Record the corpus-text-free terminal audit and integrate the reviewed
   findings into the manuscript and research status.
-- [ ] Pass final repository and rendered-manuscript validation, review, and merge.
+- [x] Pass final repository and rendered-manuscript validation, review, and merge.
 
 Issue #200's single private execution completed. Its authorization is consumed;
 do not rerun, retry, continue, or tune from the diagnostic result. Nahw-Passage,
