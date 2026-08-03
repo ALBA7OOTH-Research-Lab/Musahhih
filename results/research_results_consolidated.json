@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_date": "2026-08-02",
+  "recorded_date": "2026-08-03",
   "research_status": {
     "core_natural_synthetic_mixed_comparison": "complete",
     "original_full_research_plan": "partially_complete",
@@ -221,9 +221,38 @@
       "mcnemar_two_sided_exact_p_value": 0.7031386893685864
     }
   },
+  "f2_f3_behavioral_diagnostics": {
+    "status": "complete",
+    "execution_hardware": "one Tesla P100-PCIE-16GB",
+    "public_summary_sha256": "a25f3474e944f98b17455659ed43dc982f08bd9d825cae8bd61981859031c67b",
+    "overcorrection_unchanged_accuracy": {
+      "records": 154,
+      "f2_accuracy": 0.6298701298701299,
+      "f3_accuracy": 0.22727272727272727,
+      "f3_minus_f2": -0.4025974025974026,
+      "paired_bootstrap_95_percentile_ci": [
+        -0.4935064935064935,
+        -0.3116883116883117
+      ],
+      "mcnemar_two_sided_exact_p_value": 2.1448756331687684e-14
+    },
+    "arabicmmlu_capability": {
+      "records": 1000,
+      "tasks": 40,
+      "f2_accuracy": 0.487,
+      "f3_accuracy": 0.54,
+      "f3_minus_f2": 0.053,
+      "stratified_paired_bootstrap_95_percentile_ci": [
+        0.031,
+        0.076
+      ],
+      "mcnemar_two_sided_exact_p_value": 9.479339374881515e-06
+    },
+    "interpretation": "synthetic-only F2 better resists selected-token overcorrection while mixed F3 retains more measured ArabicMMLU capability; neither diagnostic supports a broad safety or non-inferiority claim"
+  },
   "unresolved_research_components": {
     "b1_b2_nahw_final": "complete; accepted frozen results must not be rerun or tuned",
-    "f2_f3_safety_diagnostics": "proposed only; requires protocol review, implementation, merge, and fresh authorization",
+    "f2_f3_safety_diagnostics": "complete; authorization consumed and results must not be rerun or used for tuning",
     "qualified_linguistic_error_analysis": "blocked on a qualified Arabic linguist and an approved private-review procedure",
     "adapter_release": "blocked on software, base-model, dataset-license, and institutional review",
     "manuscript": "anonymous ACL-format draft prepared with five-seed and fixed-checkpoint sensitivity results"

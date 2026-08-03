@@ -451,16 +451,20 @@ with a 95% paired-bootstrap interval of 7.05–15.26 points. See
 The authorization is consumed, and the final evaluation must not be repeated
 or used for tuning.
 
-Publication-readiness status, permitted claims, missing prompt/safety
-comparisons, and release blockers are consolidated in
+Publication-readiness status, permitted claims, behavioral diagnostics, and
+release blockers are consolidated in
 [`docs/research_completion_matrix.md`](docs/research_completion_matrix.md),
 [`docs/paper_outline.md`](docs/paper_outline.md), and
 [`docs/artifact_release_audit.md`](docs/artifact_release_audit.md). The
 B1-P1/B2-P1 execution-free readiness review is
 [`docs/b1_b2_final_gate_readiness.md`](docs/b1_b2_final_gate_readiness.md).
-The proposed F2-P1/F3-P1 safety extension is planning-only and authorizes no
-execution; see
-[`docs/f2_f3_capability_retention_protocol.md`](docs/f2_f3_capability_retention_protocol.md).
+The matched F2-P1/F3-P1 behavioral extension subsequently completed. F2-P1
+preserved the designated already-correct token in 62.99% of cases versus
+22.73% for F3-P1, while F3-P1 scored 54.0% on the balanced ArabicMMLU subset
+versus 48.7% for F2-P1. This is a narrow diagnostic trade-off, not a broad
+safety or expert-quality claim. See
+[`results/f2_f3_safety_diagnostics_audit.md`](results/f2_f3_safety_diagnostics_audit.md).
+Its authorization is consumed; do not rerun or tune from the result.
 Any qualitative error analysis requires the owner and a qualified Arabic
 linguist to approve the private procedure in
 [`docs/qualified_linguistic_review_plan.md`](docs/qualified_linguistic_review_plan.md).

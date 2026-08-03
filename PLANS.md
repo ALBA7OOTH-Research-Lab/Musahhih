@@ -958,14 +958,20 @@ inference, training, reselection, QALB-test access, diagnostics, or XG.
   non-overwrite, stage-order, and privacy gates.
 - [x] Prepare a private P100 Kaggle package builder without executing it.
 - [x] Pass focused and full repository validation.
-- [ ] Open, review, and merge one PR.
-- [ ] Obtain a fresh exact-commit owner GO before any private input access,
+- [x] Open, review, and merge the preparation PR.
+- [x] Obtain and consume the fresh exact-commit owner GO before private input access,
   model loading, inference, metric, retry, or continuation.
+- [x] Complete the single authorized private dataset upload and P100 kernel.
+- [x] Download the terminal private output into ignored storage and independently
+  verify hashes, alignment, counts, statistics, runtime, and safeguards.
+- [x] Record the corpus-text-free terminal audit and integrate the reviewed
+  findings into the manuscript and research status.
+- [ ] Pass final repository and rendered-manuscript validation, review, and merge.
 
-Issue #200 is repository preparation only. It authorizes no GPU execution,
-private-input access, model loading, inference, metric computation, retry,
-continuation, Nahw-Passage, QALB test, training, checkpoint reselection,
-prompt/parser change, linguistic labeling, or XG.
+Issue #200's single private execution completed. Its authorization is consumed;
+do not rerun, retry, continue, or tune from the diagnostic result. Nahw-Passage,
+QALB test, training, checkpoint reselection, prompt/parser change, linguistic
+labeling, and XG remain outside scope.
 
 ## Issue #202 — repair current-account diagnostic source topology
 
@@ -977,11 +983,11 @@ prompt/parser change, linguistic labeling, or XG.
 - [x] Keep legacy and combined-dataset source topologies mutually exclusive.
 - [x] Retain exact-hash continuation support.
 - [x] Pass focused and full validation.
-- [ ] Review and merge the repair.
-- [ ] Obtain a fresh exact-commit issue-#200 GO before private bundle creation,
+- [x] Review and merge the repair.
+- [x] Obtain and consume the fresh exact-commit issue-#200 GO before private bundle creation,
   private upload, or one initial diagnostic kernel.
 
-Issue #202 is repository repair only. It authorizes no private artifact read or
-copy, dataset creation/upload, Kaggle kernel, GPU, model loading, inference,
-metric, training, checkpoint change, Nahw-Passage, QALB test, prompt/parser
-change, retry, continuation, linguistic labeling, or XG.
+Issue #202's transport repair was used by the single authorized issue-#200
+execution. The authorization is consumed. Do not create another dataset or
+kernel, retry, continue, or change training, checkpoints, prompts, parsing, or
+data from the result.

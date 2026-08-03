@@ -33,7 +33,9 @@ although development selection enlarges the mean separation.  Natural-only
 reaches 28.38\%; the observed 3.33-point mixed
 advantage is not established by the frozen interval.  Natural-only and mixed
 also outperform prompt baselines in staged comparisons.  These results show
-that supervision composition materially affects this task, while strict
+that supervision composition materially affects this task.  Auxiliary
+diagnostics expose a trade-off: synthetic-only preserves correct tokens more
+often, whereas mixed scores 5.30 points higher on balanced ArabicMMLU.  Strict
 single-reference scoring, one model, and absent expert error analysis limit
 generality.
 \end{abstract}
@@ -408,9 +410,19 @@ development diagnostic, not on arbitrary correct Arabic.
 Second, we evaluate a balanced 1,000-question subset spanning all 40
 ArabicMMLU tasks \citep{koto-etal-2024-arabicmmlu}.  B0 scores 53.7\% and F1
 53.1\%; the $-0.6$-point difference has a stratified paired-bootstrap interval
-of $-3.2$ to $+1.9$ points.  The diagnostic does not establish non-inferiority
-or general capability retention.  Corresponding F2/F3 diagnostics were not
-executed, so no safety comparison among supervision compositions is claimed.
+of $-3.2$ to $+1.9$ points.  This does not establish non-inferiority or general
+capability retention.
+
+We subsequently apply the same frozen diagnostics to the original F2 and F3
+adapters in one matched P100 run.  F2 leaves the designated correct token
+unchanged in 97/154 cases (62.99\%), whereas F3 does so in 35/154 (22.73\%).
+The primary F3--F2 difference is $-40.26$ points (95\% interval $-49.35$ to
+$-31.17$; exact McNemar $p<10^{-13}$).  On ArabicMMLU, F2 scores 48.7\% and
+F3 54.0\%, a primary difference of $+5.30$ points (40-task stratified interval
+$+3.10$ to $+7.60$; $p<10^{-5}$).  Thus synthetic-only supervision resists
+overcorrection better on this narrow diagnostic, while mixed supervision
+retains substantially more measured capability.  B0/F1 comparisons remain
+staged references, and we make no broad safety claim.
 
 \section{Discussion}
 
@@ -436,6 +448,12 @@ expert-style instruction improves the untouched model, but F1 and F3 remain
 well above it in secondary comparisons.  Conversely, F2 is statistically
 compatible with B2.  Fine-tuning alone is therefore not sufficient;
 supervision source remains consequential.
+
+The auxiliary diagnostics add an important qualification: the mixed arm's GEC
+advantage does not imply uniformly better behavior.  Relative to F2, F3 trades
+substantially higher selected-token overcorrection for higher ArabicMMLU
+accuracy.  The two measures cover different behaviors, so neither arm dominates
+the other outside the frozen correction test.
 
 \section{Reproducibility and Artifact Boundaries}
 
@@ -499,9 +517,12 @@ post-hoc cohort in Table~\ref{tab:multiseed} was trained on A100s and evaluated
 uniformly on RTX 3090s.
 
 Our exact-hash overlap checks do not detect paraphrases, shared upstream
-sources, or unknown pretraining contamination.  F2/F3 capability and
-overcorrection diagnostics remain absent.  Finally, restricted artifacts
-prevent public release of the full training and prediction package.
+sources, or unknown pretraining contamination.  The overcorrection diagnostic
+uses one designated token from corrected QALB development text and does not
+measure sentence-level preservation or all valid alternatives.  ArabicMMLU is
+a selected balanced subset rather than a formal non-inferiority design.
+Finally, restricted artifacts prevent public release of the full training and
+prediction package.
 
 \section{Ethical Considerations}
 

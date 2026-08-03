@@ -361,6 +361,19 @@ without changing the evaluator or scientific contract. See
 `results/f2_f3_safety_dataset_source_repair_audit.md`. The repair authorizes no
 private copy/upload or execution. After merge, both one private dataset upload
 and one initial kernel require a fresh exact-commit issue-#200 owner GO.
+The subsequently authorized issue-#200 run used exact commit
+`06c27f28f3462106f820a2fb6c9d6b32277b4bfa`, one private combined dataset,
+and one P100 kernel. It completed all 154 overcorrection and 1,000 ArabicMMLU
+records for both original selected adapters. F2-P1 preserved the designated
+already-correct token in 62.99% of cases versus 22.73% for F3-P1; F3-P1 scored
+54.0% on the balanced ArabicMMLU subset versus 48.7% for F2-P1. The primary
+F3-minus-F2 differences were -40.26 points for unchanged-token accuracy and
++5.30 points for ArabicMMLU. See
+`results/f2_f3_safety_diagnostics_audit.md`. This is a narrow behavioral
+trade-off, not broad safety or expert linguistic validation. Private
+predictions, inputs, logs, adapters, and checkpoints remain ignored. The
+authorization is consumed; do not rerun, retry, continue, or tune from these
+diagnostics.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but
