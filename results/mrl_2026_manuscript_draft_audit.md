@@ -1,6 +1,6 @@
 # MRL 2026 manuscript-draft audit
 
-Date reviewed: 2026-07-29
+Date reviewed: 2026-08-03
 
 ## Outcome
 
@@ -33,12 +33,13 @@ checkpoints, adapters, or credentials.
 - Two behavior-neutral trailing spaces were removed from the upstream
   bibliography style for repository diff hygiene.
 - Review mode produces A4, two-column output with line numbers.
-- The abstract contains 172 words, below the 200-word limit.
-- The compiled PDF contains seven pages; references begin on page seven.
+- The abstract contains 199 words, below the 200-word limit.
+- The compiled PDF contains eight pages; the body uses seven content pages and
+  references begin on page seven.
 - No overfull box, undefined control sequence, unresolved citation, unresolved
   reference, or LaTeX error appears in the final build log.
 - PDF metadata contains no author or lab identity.
-- All seven pages were rendered to PNG and visually checked for clipped text,
+- All eight pages were rendered to PNG and visually checked for clipped text,
   overlap, broken tables, unreadable labels, missing glyphs, and float-layout
   defects.
 - The required `Limitations` section and optional `Ethical Considerations`
@@ -63,10 +64,10 @@ The official workshop call and live OpenReview configuration were rechecked on
 | Content length | Pass | The conclusion ends on page 6, below the eight-page long-paper limit; Limitations, Ethical Considerations, and references follow. |
 | Review template | Pass | The PDF uses the pinned official ACL review style in A4, two-column, line-numbered form. |
 | Anonymity | Pass | The PDF and metadata contain no author, affiliation, acknowledgement, lab name, deanonymizing link, or identifying self-reference. |
-| Abstract | Pass | 172 words, below the ACL 200-word maximum. |
+| Abstract | Pass | 199 words, below the ACL 200-word maximum. |
 | Required Limitations section | Pass | A dedicated section titled `Limitations` occurs after the conclusion and before the references. |
 | Ethical discussion | Pass | The optional `Ethical Considerations` section follows Limitations and precedes the references. |
-| PDF upload constraint | Pass | The rebuilt PDF is approximately 143 KiB, below the live form's 50 MB maximum. |
+| PDF upload constraint | Pass | The rebuilt PDF is approximately 149 KiB, below the live form's 50 MB maximum. |
 | Submission deadline | Recorded | The workshop states 2026-08-10 at 23:59 AoE; the live OpenReview deadline encodes 2026-08-11 11:59 UTC. |
 | Camera-ready allowance | Not yet applicable | Accepted research papers receive one additional content page. |
 
@@ -84,7 +85,8 @@ The manuscript's empirical values are traceable to:
 - `results/b2_p1_final_evaluation_audit.md`;
 - `results/f1_p1_final_evaluation_audit.md`;
 - `results/f2_f3_final_evaluation_audit.md`;
-- `results/f1_safety_diagnostics_audit.md`; and
+- `results/f1_safety_diagnostics_audit.md`;
+- `results/f2_f3_safety_diagnostics_audit.md`; and
 - the F1/F2/F3 corpus-text-free training summaries.
 
 The manuscript presents F3-P1 minus F2-P1 as the sole pre-specified primary
@@ -114,8 +116,10 @@ The reviewer-response revisions add corpus-text-free clarifications:
   0.3730 to 0.3441;
 - exact formatted-token totals are 312,644 for F1-P1, 522,756 for F2-P1, and
   416,746 for F3-P1 per epoch; and
-- corresponding F2/F3 safety diagnostics remain absent and no comparison is
-  claimed.
+- the matched F2/F3 behavioral diagnostics show a trade-off: F2-P1 preserves
+  the designated already-correct token in 62.99% of cases versus 22.73% for
+  F3-P1, while F3-P1 scores 54.0% on the balanced ArabicMMLU subset versus
+  48.7% for F2-P1. The paper makes no broad safety or non-inferiority claim.
 
 The related-work revision adds two primary-source-verified references: recent
 Arabic data-derived text editing, whose method contribution is complementary
@@ -166,7 +170,8 @@ cannot explain the primary F3-P1 advantage.
 
 `results/research_results_consolidated.json` includes the accepted B1-P1 and
 B2-P1 results, the five-seed cohort, the fixed-checkpoint sensitivity, and the
-reviewed staged comparisons used by the manuscript figure and tables.
+reviewed behavioral diagnostics and staged comparisons used by the manuscript
+figure, tables, and discussion.
 
 ## Citation checks
 
@@ -184,7 +189,7 @@ primary-source verification.
 
 ## Validation
 
-- full repository suite: 316 tests passed with 2 optional data skips.
+- full repository suite: 334 tests passed.
 - `python -m compileall scripts`: passed.
 - pinned-tokenizer aggregate generation and idempotent rerun: passed.
 - JSON parsing and fixed-checkpoint metric consistency: passed.
@@ -197,7 +202,7 @@ primary-source verification.
   and a 4- or 8-page research-paper limit excluding references. The draft has
   fewer than 8 content pages; references end on PDF page 8.
 - final PDF SHA-256:
-  `9b5d21a454d4080d46e3df72b3148042e9395ac9998fedacf072c5dbdf44aee5`.
+  `80e6134fee87951b9d28df1872fa21686f2975ce4379889869b434ef5521d240`.
 
 ## Remaining work before submission
 

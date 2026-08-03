@@ -1,15 +1,14 @@
 # Research completion matrix
 
-Status reviewed: 2026-08-02
+Status reviewed: 2026-08-03
 
 ## Overall decision
 
 The controlled natural-only, synthetic-only, and fixed mixed-data GEC
-comparison is complete. The original broader research plan is partially
-complete because safety
-diagnostics cover F1-P1 but not F2-P1/F3-P1, qualified linguistic error
-analysis has not occurred, release clearance is unresolved, and the manuscript
-has not been written.
+comparison and the matched F1/F2/F3 behavioral diagnostics are complete. The
+original broader research plan is partially complete because qualified
+linguistic error analysis has not occurred, release clearance is unresolved,
+and the manuscript remains under author review.
 
 This distinction must remain visible in project status and any paper.
 
@@ -26,7 +25,7 @@ This distinction must remain visible in project status and any paper.
 | Fine-tuning versus expert-style B2-P1 | Complete, staged comparisons | `results/b2_p1_final_evaluation_audit.md` | B2-P1 achieved 108/511. F1-P1 and F3-P1 exceeded B2-P1; no difference was established for F2-P1 versus B2-P1. | Do not rerun or tune from B2-P1. |
 | F1-P1 overcorrection | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | F1-P1 preserved already-correct selected tokens more often than B0. | Do not generalize to all correct Arabic text. |
 | F1-P1 general Arabic capability retention | Complete diagnostic | `results/f1_safety_diagnostics_audit.md` | No measured ArabicMMLU difference was established; the interval was −3.2 to +1.9 points. | This is not a formal non-inferiority result. |
-| F2-P1/F3-P1 overcorrection and capability retention | Gate prepared; not executed | `results/f2_f3_safety_diagnostics_gate_audit.md` | No result claim is currently allowed. | Review and merge issue #200, then obtain a fresh exact-commit GO for the matched private diagnostic. |
+| F2-P1/F3-P1 overcorrection and capability retention | Complete diagnostic | `results/f2_f3_safety_diagnostics_audit.md` | F2 preserved the selected already-correct token more often, while F3 scored 5.30 points higher on the balanced ArabicMMLU subset. | Present this as an auxiliary trade-off, not general safety, non-inferiority, or linguistic validation. Do not rerun or tune. |
 | F2-P1/F3-P1 multi-seed robustness | Complete, post-hoc robustness evidence | `results/f2_f3_rtx3090_multiseed_aggregate_audit.md` | Across five seeds, F2-P1 averaged 21.68% (SD 0.71 pp), F3-P1 31.98% (SD 1.15 pp), and paired F3−F2 averaged +10.29 pp (SD 1.45; range +8.61 to +12.52). F3 was higher in every seed. | Keep the original seed-3407 comparison primary; disclose A100 training, uniform RTX 3090 recovery inference, and the post-hoc status. Do not rerun or tune. |
 | F2-P1/F3-P1 fixed-checkpoint sensitivity | Complete, post-hoc sensitivity evidence | `results/f2_f3_fixed_checkpoint_sensitivity_audit.md` | F3−F2 averaged +6.11 pp at fixed epoch 1 and +6.58 pp at fixed epoch 2, with F3 higher in all five seeds under both policies. The dev-selected gap was +10.29 pp. | State that natural-development selection amplifies the measured gap but does not create its direction; do not claim policy neutrality or replace the primary comparison. |
 | F2-P1/F3-P1 first-token sensitivity | Complete, post-hoc robustness evidence | `results/f2_f3_first_token_sensitivity_audit.md` | First-token extraction rescued 0/20 flagged F2-P1 outputs and 0/2 flagged F3-P1 outputs; both scores and the 11.15-point gap were unchanged. | Keep the frozen parser and primary scores unchanged; do not rerun or treat this as a new primary metric. |
@@ -58,10 +57,13 @@ versus F2-P1's 105/511, with a positive paired-bootstrap interval.
 
 ### H4: targeted GEC fine-tuning may affect overcorrection or capability
 
-Answered only for F1-P1. F1-P1 reduced the measured overcorrection diagnostic
-and showed no established ArabicMMLU change. The corresponding F2-P1/F3-P1
-gate is prepared under issue #200, but no claim is allowed until its separately
-reviewed diagnostic is completed.
+Answered for the original F1-P1 diagnostic and the matched F2-P1/F3-P1
+extension. F1-P1 reduced the measured overcorrection diagnostic and showed no
+established ArabicMMLU change against B0. In the primary new comparison, F2
+preserved the selected already-correct token substantially more often, whereas
+F3 scored 5.30 points higher on the balanced ArabicMMLU subset. This is a
+narrow behavioral trade-off, not a general safety or capability-retention
+claim.
 
 ## Submission-scope decision
 
@@ -72,11 +74,13 @@ comparison if it:
 - presents B0/F1 comparisons as staged secondary evidence;
 - does not claim superiority of F3-P1 over F1-P1;
 - presents B1-P1 and B2-P1 comparisons as staged;
-- does not claim F2-P1/F3-P1 capability retention;
+- reports the F2-P1/F3-P1 diagnostic trade-off without claiming general
+  capability retention or broad safety;
 - reports exact-match limitations and the absence of independent linguistic
   validation; and
 - keeps private/restricted artifacts out of the public paper package.
 
-Completing F2-P1/F3-P1 safety diagnostics would strengthen the
-paper, but each is a new optional execution decision rather than a requirement
-to accept the already completed core result.
+The matched F2-P1/F3-P1 behavioral diagnostics are complete. Qualified
+linguistic review and an independently licensed additional GEC benchmark remain
+optional strengthening work rather than requirements for the completed core
+result.

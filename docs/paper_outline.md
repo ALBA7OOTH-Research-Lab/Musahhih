@@ -41,7 +41,8 @@ expert-style prompt baselines.
    supervision.
 3. Frozen prompts, decoding, checkpoint rules, seeds, artifacts, and paired
    statistics with hash-verified private predictions.
-4. A completed F1-P1 overcorrection and ArabicMMLU retention diagnostic.
+4. Completed matched F1/F2/F3 overcorrection and ArabicMMLU diagnostics that
+   expose a supervision-composition trade-off.
 5. A transparent audit trail covering private-data handling, time-limited GPU
    continuation, failed runs, and non-repetition of completed test results.
 
@@ -65,8 +66,8 @@ Do not claim publicly released adapters until the release audit is resolved.
    outputs and 0/2 flagged F3-P1 outputs, leaving the primary gap unchanged.
 8. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
    F1-P1.
-9. Auxiliary diagnostics: F1-P1 reduced the selected overcorrection diagnostic and showed no
-   established ArabicMMLU change.
+9. Auxiliary diagnostics: F2 resisted selected-token overcorrection more than
+   F3, while F3 scored 5.30 points higher on the balanced ArabicMMLU subset.
 10. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
    expert linguistic error analysis, and private restricted artifacts.
 
@@ -185,13 +186,14 @@ numeric prior-work claim against the primary paper before submission.
 - emphasize mixed versus synthetic-only;
 - state explicitly that mixed versus natural-only was not established.
 
-### 7. Safety diagnostics
+### 7. Auxiliary behavioral diagnostics
 
-- F1-P1 selected overcorrection diagnostic;
-- balanced ArabicMMLU subset;
-- no formal non-inferiority claim;
-- F2/F3 diagnostics marked absent unless separately completed before the paper
-  is frozen.
+- matched F1/F2/F3 selected-token overcorrection diagnostic;
+- balanced 1,000-record, 40-task ArabicMMLU subset;
+- primary F3-minus-F2 trade-off: F3 is 40.26 points lower on unchanged-token
+  accuracy but 5.30 points higher on ArabicMMLU;
+- B0/F1 comparisons remain staged references; and
+- no broad safety, formal non-inferiority, or expert linguistic claim.
 
 ### 8. Limitations and ethics
 
@@ -251,10 +253,8 @@ Required:
 
 Optional strengthening experiments:
 
-- frozen B1-P1/B2-P1 final Nahw-Passage baselines;
-- matched F2-P1/F3-P1 safety diagnostics;
-- qualified private linguistic error analysis; and
-- an independently licensed additional held-out GEC evaluation.
+- an independently licensed additional held-out GEC evaluation; and
+- a qualified private linguistic error analysis.
 
 Each optional experiment requires a separate decision. None is authorized by
 this outline.
