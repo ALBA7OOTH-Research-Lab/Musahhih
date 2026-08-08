@@ -385,6 +385,11 @@ private-verification explanations. See
 publication-only work and does not establish expert linguistic validation of
 model outputs or authorize any training, inference, evaluation, metric rerun,
 checkpoint selection, prompt/parser change, diagnostic, or XG execution.
+Issue #208 then replaced package-wide bidirectional typesetting with local
+XeTeX direction handling for the manuscript's Arabic spans, restoring ACL
+review line numbers to the outer margins without changing paper content or
+empirical claims. All nine pages were rendered and inspected. This layout-only
+fix authorizes no research execution or result change.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

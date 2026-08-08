@@ -192,6 +192,13 @@ predictions and does not support expert linguistic error labels or an
 expert-quality claim. The example in the paper is original illustrative text,
 not restricted corpus material.
 
+Issue #208 fixes a review-layout defect introduced by package-level
+bidirectional typesetting: gray ACL line numbers had moved into the center
+gutter and overlapped the text columns. The manuscript now applies right-to-
+left direction only inside the three Arabic spans using native XeTeX direction
+primitives. Arabic shaping and reading order are preserved, while line numbers
+remain in the outer margins on all nine rendered pages.
+
 ## Citation checks
 
 Every current bibliography entry was verified against a primary source:
@@ -221,7 +228,7 @@ primary-source verification.
   and a 4- or 8-page research-paper limit excluding references. The draft has
   at most 8 content pages; references begin on PDF page 8 and end on page 9.
 - final PDF SHA-256:
-  `ce26ad98b8496300657f01ea1c903cd058c87257d5dfd353fb010c5cbabbba8b`.
+  `bd95ef2e44331399fca189d7926cf9b48f390ae1471e75c724f4370f31713755`.
 
 ## Remaining work before submission
 

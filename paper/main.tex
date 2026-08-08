@@ -7,10 +7,9 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{fontspec}
-\usepackage{polyglossia}
-\setdefaultlanguage{english}
-\setotherlanguage{arabic}
 \newfontfamily\arabicfont[Script=Arabic]{Amiri}
+\TeXXeTstate=1
+\newcommand{\textarabic}[1]{{\arabicfont\beginR#1\endR}}
 
 \title{Natural, Synthetic, or Mixed Supervision for Open-Weight Arabic
 Grammatical Error Correction}
