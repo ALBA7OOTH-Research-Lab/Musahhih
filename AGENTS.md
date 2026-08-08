@@ -374,6 +374,17 @@ trade-off, not broad safety or expert linguistic validation. Private
 predictions, inputs, logs, adapters, and checkpoints remain ignored. The
 authorization is consumed; do not rerun, retry, continue, or tune from these
 diagnostics.
+Issue #206 incorporates a qualified Arabic professor's complete manuscript
+review without accessing private predictions. The anonymous draft now has a
+shorter abstract, a dedicated dataset table, an author-created Arabic task
+example with English translation, model-choice rationale, exact prompt
+instructions, consistent exact-match-accuracy terminology, a checkpoint-loss
+figure, consolidated hardware reporting, and clearer staged-comparison and
+private-verification explanations. See
+`results/qualified_professor_manuscript_review_audit.md`. This is
+publication-only work and does not establish expert linguistic validation of
+model outputs or authorize any training, inference, evaluation, metric rerun,
+checkpoint selection, prompt/parser change, diagnostic, or XG execution.
 Issue #116's separately authorized, corpus-text-free runtime probe subsequently
 completed on phone-verified Kaggle account `thgh15`. It confirmed exactly one
 Tesla P100, CUDA 12.8, and importable preinstalled PyTorch 2.10.0+cu128, but

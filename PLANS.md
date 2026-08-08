@@ -991,3 +991,21 @@ Issue #202's transport repair was used by the single authorized issue-#200
 execution. The authorization is consumed. Do not create another dataset or
 kernel, retry, continue, or change training, checkpoints, prompts, parsing, or
 data from the result.
+
+## Issue #206 — incorporate qualified professor manuscript review
+
+- [x] Preserve the annotated review PDF and extract every written comment.
+- [x] Simplify the abstract and define the highlighted-token task with an
+  author-created Arabic example and English translation.
+- [x] Add a dedicated dataset table, model-choice rationale, consistent metric
+  terminology, prompt summary, and a checkpoint-development-loss figure.
+- [x] Consolidate repeated hardware and low-level artifact details.
+- [x] Clarify the staged experimental timeline and the limits of private-
+  artifact verification.
+- [x] Rebuild and visually inspect the complete anonymous PDF.
+- [x] Pass repository validation, document the review resolution, and merge.
+
+Issue #206 is publication-only. It authorizes no corpus access, inference,
+training, evaluation, metric recomputation, checkpoint selection, parser or
+prompt change, diagnostic, or XG execution. The illustrative Arabic example
+must be author-created rather than copied from a restricted dataset.

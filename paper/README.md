@@ -29,8 +29,9 @@ python scripts/generate_paper_figures.py
 tectonic paper/main.tex --outdir paper/build
 ```
 
-Run the figure generator before compiling. The generated figure contains only
-reviewed aggregate values from `results/research_results_consolidated.json`.
+Run the figure generator before compiling. The generated accuracy and
+checkpoint-selection figures contain only reviewed aggregate values from
+`results/research_results_consolidated.json`.
 
 The current target is the MRL 2026 long-paper limit: eight content pages plus
 unlimited references. The final PDF must be visually rendered and checked
