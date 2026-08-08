@@ -1,6 +1,6 @@
 # MRL 2026 manuscript-draft audit
 
-Date reviewed: 2026-08-03
+Date reviewed: 2026-08-08
 
 ## Outcome
 
@@ -33,13 +33,13 @@ checkpoints, adapters, or credentials.
 - Two behavior-neutral trailing spaces were removed from the upstream
   bibliography style for repository diff hygiene.
 - Review mode produces A4, two-column output with line numbers.
-- The abstract contains 199 words, below the 200-word limit.
-- The compiled PDF contains eight pages; the body uses seven content pages and
-  references begin on page seven.
+- The abstract contains 132 words, below the 200-word limit.
+- The compiled PDF contains nine pages; all manuscript content fits within the
+  eight-page long-paper allowance and references begin on page eight.
 - No overfull box, undefined control sequence, unresolved citation, unresolved
   reference, or LaTeX error appears in the final build log.
 - PDF metadata contains no author or lab identity.
-- All eight pages were rendered to PNG and visually checked for clipped text,
+- All nine pages were rendered to PNG and visually checked for clipped text,
   overlap, broken tables, unreadable labels, missing glyphs, and float-layout
   defects.
 - The required `Limitations` section and optional `Ethical Considerations`
@@ -64,10 +64,10 @@ The official workshop call and live OpenReview configuration were rechecked on
 | Content length | Pass | The conclusion ends on page 6, below the eight-page long-paper limit; Limitations, Ethical Considerations, and references follow. |
 | Review template | Pass | The PDF uses the pinned official ACL review style in A4, two-column, line-numbered form. |
 | Anonymity | Pass | The PDF and metadata contain no author, affiliation, acknowledgement, lab name, deanonymizing link, or identifying self-reference. |
-| Abstract | Pass | 199 words, below the ACL 200-word maximum. |
+| Abstract | Pass | 132 words, below the ACL 200-word maximum. |
 | Required Limitations section | Pass | A dedicated section titled `Limitations` occurs after the conclusion and before the references. |
 | Ethical discussion | Pass | The optional `Ethical Considerations` section follows Limitations and precedes the references. |
-| PDF upload constraint | Pass | The rebuilt PDF is approximately 149 KiB, below the live form's 50 MB maximum. |
+| PDF upload constraint | Pass | The rebuilt PDF is approximately 182 KiB, below the live form's 50 MB maximum. |
 | Submission deadline | Recorded | The workshop states 2026-08-10 at 23:59 AoE; the live OpenReview deadline encodes 2026-08-11 11:59 UTC. |
 | Camera-ready allowance | Not yet applicable | Accepted research papers receive one additional content page. |
 
@@ -173,6 +173,25 @@ B2-P1 results, the five-seed cohort, the fixed-checkpoint sensitivity, and the
 reviewed behavioral diagnostics and staged comparisons used by the manuscript
 figure, tables, and discussion.
 
+## Qualified professor review revision
+
+Issue #206 incorporated the complete written and embedded annotation set from
+a professor of Arabic. The abstract is now 132 words and omits inferential and
+checkpoint detail. The paper adds a dedicated dataset table, an author-created
+Arabic task example with English translation, a model-choice rationale, exact
+prompt instructions, a checkpoint-development-loss figure, consistent
+“exact-match accuracy (EM)” terminology, a consolidated implementation and
+hardware subsection, the staged experimental timeline, and a precise account
+of what private hashes do and do not permit reviewers to verify. Representative
+prior Arabic GEC model results were added with an explicit non-comparability
+warning for M2 versus token EM. The itemized resolution and privacy boundary
+are recorded in `results/qualified_professor_manuscript_review_audit.md`.
+
+This review concerned the manuscript only. It did not inspect private model
+predictions and does not support expert linguistic error labels or an
+expert-quality claim. The example in the paper is original illustrative text,
+not restricted corpus material.
+
 ## Citation checks
 
 Every current bibliography entry was verified against a primary source:
@@ -196,13 +215,13 @@ primary-source verification.
 - `git diff --check`: passed.
 - Manuscript identifier/credential scan: no match.
 - Final LaTeX compilation with Tectonic 0.16.9: passed.
-- Rendered PDF: 8 A4 pages; all pages visually inspected with no clipping,
+- Rendered PDF: 9 A4 pages; all pages visually inspected with no clipping,
   overlap, broken table, or illegible content.
 - Official MRL 2026 call rechecked on 2026-08-02: anonymized EMNLP 2025 format
   and a 4- or 8-page research-paper limit excluding references. The draft has
-  fewer than 8 content pages; references end on PDF page 8.
+  at most 8 content pages; references begin on PDF page 8 and end on page 9.
 - final PDF SHA-256:
-  `80e6134fee87951b9d28df1872fa21686f2975ce4379889869b434ef5521d240`.
+  `ce26ad98b8496300657f01ea1c903cd058c87257d5dfd353fb010c5cbabbba8b`.
 
 ## Remaining work before submission
 

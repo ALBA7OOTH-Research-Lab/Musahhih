@@ -36,7 +36,7 @@ expert-style prompt baselines.
 ## Contributions
 
 1. A leakage-controlled GEC fine-tuning extension of the Nahw benchmark using
-   one open-weight instruction model.
+   one open-weight instruction-tuned LLM.
 2. A matched-size comparison of natural-only, synthetic-only, and fixed mixed
    supervision.
 3. Frozen prompts, decoding, checkpoint rules, seeds, artifacts, and paired
@@ -48,7 +48,7 @@ expert-style prompt baselines.
 
 Do not claim publicly released adapters until the release audit is resolved.
 
-## Suggested abstract structure
+## Abstract structure
 
 1. Motivation: practical MSA GEC remains weaker and less studied than Arabic
    grammar understanding.
@@ -56,20 +56,14 @@ Do not claim publicly released adapters until the release audit is resolved.
    under the same open model, size, prompt, and held-out correction task.
 3. Method: QLoRA adapters on Gemma-3 4B; equal-size F1/F2/F3 training views;
    frozen 511-record Nahw-Passage exact correction evaluation.
-4. Primary result: F3-P1 31.70% versus F2-P1 20.55%, a paired difference of
-   11.15 points with a 7.05–15.26-point interval.
-5. Robustness: in a post-hoc five-seed cohort, F3-P1 exceeded F2-P1 in every
-   seed; the mean paired advantage was 10.29 points (sample SD 1.45).
-6. Checkpoint sensitivity: F3-P1 remained higher under fixed epoch 1 (+6.11
-   points) and fixed epoch 2 (+6.58); dev selection enlarged the gap to +10.29.
-7. Format sensitivity: a post-hoc first-token rule rescued 0/20 flagged F2-P1
-   outputs and 0/2 flagged F3-P1 outputs, leaving the primary gap unchanged.
-8. Secondary result: F1-P1 28.38%; F3-P1 was not established as different from
-   F1-P1.
-9. Auxiliary diagnostics: F2 resisted selected-token overcorrection more than
-   F3, while F3 scored 5.30 points higher on the balanced ArabicMMLU subset.
-10. Limitation: one model, one strict benchmark, staged F1/B0 comparisons, no
-   expert linguistic error analysis, and private restricted artifacts.
+4. Headline results only: F3-P1 31.70%, F2-P1 20.55%, and F1-P1 28.38%; the
+   mixed–natural difference is not established.
+5. Robustness at a high level: post-hoc analyses preserve the mixed-over-
+   synthetic direction; keep intervals, p-values, seeds, standard deviations,
+   and checkpoint numbers out of the abstract.
+6. Auxiliary trade-off: F2 resists selected-token overcorrection more, whereas
+   F3 retains more measured ArabicMMLU capability.
+7. Limitation: one model and strict single-reference scoring limit generality.
 
 ## Main results table
 
@@ -154,8 +148,10 @@ post-hoc sensitivity evidence, not a replacement primary analysis.
 Use `docs/literature_matrix.md` as the source map. Re-verify every citation and
 numeric prior-work claim against the primary paper before submission.
 
-### 3. Data and safeguards
+### 3. Datasets and safeguards
 
+- source/reference/release-size/study-use table;
+- author-created Arabic highlighted-token example with English translation;
 - QALB roles and restrictions;
 - Tibyan CC BY 4.0 release and deterministic derived view;
 - exact overlap and grouping controls;
@@ -164,6 +160,7 @@ numeric prior-work claim against the primary paper before submission.
 
 ### 4. Systems and training
 
+- rationale for one Gemma 3 4B model and the corresponding generalization limit;
 - immutable base revision and 4-bit QLoRA;
 - equal training size;
 - F1 natural-only, F2 synthetic-only, F3 fixed 50:50 mixture;
@@ -221,11 +218,10 @@ numeric prior-work claim against the primary paper before submission.
 
 Recommended:
 
-1. accuracy plot for B0/F1/F2/F3 with paired-difference intervals shown
-   separately;
-2. data-composition diagram for equal-size F1/F2/F3 training;
-3. research workflow diagram showing freeze, training, private development,
-   single final evaluation, and audit.
+1. exact-match-accuracy plot for the retained B1/B2/F1/F2/F3 systems;
+2. original F1/F2/F3 development loss across epochs 1 and 2, with selected
+   checkpoints marked; and
+3. optional data-composition or workflow diagram only if space permits.
 
 Do not plot B1/B2 development values alongside Nahw-Passage results.
 

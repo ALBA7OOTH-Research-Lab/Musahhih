@@ -132,6 +132,32 @@
     "f3_exceeded_f2_in_every_seed": true,
     "original_seed_3407_result_remains_primary": true
   },
+  "primary_checkpoint_selection_development_loss": {
+    "status": "accepted_corpus_free_aggregate",
+    "dataset": "QALB-2014 L1 development highlighted-token view",
+    "records": 975,
+    "metric": "mean assistant-token cross-entropy loss",
+    "lower_is_better": true,
+    "tie_rule": "differences within 1e-6 select epoch 1",
+    "arms": {
+      "F1-P1": {
+        "epoch_1": 0.33018210530281067,
+        "epoch_2": 0.3194449543952942,
+        "selected_epoch": 2
+      },
+      "F2-P1": {
+        "epoch_1": 0.5975050330162048,
+        "epoch_2": 0.611619234085083,
+        "selected_epoch": 1
+      },
+      "F3-P1": {
+        "epoch_1": 0.37296223640441895,
+        "epoch_2": 0.3441389799118042,
+        "selected_epoch": 2
+      }
+    },
+    "contains_corpus_text": false
+  },
   "f2_f3_fixed_checkpoint_sensitivity": {
     "status": "complete_post_hoc",
     "seeds": [3407, 3408, 3409, 3410, 3411],
@@ -255,7 +281,7 @@
     "f2_f3_safety_diagnostics": "complete; authorization consumed and results must not be rerun or used for tuning",
     "qualified_linguistic_error_analysis": "blocked on a qualified Arabic linguist and an approved private-review procedure",
     "adapter_release": "blocked on software, base-model, dataset-license, and institutional review",
-    "manuscript": "anonymous ACL-format draft prepared with five-seed and fixed-checkpoint sensitivity results"
+    "manuscript": "anonymous ACL-format draft revised after qualified professor manuscript review"
   },
   "safeguards": {
     "contains_corpus_text": false,
