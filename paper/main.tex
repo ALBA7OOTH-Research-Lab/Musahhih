@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{fontspec}
+\setmainfont{TeXGyreTermesX}
 \newfontfamily\arabicfont[Script=Arabic]{Amiri}
 \TeXXeTstate=1
 \newcommand{\textarabic}[1]{{\arabicfont\beginR#1\endR}}
@@ -144,6 +145,9 @@ assigning linguistic error types.
 
 \section{Datasets and Experimental Controls}
 
+Table~\ref{tab:datasets} summarizes the source, released size, and experimental
+role of every dataset used in this study.
+
 \begin{table*}[t]
 \centering
 \scriptsize
@@ -240,19 +244,22 @@ model and scale limits external validity.
 
 \subsection{Prompt-only baselines}
 
-Both baselines use the untouched 4-bit Gemma 3 4B instruction-tuned LLM at the
-same fixed revision.  \textbf{B1} prepends five QALB-training demonstrations
+Both baselines use the same 4-bit Gemma 3 4B instruction-tuned LLM at the same
+fixed revision.  \textbf{B1} prepends five QALB-training demonstrations
 selected by a content-neutral hash rule.  Its Arabic query then says, in
 English translation: ``Correct the specified erroneous word in the following
 text. Return only the corrected word, without explanation or quotation
 marks.''  The exact query is \textarabic{صحح الكلمة الخاطئة المحددة في النص
-التالي. أعد الكلمة المصححة فقط دون شرح أو علامات اقتباس.}  \textbf{B2} uses no
+التالي. أعد الكلمة المصححة فقط دون شرح أو علامات اقتباس.}
+
+\noindent\textbf{B2} uses no
 demonstrations and asks an Arabic-correction tool
 to determine the correct form from context, leave the rest unchanged, and
 return only that word: \textarabic{أنت أداة متخصصة في تصحيح العربية الفصحى.
 راجع سياق النص لتحديد الصيغة الصحيحة للكلمة المحددة، مع إبقاء بقية النص دون
-تغيير. أعد الكلمة المصححة فقط دون شرح أو تعليل أو علامات اقتباس.}  The exact
-Arabic templates are public in the code;
+تغيير. أعد الكلمة المصححة فقط دون شرح أو تعليل أو علامات اقتباس.}
+
+The exact Arabic templates are public in the code;
 restricted demonstration and passage text is not reproduced.  ``Expert-style''
 names the prompt design, not expert validation.
 
@@ -275,7 +282,8 @@ F3 (156.32, 261.38, and 208.37 tokens per record).  F2 has 25.4\% more than
 F3; record matching therefore does not match token budgets, and greater
 exposure cannot explain F3's advantage.
 
-We evaluate checkpoints after each epoch on the same frozen 975-record natural
+Figure~\ref{fig:checkpoint-loss} shows the development losses used for
+checkpoint selection.  We evaluate checkpoints after each epoch on the same frozen 975-record natural
 development view.  The rule chooses the lowest mean assistant-token
 cross-entropy, breaking differences within $10^{-6}$ in favor of epoch 1.  It
 selects epoch 2 for F1 and F3 but epoch 1 for F2: F2's loss increases from
@@ -378,7 +386,9 @@ results.  F3 obtains 162/511 exact matches (31.70\%), compared with 105/511
 missed by F3.  The primary paired difference is 11.15 points, with a 95\%
 interval of 7.05--15.26 points and exact McNemar
 $p=2.15\times10^{-7}$.  This supports mixed supervision over
-synthetic-only supervision under the frozen protocol.
+synthetic-only supervision under the frozen protocol.  Table~\ref{tab:paired}
+reports this primary comparison together with the staged secondary paired
+differences.
 
 \begin{table}[t]
 \centering

@@ -170,7 +170,7 @@ mkdir -p "$log_root"
 test ! -e "$log_path"
 test ! -e "$exit_path"
 run_workflow() {
-  python -m pip install --quiet --progress-bar off --requirement requirements-nautilus-f2-f3.txt || return "$?"
+  python -m pip install --quiet --progress-bar off --requirement requirements-nautilus.txt || return "$?"
   python -m scripts.run_f2_f3_nautilus_multiseed_eval "${args[@]}"
 }
 set +e
