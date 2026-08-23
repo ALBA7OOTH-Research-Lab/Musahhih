@@ -1,184 +1,64 @@
-# Dataset Audit
+# Dataset audit
 
-| Dataset | What it contains | Intended role | Current status | Main risk |
-|---|---|---|---|---|
-| Nahw-Passage | 100 MSA passages represented as 511 error/correction/explanation records | **Test only** for GED/GEC/GEX | Public in Nahw GitHub | Training on it would invalidate the benchmark |
-| Nahw-MCQ | 5K natural Arabic grammar MCQs | GU evaluation; not primary GEC training data | Public in Nahw GitHub | Different task format from passage correction |
-| Nahw Synthetic 10K | Synthetic grammar MCQs | GU replication/ablation | Public in Nahw GitHub | MCQ task mismatch for GEC |
-| QALB-2014 | Parallel erroneous/corrected native-speaker Arabic text | Natural training/dev/test benchmark | Release 0.9.1 received and integrity-audited locally on 2026-06-23 | Research-only license; no redistribution or dataset modification rights; preserve official splits |
-| QALB-2015 | Native-speaker test and non-native-speaker train/dev/test correction data | Additional benchmark or training split | Release 0.9.1 received and integrity-audited locally on 2026-06-23 | One exact L2 source occurs in both train and test; exclude the train-side duplicate from any derived training view |
-| ArabicMMLU | 14,575 original Arabic multiple-choice questions across 40 tasks | General Arabic capability-retention diagnostic only | Official repository pinned at `7aa530e2893ac420352b3f5c1a1310c010e9758b`; CC BY-NC 4.0 | Selected test-subset results must not be used to tune the model, prompt, or scoring |
-| Tibyan | Large synthetic Arabic GEC corpus with paper-described expert/professional review | Conditional synthetic or mixed-data training source after private manifesting and overlap checks | Authoritative Zenodo release located and verified on 2026-06-25: `Tibyan-corpus`, DOI `10.5281/zenodo.14623621`, CC BY 4.0 | No official splits or IDs; paper/release token-count discrepancy; QALB overlap still requires private check |
-| ZAEBUC-related data | Learner writing used by recent GED/GEC work | Optional cross-domain evaluation | Check paper/repository access terms | Domain differs from Nahw passages |
-| ARETA | Automatic error-type annotation tool | Error analysis only | Public research tool/paper | Automatic tags are imperfect |
+Status reviewed: 2026-08-22
 
-## Rules
+## Dataset roles
 
-1. Record the exact URL, license, version, checksum, and retrieval date for every dataset.
-2. Preserve original train/dev/test splits.
-3. Deduplicate across datasets before training.
-4. Never report a benchmark that overlaps with training data.
-5. Keep a manifest of every transformation.
-6. Do not use Nahw-Passage or any evaluation split as a clean-text source for
-   synthetic generation, demonstrations, retrieval, taxonomy design, or model
-   selection.
-7. Register the license and checksum of every clean-text source before producing
-   derived records; accessibility alone does not establish transformation or
-   redistribution rights.
-8. Assign all variants of one clean source to one split before generation, and
-   preserve exact original text alongside any documented normalization.
-9. Treat automatic ARETA or morphology labels as diagnostics, not expert gold
-   annotations. Every project category must retain its external source and tool
-   version.
+| Dataset | Source | Released size | Use in this study |
+| --- | --- | ---: | --- |
+| QALB 2014 L1 | Mohit et al. (2014) | 19,411 train; 1,017 dev; 968 test | 2,000 filtered training records for F1; nested first 1,000 for F3; 975 filtered development records for checkpoint selection. Test is unused. |
+| Tibyan | Alrehili and Alhothali (2024) | 6,192 sentence pairs | Deterministic highlighted-token conversion; 2,000 project-training records for F2; nested first 1,000 for F3. |
+| Nahw-Passage | Mubarak et al. (2026) | 100 passages; 511 correction records | Single frozen final test for all reported systems. |
+| QALB 2015 L2 development | Rozovskaya et al. (2015) | 154 selected records | Matched already-correct-token diagnostic. |
+| ArabicMMLU | Koto et al. (2024) | 14,575 questions across 40 tasks | Fixed balanced 1,000-question auxiliary capability diagnostic. |
 
-The preregistered requirements for project-generated and released synthetic
-data are defined in
-[`synthetic_data_protocol.md`](synthetic_data_protocol.md). No synthetic
-generation is authorized until that protocol passes methodology review and is
-marked frozen.
+## Split and leakage controls
 
-## QALB 0.9.1 intake
+- Nahw-Passage is test-only and is excluded from training, prompting,
+  checkpoint selection, and development.
+- QALB official train, development, and test roles are preserved. QALB test is
+  not used anywhere in the study.
+- QALB training candidates are filtered against registered QALB test and Nahw
+  source hashes before selection.
+- Tibyan has no official split. Exact source sides are grouped before a fixed
+  hash-based 80:20 project train/development split, preventing identical source
+  strings from crossing the project split.
+- Tibyan candidates are checked against registered QALB and Nahw hashes. Exact
+  overlaps are excluded; hash checks cannot detect paraphrases or unknown
+  pretraining contamination.
+- The mixed F3 view uses nested subsets of the frozen F1 and F2 orders rather
+  than fresh samples.
+- All final systems are evaluated on the same 511 ordered record identifiers.
 
-- Source: the registered QALB shared-task distribution supplied to the team.
-- Release: `QALB-0.9.1-Dec03-2021-SharedTasks`, dated 2021-12-03.
-- Archive SHA-256: `c14764b01439618bdcebda04bd5b9365cd70a1fbc58607f1bd18cf357514e503`.
-- Retrieved by the project: 2026-06-23.
-- License: internal research and evaluation use only. The release prohibits sublicensing, redistribution, dataset modification, and assignment of the license. Copyright and license notices must accompany internal copies. Commercial use or additional rights require permission from the rights holders.
-- Repository handling: the archive and extracted corpus files remain under ignored `data/raw/qalb/`. They must not be committed, attached to a public release, or copied into public experiment artifacts. Use manifests that reference unchanged originals; obtain institutional guidance before creating persistent transformed corpus copies, and never publish them without additional permission.
+## Transformation rules
 
-The release contains these official document counts:
+QALB natural records retain only a single eligible token replacement with one
+non-empty correction token and one occurrence of the erroneous token. Tibyan
+sentence pairs are aligned by deterministic minimum edit, retaining one seeded
+representative for each eligible source group. The repository does not assign
+linguistic error categories to either source.
 
-| Track | Train | Dev | Test |
-|---|---:|---:|---:|
-| QALB-2014 L1 (native) | 19,411 | 1,017 | 968 |
-| QALB-2015 L1 (native) | Reuses the 2014 native data | Reuses the 2014 native data | 920 |
-| QALB-2015 L2 (non-native) | 310 | 154 | 158 |
+## Public and private artifacts
 
-All `.sent`, `.cor`, and `.m2` files decoded as UTF-8 with BOM handling. Within every split, document IDs are unique, source/reference record counts agree, and `.sent` source text matches the ordered `S` records in `.m2`.
+Public artifacts may contain release metadata, record counts, deterministic
+selection rules, aggregate statistics, and hashes. They must not contain:
 
-Exact-source checks found no overlap between any QALB source document and the 100 unique Nahw-Passage passages. This is only an exact-text check and does not rule out paraphrase or broader provenance overlap. One 34-character, already-correct L2 source occurs in both QALB-2015 L2 train and test under different document IDs. Its SHA-256 is `32f52ef800b5292b2b3df1e0dfe6ba5b6254d25a32dbad12909dcd8e1f144e5b`. Preserve the official raw files, but exclude the train-side occurrence at load time through a private selection manifest before modeling.
+- QALB text or transformed QALB records;
+- Nahw-Passage records copied from the private prepared input;
+- ArabicMMLU questions or answers;
+- record-level predictions, prompts, gold values, or model responses; or
+- private development metrics, adapters, checkpoints, or logs.
 
-### Private selection manifests
+The public scripts read restricted inputs only from ignored paths and write
+text-bearing derivatives under ignored directories. Possession or hashing of
+an artifact does not authorize redistribution. See
+[`artifact_release_audit.md`](artifact_release_audit.md) for the full release
+matrix.
 
-The verified manifest run used `python scripts/prepare_qalb_manifests.py` from generator commit `303bd4774d7a4fbcf7c346c253b6429255c58fff`. The generator read the unchanged QALB ZIP directly and compared exact source strings without normalization; file-format prefixes were removed before the exact UTF-8 comparisons.
+## Authoritative sources
 
-| Input | SHA-256 |
-|---|---|
-| QALB 0.9.1 ZIP | `c14764b01439618bdcebda04bd5b9365cd70a1fbc58607f1bd18cf357514e503` |
-| Nahw-Passage JSON | `97d4f5e0b75ff5848ffdff113a74676c0de607d0bb877e1f26c1bde1585a2208` |
-
-| Private output under `data/processed/qalb/` | SHA-256 |
-|---|---|
-| `qalb_registry.jsonl` | `e0a87eb3b6bdf9d0dca4edd29e4a4ab72b8c6a49d2e29f83aaab496147939691` |
-| `qalb_train_selection.jsonl` | `9c9a054120d884a26d1b700501020452211df7b24de7e64476615d4a85d5dca2` |
-| `qalb_dev_selection.jsonl` | `563b12a75789ce0865ab341614935d855ab42086fae6e0cdaa26ba17f4de26c8` |
-| `qalb_manifest_summary.json` | `e322424d4b1e0265c8c3011a243f7aba38609c35e3905b4aedf0b0ef75e3ea33` |
-
-The registry contains 22,938 records. The selection contains 19,720 training records and 1,171 development records, while all 2,046 official test records remain evaluation-only. One train/dev record with exact QALB-test source overlap was excluded; no train/dev record was excluded for exact Nahw overlap.
-
-Within-split duplicated sources are intentionally preserved. The manifest flags 237 records because every member of a duplicated-source group receives the flag. This is distinct from the 121 duplicate excess records, which count only records beyond the first occurrence in each within-split group (total records minus within-split unique-source counts).
-
-The deterministic rerun and schema/privacy checks passed. All outputs contain no source, correction, annotation, prompt, or passage text; they remain ignored and private and must not be committed or redistributed. Obtain institutional guidance before creating any persistent transformed corpus copy. This preparation performed no model training and no QALB test evaluation.
-
-See `results/qalb_0.9.1_intake.md` for the reproducible intake checks and duplicate counts.
-
-### F1 overcorrection development diagnostic
-
-For the post-hoc safety diagnostic specified before its own inference, use all
-154 QALB-2015 L2 development records only. Reconstruct each annotator-0 gold
-target from the frozen M2 source, then deterministically select one Arabic-script
-token that is already present in the corrected target. This is a project
-development diagnostic, not an official QALB score and not evidence that every
-target sentence is linguistically flawless. The private prepared records remain
-ignored; their text-free selection audit is in
-`results/f1_safety_eval_selection_summary.json`. QALB test remains untouched.
-All 154 reconstructed targets must exactly match the official `.cor` development
-targets after removing their `S ` format prefix.
-
-## ArabicMMLU capability intake
-
-- Official source: <https://huggingface.co/datasets/MBZUAI/ArabicMMLU>.
-- Paper: <https://arxiv.org/abs/2402.12840>.
-- License at the pinned revision: CC BY-NC 4.0.
-- Frozen repository revision:
-  `7aa530e2893ac420352b3f5c1a1310c010e9758b`.
-- Official counts: 120 development examples and 14,455 test questions, totaling
-  14,575 questions across 40 tasks.
-- Musahhih selection: 25 hash-ranked test rows per task, excluding the aggregate
-  `All/` duplicate, for 1,000 records. The hash rank uses task and official ID,
-  not question text, answer key, or model output.
-
-The frozen subset is a capability-retention diagnostic, not a full leaderboard
-submission. Use no development demonstrations. Compare B0 and F1-P1 once under
-the matched protocol in `docs/f1_capability_retention_protocol.md`; do not use
-the selected test-subset result to revise prompts, scoring, checkpoint choice,
-training data, or model decisions.
-
-## Tibyan intake
-
-- Source paper: Ahlam Alrehili and Areej Alhothali, “Tibyan Corpus: Balanced and
-  Comprehensive Error Coverage Corpus Using ChatGPT for Arabic Grammatical Error
-  Correction,” `arXiv:2411.04588`, DOI `10.48550/arXiv.2411.04588`.
-- Authoritative dataset release: Zenodo record `14623621`,
-  <https://zenodo.org/records/14623621>, DOI `10.5281/zenodo.14623621`.
-- Retrieved and availability-tested: 2026-06-25.
-- Zenodo creator metadata: `Alrehili, Ahlam`, King Abdulaziz University, ORCID
-  `0000-0002-4218-4659`.
-- License: CC BY 4.0 (`cc-by-4.0`). Attribute the creator, link the license,
-  indicate changes, and do not add legal or technical restrictions beyond the
-  license. Other rights may still limit specific uses.
-- Archive: `Data (1).rar`, 5,614,320 bytes, Zenodo MD5
-  `cb045bfd2506d7df9316213e11c4e757`, locally computed SHA-256
-  `a7f318d9c64d7d2c214a5f44ee515b70c7d1ee930178b4b6b00cf5c733b0dfda`.
-- Final released pairs:
-
-| File | Lines | SHA-256 |
-|---|---:|---|
-| `Data/Final-Data-after-human-annotation/Tibyan Correct.txt` | 6,192 | `5f8fde9319df89419ade12114f14466301cafb181ce807df896fb5de2361c4e4` |
-| `Data/Final-Data-after-human-annotation/Tibyan Incorrect.txt` | 6,192 | `e3b72a45abffbf2a63da07912adc0fa0b29a41c495d609aa2b917fc4d58956a6` |
-
-The final files are UTF-8 text with BOM handling, one line per paired record, and
-no header, stable ID, official split field, error-label field, explanation field,
-or per-record provenance field. The two final files have equal line counts; two
-line pairs are identical between corrected and erroneous sides. A simple
-whitespace-token count over the final files produced 596,749 corrected-side tokens
-and 572,572 erroneous-side tokens, which does not exactly match the paper's
-reported 618,598 and 604,592 word counts. Treat this as an unresolved counting
-definition or release-version issue until the private manifest task resolves it.
-
-No official train/dev/test split was found in the paper, arXiv source package,
-Zenodo metadata, or extracted archive. Any Musahhih split must be created as a
-separate methodology-reviewed project split, not represented as an official
-Tibyan split.
-
-The paper supports a claim of linguistic/professional review, including two
-annotation phases and a qualified linguistic auditor, but the archive does not
-include reviewer identities or adjudication logs. Cite the paper for that claim
-and do not claim that Musahhih independently validated the Arabic.
-
-Hash-only overlap checks against public Nahw-Passage found zero exact full-string
-matches between Tibyan final lines and Nahw `passage`, `error`, `correction`, or
-`explanation` fields. QALB overlap was not run in this branch because private
-QALB text is not available here; it must be checked in the private QALB
-environment before any Tibyan training or mixed-data experiment.
-
-Recommendation: conditionally usable. Create a private, Git-ignored Tibyan
-manifest before modeling, preserve CC BY 4.0 attribution/license notices, define
-a project split without touching Nahw-Passage, rerun exact QALB overlap checks,
-and resolve the token-count discrepancy before publication.
-
-The proposed task-specific view is now documented in
-[`tibyan_f2_f3_protocol.md`](tibyan_f2_f3_protocol.md). The canonical
-corpus-text-free audit of the exact release found that a strict whole-pair
-single-substitution rule would retain only 3 of 6,192 pairs and is therefore
-not viable for the matched 2,000-record study. The draft companion protocol
-instead proposes a minimum-edit alignment rule that retains only substitutions
-forced across every optimal alignment, requires a unique erroneous token in the
-passage, and keeps at most one seeded record per released pair. The guarded
-implementation retained 6,165 candidate pairs, found 6,156 exact-side connected
-groups and zero exact full-side overlaps with the registered QALB or Nahw hash
-sets, and produced a 2,000-record selection. All selected records passed the
-pinned Gemma 1,024-token guard. Independent exact-commit review remains required
-before F2/F3 can be frozen or executed.
-
-See `results/tibyan_dataset_intake.md` for the corpus-text-free intake details.
+- Mohit et al. (2014), [The First QALB Shared Task on Automatic Text Correction for Arabic](https://aclanthology.org/W14-3621/)
+- Rozovskaya et al. (2015), [The Second QALB Shared Task on Automatic Text Correction for Arabic](https://aclanthology.org/W15-3206/)
+- Alrehili and Alhothali (2024), [Tibyan](https://arxiv.org/abs/2411.04588)
+- Mubarak et al. (2026), [Nahw](https://aclanthology.org/2026.eacl-long.296/)
+- Koto et al. (2024), [ArabicMMLU](https://aclanthology.org/2024.findings-acl.334/)

@@ -31,7 +31,7 @@ test ! -e "$log_path"
 test ! -e "$exit_path"
 set +e
 (
-  python -m pip install --quiet --progress-bar off --requirement requirements-nautilus-f2-f3.txt || exit "$?"
+  python -m pip install --quiet --progress-bar off --requirement requirements-nautilus.txt || exit "$?"
   python -m scripts.supervise_f2_f3_fixed_checkpoint_eval \
     --seed "$MUSAHHIH_SEED" \
     --training-root /private/outputs/issue-155 \

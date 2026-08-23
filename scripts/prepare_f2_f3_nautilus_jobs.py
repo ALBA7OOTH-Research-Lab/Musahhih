@@ -48,7 +48,7 @@ if [[ -n "$MUSAHHIH_OUTPUT_ROOT" ]]; then
 fi
 run_workflow() {
   python -m pip install --quiet --progress-bar off \
-    --requirement requirements-nautilus-f2-f3.txt || return "$?"
+    --requirement requirements-nautilus.txt || return "$?"
   python -m scripts.run_f2_f3_nautilus_pair "${runner_args[@]}"
 }
 if [[ -n "$MUSAHHIH_OUTPUT_ROOT" ]]; then

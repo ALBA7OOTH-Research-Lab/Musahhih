@@ -8,3 +8,4 @@ bitsandbytes>=0.45; platform_system != "Darwin"
 sentencepiece
 requests
 tqdm
+matplotlib>=3.8
