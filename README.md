@@ -109,17 +109,19 @@ public visibility alone does not grant reuse rights.
 
 ## Citation
 
-During anonymous review, cite the manuscript by title. Replace `Anonymous`
-with the final author list after de-anonymization.
+The camera-ready manuscript has been accepted to the 6th MRL Workshop.
+OpenReview currently marks the submission non-archival, so proceedings
+publication and an ACL Anthology identifier are pending confirmation.
 
 ```bibtex
-@inproceedings{anonymous2026musahhih,
+@misc{alnuwaiser-albalawi-2026-musahhih,
   title     = {Natural, Synthetic, or Mixed Supervision for Open-Weight Arabic
                Grammatical Error Correction},
-  author    = {Anonymous},
-  booktitle = {Proceedings of the 6th Workshop on Multilingual Representation
-               Learning},
-  year      = {2026}
+  author    = {Alnuwaiser, Mohammed and Albalawi, Mohammed},
+  note      = {Accepted to the 6th Workshop on Multilingual Representation
+               Learning; proceedings status pending},
+  year      = {2026},
+  url       = {https://openreview.net/forum?id=3kYiLneLKE}
 }
 ```
 
