@@ -1,6 +1,6 @@
 \documentclass[11pt,a4paper]{article}
 
-\usepackage[review]{acl}
+\usepackage[final]{acl}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{microtype}
@@ -15,7 +15,17 @@
 \title{Natural, Synthetic, or Mixed Supervision for Open-Weight Arabic
 Grammatical Error Correction}
 
-\author{Anonymous ACL submission}
+\author{Mohammed Alnuwaiser \\
+ALBA7OOTH Research Lab \\
+\texttt{momoalnuw@gmail.com}
+\And
+Mohammed Albalawi \\
+ALBA7OOTH Research Lab \\
+\texttt{malbowi6@gmail.com}
+\And
+Thikra Alghamdi \\
+ALBA7OOTH Research Lab \\
+\texttt{thikramans1455@gmail.com}}
 
 \begin{document}
 \maketitle
@@ -23,18 +33,20 @@ Grammatical Error Correction}
 \begin{abstract}
 Modern Standard Arabic grammatical error correction (GEC) remains
 underexplored for open-weight instruction-tuned large language models (LLMs).
-We study how natural, synthetic, and mixed supervision affect a practical
+We compare natural, synthetic, and mixed training views for a
 highlighted-token correction task while holding the model, training-set size,
 and evaluation protocol fixed.  We fine-tune Gemma 3 4B with QLoRA on three
 equal 2,000-record views and evaluate once on 511 Nahw-Passage records.  Mixed
 supervision reaches 31.70\% exact-match accuracy, compared with 20.55\% for
 synthetic-only and 28.38\% for natural-only; the mixed--natural difference is
 not established.  Post-hoc robustness analyses preserve the mixed-over-
-synthetic direction.  Auxiliary diagnostics reveal a trade-off: synthetic-
+synthetic direction, but checkpoint selection enlarges its measured size.
+Auxiliary diagnostics reveal a trade-off: synthetic-
 only changes fewer already-correct tokens, whereas mixed supervision retains
-more ArabicMMLU capability.  These findings show that supervision composition
-materially affects open-weight Arabic GEC, while one model and strict single-
-reference scoring limit generality.
+more ArabicMMLU capability.  The result concerns these particular data views:
+source also varies with domain, length, and error distribution; correction
+quality was not independently assessed.  One model and strict single-reference
+scoring further limit generality.
 \end{abstract}
 
 \section{Introduction}
@@ -49,7 +61,8 @@ rozovskaya-etal-2015-second}, specialized sequence-to-sequence systems
 prompting and instruction-tuning studies \citep{kwon-etal-2023-beyond}.
 Nevertheless, the effect of \emph{supervision source} is difficult to isolate
 when model families, corpus sizes, tasks, and evaluation protocols vary
-together.
+together.  Even at equal record count, comparing existing corpora cannot
+separate the origin of supervision from other corpus differences.
 
 Nahw provides a recent benchmark spanning Arabic grammar understanding, error
 detection, correction, and explanation \citep{mubarak-etal-2026-nahw}.  Its
@@ -69,11 +82,12 @@ also report the earlier natural-only result and later prompt-only baselines as
 explicitly staged comparisons rather than presenting all five systems as one
 simultaneous experiment.
 
-The study is intentionally a controlled case study rather than a new model
-architecture.  Its central contribution is to isolate supervision composition
-under one task and one open-weight LLM.  This design strengthens the internal
-comparison, while necessarily limiting claims about other model families,
-scales, or Arabic correction settings.
+The study is a controlled case study rather than a new model architecture.
+Its central contribution is a matched comparison of three fixed training
+views under one task and one open-weight LLM.  The source corpora also differ
+in domain, length, and error distribution, with potentially different label
+quality; the comparison does not identify a causal effect of supervision
+origin alone.
 
 Our contributions are:
 \begin{itemize}
@@ -171,7 +185,10 @@ text is not reproduced.}
 \subsection{Task and final evaluation}
 
 Each example supplies an MSA passage and one highlighted erroneous token.  The
-model must return only the corrected token.  We use all 511 ordered
+model must return only the corrected token.  This interface resembles a
+proofreading assistant asked to replace a word already flagged by a writer or
+another system.  It does not test error detection, whole-sentence editing,
+or effectiveness in a deployed writing tool.  We use all 511 ordered
 Nahw-Passage correction records as a test-only set.
 
 \noindent\textbf{Illustrative task example (author-created; not corpus text).}
@@ -228,7 +245,11 @@ representatives under a fixed hash order.  The mixed arm (\textbf{F3}) combines
 the first 1,000 records in the frozen natural order with the first 1,000 in the
 frozen synthetic order.  Thus both halves are nested subsets of their
 single-source arms rather than new samples.  The natural arm (\textbf{F1}),
-F2, and F3 each contain exactly 2,000 records.
+F2, and F3 each contain exactly 2,000 records.  We chose 50:50 as a simple
+balanced condition before final evaluation, not as an optimized ratio.  It
+allows a size-matched contrast against either single-source view.  We do not
+test other ratios or a 4,000-record union; the latter would also change
+training-set size.
 
 \section{Systems and Training}
 
@@ -385,8 +406,10 @@ results.  F3 obtains 162/511 exact matches (31.70\%), compared with 105/511
 (20.55\%) for F2.  F3 corrects 89 records missed by F2, whereas F2 corrects 32
 missed by F3.  The primary paired difference is 11.15 points, with a 95\%
 interval of 7.05--15.26 points and exact McNemar
-$p=2.15\times10^{-7}$.  This supports mixed supervision over
-synthetic-only supervision under the frozen protocol.  Table~\ref{tab:paired}
+$p=2.15\times10^{-7}$.  This supports the specific mixed view over the specific
+synthetic view under the frozen development-selected protocol.  The checkpoint
+policy contributes to the size of the gap, as Table~\ref{tab:checkpoints}
+shows.  Table~\ref{tab:paired}
 reports this primary comparison together with the staged secondary paired
 differences.
 
@@ -484,10 +507,12 @@ match percentages. F3 exceeds F2 in every seed under both fixed policies.}
 
 Table~\ref{tab:checkpoints} shows that the mixed-over-synthetic direction is
 not created by the natural-development selection rule: the mean gap remains
-6.11 points at fixed epoch 1 and 6.58 points at fixed epoch 2.  However, the
-rule selects epoch 1 for every F2 replica and epoch 2 for every F3 replica,
-expanding the dev-selected gap to 10.29 points.  The selection policy therefore
-affects effect magnitude even though both matched policies preserve its sign.
+6.11 points at fixed epoch 1 and 6.58 points at fixed epoch 2, with F3 higher
+in every seed under both policies.  The rule selects epoch 1 for every F2
+replica and epoch 2 for every F3 replica, expanding the dev-selected gap to
+10.29 points.  The fixed-epoch differences are therefore the more conservative
+measure of this comparison; development selection affects its estimated
+magnitude.  These post-hoc checks do not replace the frozen primary analysis.
 
 \section{Auxiliary Behavioral Diagnostics}
 
@@ -520,22 +545,26 @@ staged references, and we make no broad safety claim.
 
 \section{Discussion}
 
-The primary result shows that synthetic examples are not interchangeable with
-natural supervision at fixed record count.  Adding natural data to the
-synthetic view closes a large performance deficit and does so across all five
-post-hoc seeds.  This is consistent with natural examples better matching the
-task interface or correction distribution while synthetic examples provide
-complementary coverage.  The experiment cannot distinguish those mechanisms:
-QALB and Tibyan differ in record length, token count, domain, error
-distribution, and correction quality.
+The primary result shows that the selected Tibyan-only view and the selected
+QALB--Tibyan view perform differently at fixed record count.  The latter
+scores higher in all five post-hoc seeds, including under both fixed-epoch
+policies.  QALB and Tibyan also differ in record length, token count, domain,
+and error distribution; their relative correction quality was not separately
+measured.  The study cannot tell whether
+the gap arises from the natural origin of QALB examples, their closer match
+to the test task, data quality, a complementary mixture, or several of these.
+We have no expert error-type labels for the private outputs with which to
+identify a grammatical mechanism.
 
 The F1--F2 secondary result also favors natural supervision, while the F3--F1
 interval includes zero.  The appropriate conclusion is therefore not that
 mixing is universally optimal.  Rather, mixing substantially repairs the
 deficit of the synthetic-only view and reaches performance statistically
-compatible with the natural-only arm under this test.  Additional models,
-sizes, languages, and independently licensed test sets are required to
-separate a general mixture effect from a dataset-specific interaction.
+compatible with the natural-only arm under this test.  The interval does not
+show that synthetic additions improve on natural-only supervision.  Other
+mixture ratios, a larger union, additional models, and expert-reviewed output
+samples would help test how broadly this pattern holds; none was evaluated
+here.
 
 The prompt baselines sharpen this interpretation.  A more explicit
 expert-style instruction improves the untouched model, but F1 and F3 remain
@@ -559,7 +588,7 @@ predictions.  Timeout-safe evaluation persists each row and resumes only after
 verifying the exact prefix, avoiding regeneration of completed predictions.
 
 Code, protocols, corpus-free summaries, aggregate statistics, and hashes are
-eligible for an anonymized review package.  QALB-derived records, Nahw text,
+available in the public research repository.  QALB-derived records, Nahw text,
 record-level predictions, raw model responses, logs, checkpoints, and adapters
 are not redistributed under the applicable data and artifact restrictions.
 The published code lets a licensed custodian recompute every count and paired
@@ -567,25 +596,26 @@ statistic from aligned private rows; published hashes establish which exact
 inputs, predictions, and checkpoints were audited.  Hashes do not reveal the
 rows or permit an unlicensed reviewer to rescore them, so fully independent
 end-to-end replication remains limited.  The upstream Tibyan release remains
-available under its own license.
+available under its own license.  The public repository is
+\url{https://github.com/ALBA7OOTH-Research-Lab/Musahhih}.
 
 \section{Conclusion}
 
-In a frozen equal-record comparison, a 50:50 natural--synthetic mixture
-substantially outperforms synthetic-only supervision for Gemma 3 4B Arabic
-highlighted-token GEC, and a post-hoc five-seed cohort preserves this direction
-in every seed and at both matched epoch checkpoints.  Development selection
-amplifies the mean separation but does not create it.  Natural-only supervision also exceeds synthetic-only
-supervision in a staged comparison, while mixed supervision is not established
-as better than natural-only.  Together with prompt baselines, the results
-indicate that data composition---not fine-tuning alone---is a central
-experimental variable for open-weight Arabic GEC.
+In this equal-record Gemma 3 4B comparison, the selected 50:50
+QALB--Tibyan view outperforms the selected Tibyan-only view on highlighted-token
+GEC.  A post-hoc five-seed cohort preserves that direction at both matched
+epochs, where the mean gap is about six points; development selection expands
+it to 10.29 points.  The mixed view is not established as better than
+natural-only supervision.  The corpora's many co-varying properties prevent
+attributing the result to supervision origin or mixing alone.
 
 \section{Limitations}
 
-Our evidence is limited to one 4B model, one equal-record training size, and
-one principal test set.  Record matching does not equalize tokens, domains, or
-error categories.  The primary interval is conditional on seed 3407; the
+Our evidence is limited to one 4B model, one equal-record training size, one
+50:50 mixture, and one principal test set.  Record matching does not equalize
+tokens, domains, error categories, or potential differences in label quality.
+The primary
+interval is conditional on seed 3407; the
 post-hoc cohort finds a positive paired difference in every seed but uses a
 different, internally uniform hardware path.  Although F2 contains more
 tokens than F3, token totals do not control length, domain, or source quality.
