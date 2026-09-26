@@ -114,10 +114,11 @@ OpenReview currently marks the submission non-archival, so proceedings
 publication and an ACL Anthology identifier are pending confirmation.
 
 ```bibtex
-@misc{alnuwaiser-albalawi-2026-musahhih,
+@misc{alnuwaiser-etal-2026-musahhih,
   title     = {Natural, Synthetic, or Mixed Supervision for Open-Weight Arabic
                Grammatical Error Correction},
-  author    = {Alnuwaiser, Mohammed and Albalawi, Mohammed},
+  author    = {Alnuwaiser, Mohammed and Albalawi, Mohammed and
+               Alghamdi, Thikra},
   note      = {Accepted to the 6th Workshop on Multilingual Representation
                Learning; proceedings status pending},
   year      = {2026},
